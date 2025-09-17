@@ -164,7 +164,7 @@ public static class TextUtil
                 blue = ParseHex(hexColor.Substring(4, 2));
                 break;
             default:
-                throw new FormatException("Format color must be 3 or 6 heximal digits");
+                throw new FormatException("Format color must be 3 or 6 heximal digits.");
         }
 
         return new RgbColor(red, green, blue);
@@ -174,12 +174,12 @@ public static class TextUtil
     {
         if (string.IsNullOrWhiteSpace(color))
         {
-            throw new ArgumentNullException("String cannot be empty");
+            throw new ArgumentNullException("String cannot be empty.");
         }
 
         if (!color.StartsWith('#'))
         {
-            throw new FormatException("Invalid color");
+            throw new FormatException("Invalid color.");
         }
     }
 
@@ -211,6 +211,6 @@ public static class TextUtil
             return ch - 'a' + 10;
         }
 
-        throw new FormatException($"Invalid hex character for color: {ch}");
+        throw new FormatException($"Invalid hex character for color: {ch}.");
     }
 }
