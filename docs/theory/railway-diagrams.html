@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="generator" content="ebnf2railroad" />
+  <title>grammar</title>
+  <style type="text/css">
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+:root {
+    --subtleText: #777;
+    --highlightText: hotpink;
+    --itemHeadingBackground: #eee;
+    --background: white;
+    --borderColor: #ccc;
+    --textColor: #111;
+
+    --diagramBackground: #f8f8f8;
+    --diagramLines: black;
+    --diagramText: black;
+    --terminalLines: black;
+    --terminalFill: #feffdf;
+    --nonTerminalLines: black;
+    --nonTerminalFill: #feffdf;
+    --specialSequenceLines: black;
+    --specialSequenceFill: #ffe79a;
+
+    --ebnfCodeBackground: #e8e8e8;
+    --ebnfIdentifier: #ef5a5a;
+    --ebnfTerminal: #ffa952;
+    --ebnfBaseColor: #777;
+}
+
+.theme-dark {
+    --subtleText: #777;
+    --highlightText: hotpink;
+    --itemHeadingBackground: #444;
+    --background: #333;
+    --borderColor: lightblue;
+    --textColor: #ddd;
+
+    --diagramBackground: #222;
+    --diagramLines: #3e432e;
+    --diagramText: #a7d129;
+    --terminalLines: #a7d129;
+    --terminalFill: #3e432e;
+    --nonTerminalLines: #a7d129;
+    --nonTerminalFill: #3e432e;
+    --specialSequenceLines: #a7d129;
+    --specialSequenceFill: #444;
+
+    --ebnfCodeBackground: #3e432e;
+    --ebnfIdentifier: lightblue;
+    --ebnfTerminal: #a7d129;
+    --ebnfBaseColor: #ddd;
+}
+
+html {
+    font-family: sans-serif;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--background);
+    color: var(--textColor);
+}
+
+a {
+    color: inherit;
+}
+
+a:visited {
+    color: var(--subtleText);
+}
+
+a:active, a:focus, a:hover {
+    color: var(--highlightText);
+}
+
+header {
+    border-bottom: 1px solid var(--borderColor);
+    padding: 1rem;
+}
+
+header button {
+  display: none;
+}
+
+main {
+    overflow: hidden;
+    margin-left: 300px;
+}
+
+nav {
+    position: sticky;
+    top: 0;
+    max-height: 100vh;
+    padding: 1rem 2rem 1rem 1rem;
+    z-index: 5;
+    background: var(--background);
+    width: 300px;
+    float: left;
+    overflow: auto;
+}
+
+nav h3 {
+    white-space: nowrap;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav a {
+    display: inline-block;
+    color: var(--subtleText);
+    text-decoration: none;
+    padding: 0.33rem 0;
+}
+
+article {
+    width: 100%;
+    overflow: hidden;
+    padding: 1rem 2rem;
+    border-left: 1px solid var(--borderColor);
+}
+
+article + footer {
+    padding: 1rem 2rem;
+    border-left: 1px solid var(--borderColor);
+    background: var(--itemHeadingBackground);
+}
+
+code {
+    width: 100%;
+}
+
+pre {
+    overflow: auto;
+}
+
+pre > code {
+    display: block;
+    padding: 1em;
+    background: var(--diagramBackground);
+}
+
+h4 {
+    padding: 2rem;
+    margin: 4rem -2rem 1rem -2rem;
+    background: var(--itemHeadingBackground);
+    font-size: 125%;
+}
+
+blockquote {
+    margin-left: 0;
+    margin-top: calc(1em - 1px);
+    margin-bottom: calc(1em - 1px);
+    padding: 1px 0 1px 1rem;
+    border-left: 1rem solid var(--ebnfCodeBackground);
+}
+
+dfn {
+    font-style: normal;
+    cursor: default;
+}
+
+.diagram-container {
+    background: var(--diagramBackground);
+    margin-bottom: 0.25rem;
+    padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+    overflow: auto;
+}
+
+/* Responsiveness */
+@media (max-width: 800px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  header {
+    padding: 0.5rem 1rem;
+    display: flex;
+  }
+
+  header h1 {
+    margin: 0 auto 0 0;
+    display: flex;
+    align-items: center;
+  }
+
+  header button {
+    display: initial;
+    position: relative;
+    z-index: 10;
+  }
+
+  header button::after {
+    content: '☰';
+    margin-left: auto;
+    font-size: 1.5rem;
+  }
+
+  main {
+    display: block;
+    position: relative;
+    margin-left: 0;
+  }
+
+  nav {
+    height: auto;
+    display: block;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translateX(300px);
+    padding-top: 3rem;
+    background: var(--background);
+    box-shadow: 0 0 0 1000000rem rgba(0, 0, 0, 0.35);
+  }
+
+  .menu-open nav {
+    pointer-events: auto;
+    opacity: 1;
+    transform: translateX(0px);
+  }
+
+  nav a {
+    padding: 0.66rem 0;
+  }
+
+  article {
+    margin-left: 0;
+    border-left: 0;
+    padding: 1rem;
+  }
+  article + footer {
+    padding: 1rem;
+    border-left: 0;
+  }
+}
+
+/* EBNF text representation styling */
+code.ebnf {
+  padding: 1em;
+  background: var(--ebnfCodeBackground);
+  font-weight: bold;
+  color: var(--ebnfBaseColor);
+  white-space: pre-wrap;
+  display: inline-block;
+  width: 100%;
+}
+.ebnf-identifier {
+  color: var(--ebnfIdentifier);
+}
+.ebnf-terminal {
+  color: var(--ebnfTerminal);
+}
+.ebnf-non-terminal {
+  font-weight: normal;
+}
+.ebnf-comment {
+  font-weight: normal;
+  font-style: italic;
+  color: #999;
+}
+
+/* EBNF diagram representation styling */
+svg.railroad-diagram {
+  width: 100%;
+}
+svg.railroad-diagram path {
+  stroke-width: 3;
+  stroke: var(--diagramLines);
+  fill: rgba(0,0,0,0);
+}
+svg.railroad-diagram text {
+  font: bold 14px monospace;
+  text-anchor: middle;
+  fill: var(--diagramText);
+}
+svg.railroad-diagram text.diagram-text {
+  font-size: 12px;
+}
+svg.railroad-diagram text.diagram-arrow {
+  font-size: 16px;
+}
+svg.railroad-diagram text.label {
+  text-anchor: start;
+}
+svg.railroad-diagram text.comment {
+  font: italic 12px monospace;
+}
+svg.railroad-diagram g.non-terminal text {
+  /*font-style: italic;*/
+}
+svg.railroad-diagram g.special-sequence rect {
+  fill: var(--specialSequenceFill);
+  stroke: var(--specialSequenceLines);
+}
+svg.railroad-diagram g.special-sequence text {
+  font-style: italic;
+}
+svg.railroad-diagram rect {
+  stroke-width: 3;
+}
+svg.railroad-diagram rect.group-box {
+  stroke: gray;
+  stroke-dasharray: 10 5;
+  fill: none;
+}
+svg.railroad-diagram g.non-terminal rect {
+  fill: var(--nonTerminalFill);
+  stroke: var(--nonTerminalLines);
+}
+svg.railroad-diagram g.terminal rect {
+  fill: var(--terminalFill);
+  stroke: var(--terminalLines);
+}
+svg.railroad-diagram path.diagram-text {
+  stroke-width: 3;
+  stroke: black;
+  fill: white;
+  cursor: help;
+}
+svg.railroad-diagram g.diagram-text:hover path.diagram-text {
+  fill: #eee;
+}
+</style>
+</head>
+<body>
+
+  <script type="text/javascript">
+    const htmlTag = document.getElementsByTagName("html")[0];
+    const options = (document.location.search || "")
+      .slice(1)
+      .split("&")
+      .map(kv => kv.split("="))
+      .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
+
+    if (options["theme"]) {
+      htmlTag.classList.add("theme-" + options["theme"]);
+    }
+  </script>
+  <header>
+    <h1>grammar</h1>
+    <button type="button"></button>
+  </header>
+  <nav>
+    
+    <h3>Root elements:</h3>
+    <ul class="nav-alphabetical">
+    <li class="root-node"><a href="#float_lit">float_lit</a>
+        
+        
+      </li><li class="root-node"><a href="#identifier">identifier</a>
+        
+        
+      </li><li class="root-node"><a href="#int_lit">int_lit</a>
+        
+        
+      </li><li class="root-node"><a href="#string_lit">string_lit</a>
+        
+        
+      </li>
+    </ul>
+    
+    
+    <h3>Quick navigation:</h3>
+    <ul class="nav-alphabetical">
+    <li><a href="#binary_digits">binary_digits</a>
+        
+        
+      </li><li><a href="#binary_lit">binary_lit</a>
+        
+        
+      </li><li><a href="#byte_value">byte_value</a>
+        
+        
+      </li><li><a href="#decimal_exponent">decimal_exponent</a>
+        
+        
+      </li><li><a href="#decimal_float_lit">decimal_float_lit</a>
+        
+        
+      </li><li><a href="#decimal_lit">decimal_lit</a>
+        
+        
+      </li><li><a href="#escaped_char">escaped_char</a>
+        
+        
+      </li><li><a href="#hex_byte_value">hex_byte_value</a>
+        
+        
+      </li><li><a href="#hex_exponent">hex_exponent</a>
+        
+        
+      </li><li><a href="#hex_float_lit">hex_float_lit</a>
+        
+        
+      </li><li><a href="#hex_lit">hex_lit</a>
+        
+        
+      </li><li><a href="#hex_mantissa">hex_mantissa</a>
+        
+        
+      </li><li><a href="#interpreted_string_lit">interpreted_string_lit</a>
+        
+        
+      </li><li><a href="#letter">letter</a>
+        
+        
+      </li><li><a href="#newline">newline</a>
+        
+        
+      </li><li><a href="#octal_byte_value">octal_byte_value</a>
+        
+        
+      </li><li><a href="#octal_digits">octal_digits</a>
+        
+        
+      </li><li><a href="#octal_lit">octal_lit</a>
+        
+        
+      </li><li><a href="#raw_string_lit">raw_string_lit</a>
+        
+        
+      </li><li><a href="#unicode_char">unicode_char</a>
+        
+        
+      </li><li><a href="#unicode_digit">unicode_digit</a>
+        
+        
+      </li><li><a href="#unicode_letter">unicode_letter</a>
+        
+        
+      </li><li><a href="#unicode_value">unicode_value</a>
+        
+        
+      </li>
+    </ul>
+    
+    
+    <h3>Common elements:</h3>
+    <ul class="nav-alphabetical">
+    <li class="common-node"><a href="#decimal_digits">decimal_digits</a>
+        
+        
+      </li><li class="common-node"><a href="#hex_digits">hex_digits</a>
+        
+        
+      </li>
+    </ul>
+    
+    
+    <h3>Character sets:</h3>
+    <ul class="nav-alphabetical">
+    <li><a href="#binary_digit">binary_digit</a>
+        
+        
+      </li><li class="common-node"><a href="#decimal_digit">decimal_digit</a>
+        
+        
+      </li><li class="common-node"><a href="#hex_digit">hex_digit</a>
+        
+        
+      </li><li class="common-node"><a href="#octal_digit">octal_digit</a>
+        
+        
+      </li>
+    </ul>
+    
+  </nav>
+  <main>
+  <article>
+    <section>
+  <h4 id="letter">letter</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="259" style="max-height: 92px;" viewBox="0 0 259 92"><g transform="translate(.5 .5)"><g><path d="M20 21v20m0 -10h20"></path></g><g><path d="M40 31h0"></path><path d="M219 31h0"></path><path d="M40 31h20"></path><g class="non-terminal"><path d="M60 31h0"></path><path d="M199 31h0"></path><rect x="60" y="20" width="139" height="22"></rect><a xlink:href="#unicode_letter"><text x="129.5" y="35">unicode&#95;letter</text></a></g><path d="M199 31h20"></path><path d="M40 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 61h55.25"></path><path d="M143.75 61h55.25"></path><rect x="115.25" y="50" width="28.5" height="22" rx="10" ry="10"></rect><text x="129.5" y="65">&#95;</text></g><path d="M199 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><path d="M 219 31 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">letter</span> = <a class="ebnf-non-terminal" href="#unicode_letter">unicode_letter</a> | <span class="ebnf-terminal">"_"</span> <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>letter</strong>:<p>
+<ul>
+<li><a href="#identifier">identifier</a></li>
+</ul>
+  <p><strong>letter</strong> is referencing:<p>
+<ul>
+<li><a href="#unicode_letter">unicode_letter</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="unicode_letter">unicode_letter</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="375" style="max-height: 62px;" viewBox="0 0 375 62"><g transform="translate(.5 .5)"><g><path d="M20 21v20m10 -20v20m-10 -10h20"></path></g><path d="M40 31h10"></path><g class="special-sequence"><path d="M50 31h0"></path><path d="M325 31h0"></path><rect x="50" y="20" width="275" height="22"></rect><text x="187.5" y="35"> любой символ юникодной буквы </text></g><path d="M325 31h10"></path><path d="M 335 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">unicode_letter</span> = <span class="ebnf-special-sequence">? любой символ юникодной буквы ?</span> <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>unicode_letter</strong>:<p>
+<ul>
+<li><a href="#letter">letter</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="unicode_digit">unicode_digit</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="400.5" style="max-height: 62px;" viewBox="0 0 400.5 62"><g transform="translate(.5 .5)"><g><path d="M20 21v20m10 -20v20m-10 -10h20"></path></g><path d="M40 31h10"></path><g class="special-sequence"><path d="M50 31h0"></path><path d="M350.5 31h0"></path><rect x="50" y="20" width="300.5" height="22"></rect><text x="200.25" y="35"> любой юникодный цифровой символ </text></g><path d="M350.5 31h10"></path><path d="M 360.5 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">unicode_digit</span> = <span class="ebnf-special-sequence">? любой юникодный цифровой символ ?</span> <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>unicode_digit</strong>:<p>
+<ul>
+<li><a href="#identifier">identifier</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="decimal_digit">decimal_digit</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="148.5" style="max-height: 332px;" viewBox="0 0 148.5 332"><g transform="translate(.5 .5)"><g><path d="M20 21v20m10 -20v20m-10 -10h20"></path></g><g><path d="M40 31h0"></path><path d="M108.5 31h0"></path><path d="M40 31h20"></path><g class="terminal"><path d="M60 31h0"></path><path d="M88.5 31h0"></path><rect x="60" y="20" width="28.5" height="22" rx="10" ry="10"></rect><text x="74.25" y="35">0</text></g><path d="M88.5 31h20"></path><path d="M40 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 61h0"></path><path d="M88.5 61h0"></path><rect x="60" y="50" width="28.5" height="22" rx="10" ry="10"></rect><text x="74.25" y="65">1</text></g><path d="M88.5 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v40a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 91h0"></path><path d="M88.5 91h0"></path><rect x="60" y="80" width="28.5" height="22" rx="10" ry="10"></rect><text x="74.25" y="95">2</text></g><path d="M88.5 91a10 10 0 0 0 10 -10v-40a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v70a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 121h0"></path><path d="M88.5 121h0"></path><rect x="60" y="110" width="28.5" height="22" rx="10" ry="10"></rect><text x="74.25" y="125">3</text></g><path d="M88.5 121a10 10 0 0 0 10 -10v-70a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v100a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 151h0"></path><path d="M88.5 151h0"></path><rect x="60" y="140" width="28.5" height="22" rx="10" ry="10"></rect><text x="74.25" y="155">4</text></g><path d="M88.5 151a10 10 0 0 0 10 -10v-100a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v130a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 181h0"></path><path d="M88.5 181h0"></path><rect x="60" y="170" width="28.5" height="22" rx="10" ry="10"></rect><text x="74.25" y="185">5</text></g><path d="M88.5 181a10 10 0 0 0 10 -10v-130a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v160a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 211h0"></path><path d="M88.5 211h0"></path><rect x="60" y="200" width="28.5" height="22" rx="10" ry="10"></rect><text x="74.25" y="215">6</text></g><path d="M88.5 211a10 10 0 0 0 10 -10v-160a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v190a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 241h0"></path><path d="M88.5 241h0"></path><rect x="60" y="230" width="28.5" height="22" rx="10" ry="10"></rect><text x="74.25" y="245">7</text></g><path d="M88.5 241a10 10 0 0 0 10 -10v-190a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v220a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 271h0"></path><path d="M88.5 271h0"></path><rect x="60" y="260" width="28.5" height="22" rx="10" ry="10"></rect><text x="74.25" y="275">8</text></g><path d="M88.5 271a10 10 0 0 0 10 -10v-220a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v250a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 301h0"></path><path d="M88.5 301h0"></path><rect x="60" y="290" width="28.5" height="22" rx="10" ry="10"></rect><text x="74.25" y="305">9</text></g><path d="M88.5 301a10 10 0 0 0 10 -10v-250a10 10 0 0 1 10 -10"></path></g><path d="M 108.5 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">decimal_digit</span>
+  = <span class="ebnf-terminal">"0"</span> | <span class="ebnf-terminal">"1"</span> | <span class="ebnf-terminal">"2"</span> | <span class="ebnf-terminal">"3"</span> | <span class="ebnf-terminal">"4"</span> | <span class="ebnf-terminal">"5"</span> | <span class="ebnf-terminal">"6"</span>
+  | <span class="ebnf-terminal">"7"</span> | <span class="ebnf-terminal">"8"</span> | <span class="ebnf-terminal">"9"</span>
+  <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>decimal_digit</strong>:<p>
+<ul>
+<li><a href="#decimal_digits">decimal_digits</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="binary_digit">binary_digit</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="148.5" style="max-height: 92px;" viewBox="0 0 148.5 92"><g transform="translate(.5 .5)"><g><path d="M20 21v20m10 -20v20m-10 -10h20"></path></g><g><path d="M40 31h0"></path><path d="M108.5 31h0"></path><path d="M40 31h20"></path><g class="terminal"><path d="M60 31h0"></path><path d="M88.5 31h0"></path><rect x="60" y="20" width="28.5" height="22" rx="10" ry="10"></rect><text x="74.25" y="35">0</text></g><path d="M88.5 31h20"></path><path d="M40 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 61h0"></path><path d="M88.5 61h0"></path><rect x="60" y="50" width="28.5" height="22" rx="10" ry="10"></rect><text x="74.25" y="65">1</text></g><path d="M88.5 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><path d="M 108.5 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">binary_digit</span> = <span class="ebnf-terminal">"0"</span> | <span class="ebnf-terminal">"1"</span> <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>binary_digit</strong>:<p>
+<ul>
+<li><a href="#binary_digits">binary_digits</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="octal_digit">octal_digit</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="148.5" style="max-height: 272px;" viewBox="0 0 148.5 272"><g transform="translate(.5 .5)"><g><path d="M20 21v20m10 -20v20m-10 -10h20"></path></g><g><path d="M40 31h0"></path><path d="M108.5 31h0"></path><path d="M40 31h20"></path><g class="terminal"><path d="M60 31h0"></path><path d="M88.5 31h0"></path><rect x="60" y="20" width="28.5" height="22" rx="10" ry="10"></rect><text x="74.25" y="35">0</text></g><path d="M88.5 31h20"></path><path d="M40 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 61h0"></path><path d="M88.5 61h0"></path><rect x="60" y="50" width="28.5" height="22" rx="10" ry="10"></rect><text x="74.25" y="65">1</text></g><path d="M88.5 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v40a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 91h0"></path><path d="M88.5 91h0"></path><rect x="60" y="80" width="28.5" height="22" rx="10" ry="10"></rect><text x="74.25" y="95">2</text></g><path d="M88.5 91a10 10 0 0 0 10 -10v-40a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v70a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 121h0"></path><path d="M88.5 121h0"></path><rect x="60" y="110" width="28.5" height="22" rx="10" ry="10"></rect><text x="74.25" y="125">3</text></g><path d="M88.5 121a10 10 0 0 0 10 -10v-70a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v100a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 151h0"></path><path d="M88.5 151h0"></path><rect x="60" y="140" width="28.5" height="22" rx="10" ry="10"></rect><text x="74.25" y="155">4</text></g><path d="M88.5 151a10 10 0 0 0 10 -10v-100a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v130a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 181h0"></path><path d="M88.5 181h0"></path><rect x="60" y="170" width="28.5" height="22" rx="10" ry="10"></rect><text x="74.25" y="185">5</text></g><path d="M88.5 181a10 10 0 0 0 10 -10v-130a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v160a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 211h0"></path><path d="M88.5 211h0"></path><rect x="60" y="200" width="28.5" height="22" rx="10" ry="10"></rect><text x="74.25" y="215">6</text></g><path d="M88.5 211a10 10 0 0 0 10 -10v-160a10 10 0 0 1 10 -10"></path><path d="M40 31a10 10 0 0 1 10 10v190a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M60 241h0"></path><path d="M88.5 241h0"></path><rect x="60" y="230" width="28.5" height="22" rx="10" ry="10"></rect><text x="74.25" y="245">7</text></g><path d="M88.5 241a10 10 0 0 0 10 -10v-190a10 10 0 0 1 10 -10"></path></g><path d="M 108.5 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">octal_digit</span>
+  = <span class="ebnf-terminal">"0"</span> | <span class="ebnf-terminal">"1"</span> | <span class="ebnf-terminal">"2"</span> | <span class="ebnf-terminal">"3"</span> | <span class="ebnf-terminal">"4"</span> | <span class="ebnf-terminal">"5"</span> | <span class="ebnf-terminal">"6"</span>
+  | <span class="ebnf-terminal">"7"</span>
+  <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>octal_digit</strong>:<p>
+<ul>
+<li><a href="#octal_digits">octal_digits</a></li><li><a href="#octal_byte_value">octal_byte_value</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="hex_digit">hex_digit</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="345.5" style="max-height: 349px;" viewBox="0 0 345.5 349"><g transform="translate(.5 .5)"><g><path d="M20 30v20m10 -20v20m-10 -10h20"></path></g><g><path d="M40 40h0"></path><path d="M305.5 40h0"></path><path d="M40 40a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10h147"></path><path d="M138.5 329h147a10 10 0 0 0 10 -10v-269a10 10 0 0 1 10 -10"></path><path d="M40 40h10"></path><g><path d="M50 40h0"></path><path d="M118.5 40h0"></path><path d="M50 40h20"></path><g class="terminal"><path d="M70 40h0"></path><path d="M98.5 40h0"></path><rect x="70" y="29" width="28.5" height="22" rx="10" ry="10"></rect><text x="84.25" y="44">0</text></g><path d="M98.5 40h20"></path><path d="M50 40a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M70 70h0"></path><path d="M98.5 70h0"></path><rect x="70" y="59" width="28.5" height="22" rx="10" ry="10"></rect><text x="84.25" y="74">1</text></g><path d="M98.5 70a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path><path d="M50 40a10 10 0 0 1 10 10v40a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M70 100h0"></path><path d="M98.5 100h0"></path><rect x="70" y="89" width="28.5" height="22" rx="10" ry="10"></rect><text x="84.25" y="104">2</text></g><path d="M98.5 100a10 10 0 0 0 10 -10v-40a10 10 0 0 1 10 -10"></path><path d="M50 40a10 10 0 0 1 10 10v70a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M70 130h0"></path><path d="M98.5 130h0"></path><rect x="70" y="119" width="28.5" height="22" rx="10" ry="10"></rect><text x="84.25" y="134">3</text></g><path d="M98.5 130a10 10 0 0 0 10 -10v-70a10 10 0 0 1 10 -10"></path><path d="M50 40a10 10 0 0 1 10 10v100a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M70 160h0"></path><path d="M98.5 160h0"></path><rect x="70" y="149" width="28.5" height="22" rx="10" ry="10"></rect><text x="84.25" y="164">4</text></g><path d="M98.5 160a10 10 0 0 0 10 -10v-100a10 10 0 0 1 10 -10"></path><path d="M50 40a10 10 0 0 1 10 10v130a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M70 190h0"></path><path d="M98.5 190h0"></path><rect x="70" y="179" width="28.5" height="22" rx="10" ry="10"></rect><text x="84.25" y="194">5</text></g><path d="M98.5 190a10 10 0 0 0 10 -10v-130a10 10 0 0 1 10 -10"></path><path d="M50 40a10 10 0 0 1 10 10v160a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M70 220h0"></path><path d="M98.5 220h0"></path><rect x="70" y="209" width="28.5" height="22" rx="10" ry="10"></rect><text x="84.25" y="224">6</text></g><path d="M98.5 220a10 10 0 0 0 10 -10v-160a10 10 0 0 1 10 -10"></path><path d="M50 40a10 10 0 0 1 10 10v190a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M70 250h0"></path><path d="M98.5 250h0"></path><rect x="70" y="239" width="28.5" height="22" rx="10" ry="10"></rect><text x="84.25" y="254">7</text></g><path d="M98.5 250a10 10 0 0 0 10 -10v-190a10 10 0 0 1 10 -10"></path><path d="M50 40a10 10 0 0 1 10 10v220a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M70 280h0"></path><path d="M98.5 280h0"></path><rect x="70" y="269" width="28.5" height="22" rx="10" ry="10"></rect><text x="84.25" y="284">8</text></g><path d="M98.5 280a10 10 0 0 0 10 -10v-220a10 10 0 0 1 10 -10"></path><path d="M50 40a10 10 0 0 1 10 10v250a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M70 310h0"></path><path d="M98.5 310h0"></path><rect x="70" y="299" width="28.5" height="22" rx="10" ry="10"></rect><text x="84.25" y="314">9</text></g><path d="M98.5 310a10 10 0 0 0 10 -10v-250a10 10 0 0 1 10 -10"></path></g><path d="M118.5 40a10 10 0 0 1 10 10v269a10 10 0 0 0 10 10"></path><path d="M118.5 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g><path d="M138.5 40h0"></path><path d="M207 40h0"></path><path d="M138.5 40h20"></path><g class="terminal"><path d="M158.5 40h0"></path><path d="M187 40h0"></path><rect x="158.5" y="29" width="28.5" height="22" rx="10" ry="10"></rect><text x="172.75" y="44">A</text></g><path d="M187 40h20"></path><path d="M138.5 40a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M158.5 70h0"></path><path d="M187 70h0"></path><rect x="158.5" y="59" width="28.5" height="22" rx="10" ry="10"></rect><text x="172.75" y="74">B</text></g><path d="M187 70a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path><path d="M138.5 40a10 10 0 0 1 10 10v40a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M158.5 100h0"></path><path d="M187 100h0"></path><rect x="158.5" y="89" width="28.5" height="22" rx="10" ry="10"></rect><text x="172.75" y="104">C</text></g><path d="M187 100a10 10 0 0 0 10 -10v-40a10 10 0 0 1 10 -10"></path><path d="M138.5 40a10 10 0 0 1 10 10v70a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M158.5 130h0"></path><path d="M187 130h0"></path><rect x="158.5" y="119" width="28.5" height="22" rx="10" ry="10"></rect><text x="172.75" y="134">D</text></g><path d="M187 130a10 10 0 0 0 10 -10v-70a10 10 0 0 1 10 -10"></path><path d="M138.5 40a10 10 0 0 1 10 10v100a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M158.5 160h0"></path><path d="M187 160h0"></path><rect x="158.5" y="149" width="28.5" height="22" rx="10" ry="10"></rect><text x="172.75" y="164">E</text></g><path d="M187 160a10 10 0 0 0 10 -10v-100a10 10 0 0 1 10 -10"></path><path d="M138.5 40a10 10 0 0 1 10 10v130a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M158.5 190h0"></path><path d="M187 190h0"></path><rect x="158.5" y="179" width="28.5" height="22" rx="10" ry="10"></rect><text x="172.75" y="194">F</text></g><path d="M187 190a10 10 0 0 0 10 -10v-130a10 10 0 0 1 10 -10"></path><path d="M138.5 40a10 10 0 0 1 10 10v160a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M158.5 220h0"></path><path d="M187 220h0"></path><rect x="158.5" y="209" width="28.5" height="22" rx="10" ry="10"></rect><text x="172.75" y="224">a</text></g><path d="M187 220a10 10 0 0 0 10 -10v-160a10 10 0 0 1 10 -10"></path><path d="M138.5 40a10 10 0 0 1 10 10v190a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M158.5 250h0"></path><path d="M187 250h0"></path><rect x="158.5" y="239" width="28.5" height="22" rx="10" ry="10"></rect><text x="172.75" y="254">b</text></g><path d="M187 250a10 10 0 0 0 10 -10v-190a10 10 0 0 1 10 -10"></path><path d="M138.5 40a10 10 0 0 1 10 10v220a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M158.5 280h0"></path><path d="M187 280h0"></path><rect x="158.5" y="269" width="28.5" height="22" rx="10" ry="10"></rect><text x="172.75" y="284">c</text></g><path d="M187 280a10 10 0 0 0 10 -10v-220a10 10 0 0 1 10 -10"></path><path d="M138.5 40a10 10 0 0 1 10 10v250a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M158.5 310h0"></path><path d="M187 310h0"></path><rect x="158.5" y="299" width="28.5" height="22" rx="10" ry="10"></rect><text x="172.75" y="314">d</text></g><path d="M187 310a10 10 0 0 0 10 -10v-250a10 10 0 0 1 10 -10"></path></g><path d="M207 40a10 10 0 0 1 10 10v269a10 10 0 0 0 10 10"></path><path d="M207 20a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g><path d="M227 40h0"></path><path d="M295.5 40h0"></path><path d="M227 40h20"></path><g class="terminal"><path d="M247 40h0"></path><path d="M275.5 40h0"></path><rect x="247" y="29" width="28.5" height="22" rx="10" ry="10"></rect><text x="261.25" y="44">e</text></g><path d="M275.5 40h20"></path><path d="M227 40a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M247 70h0"></path><path d="M275.5 70h0"></path><rect x="247" y="59" width="28.5" height="22" rx="10" ry="10"></rect><text x="261.25" y="74">f</text></g><path d="M275.5 70a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><path d="M295.5 40h10"></path></g><path d="M 305.5 40 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">hex_digit</span>
+  = <span class="ebnf-terminal">"0"</span> | <span class="ebnf-terminal">"1"</span> | <span class="ebnf-terminal">"2"</span> | <span class="ebnf-terminal">"3"</span> | <span class="ebnf-terminal">"4"</span> | <span class="ebnf-terminal">"5"</span> | <span class="ebnf-terminal">"6"</span>
+  | <span class="ebnf-terminal">"7"</span> | <span class="ebnf-terminal">"8"</span> | <span class="ebnf-terminal">"9"</span> | <span class="ebnf-terminal">"A"</span> | <span class="ebnf-terminal">"B"</span> | <span class="ebnf-terminal">"C"</span> | <span class="ebnf-terminal">"D"</span>
+  | <span class="ebnf-terminal">"E"</span> | <span class="ebnf-terminal">"F"</span> | <span class="ebnf-terminal">"a"</span> | <span class="ebnf-terminal">"b"</span> | <span class="ebnf-terminal">"c"</span> | <span class="ebnf-terminal">"d"</span> | <span class="ebnf-terminal">"e"</span>
+  | <span class="ebnf-terminal">"f"</span>
+  <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>hex_digit</strong>:<p>
+<ul>
+<li><a href="#hex_digits">hex_digits</a></li><li><a href="#hex_byte_value">hex_byte_value</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="identifier">identifier</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="560.5" style="max-height: 290px;" viewBox="0 0 560.5 290"><g transform="translate(.5 .5)"><g><path d="M20 81v20m0 -10h20"></path></g><path d="M40 91h10"></path><g><path d="M50 91h0"></path><path d="M50 91h10"></path><g><path d="M60 91h52.75"></path><path d="M447.75 91h52.75"></path><g><path d="M112.75 91h0"></path><path d="M447.75 91h0"></path><rect x="112.75" y="42" width="335" height="106" rx="10" ry="10" class="group-box"></rect><g><path d="M112.75 91h0"></path><path d="M447.75 91h0"></path><path d="M112.75 91h20"></path><g><path d="M132.75 91h0"></path><path d="M427.75 91h0"></path><rect x="132.75" y="72" width="295" height="38" rx="10" ry="10" class="group-box"></rect><g class="special-sequence"><path d="M132.75 91h10"></path><path d="M417.75 91h10"></path><rect x="142.75" y="80" width="275" height="22"></rect><text x="280.25" y="95"> любой символ юникодной буквы </text></g><g><path d="M132.75 61h0"></path><path d="M240.75 61h0"></path><a xlink:href="#unicode_letter"><text x="186.75" y="66" class="comment">unicode&#95;letter</text></a></g></g><path d="M427.75 91h20"></path><path d="M112.75 91a10 10 0 0 1 10 10v18a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M132.75 129h133.25"></path><path d="M294.5 129h133.25"></path><rect x="266" y="118" width="28.5" height="22" rx="10" ry="10"></rect><text x="280.25" y="133">&#95;</text></g><path d="M427.75 129a10 10 0 0 0 10 -10v-18a10 10 0 0 1 10 -10"></path></g><g><path d="M112.75 31h0"></path><path d="M164.75 31h0"></path><a xlink:href="#letter"><text x="138.75" y="36" class="comment">letter</text></a></g></g></g><path d="M500.5 91a10 10 0 0 1 10 10v45a10 10 0 0 1 -10 10h-440.5a10 10 0 0 0 -10 10v7a10 10 0 0 0 10 10"></path><g><path d="M60 183h10"></path><path d="M490.5 183h10"></path><g><path d="M70 183h0"></path><path d="M490.5 183h0"></path><path d="M70 183a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M90 163h380.5"></path></g><path d="M470.5 163a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M70 183h20"></path><g><path d="M90 183h0"></path><path d="M470.5 183h0"></path><path d="M90 183h10"></path><g><path d="M100 183h0"></path><path d="M460.5 183h0"></path><path d="M100 183h20"></path><g class="non-terminal"><path d="M120 183h124.75"></path><path d="M315.75 183h124.75"></path><rect x="244.75" y="172" width="71" height="22"></rect><a xlink:href="#letter"><text x="280.25" y="187">letter</text></a></g><path d="M440.5 183h20"></path><path d="M100 183a10 10 0 0 1 10 10v40a10 10 0 0 0 10 10"></path><g><path d="M120 243h0"></path><path d="M440.5 243h0"></path><rect x="120" y="224" width="320.5" height="38" rx="10" ry="10" class="group-box"></rect><g class="special-sequence"><path d="M120 243h10"></path><path d="M430.5 243h10"></path><rect x="130" y="232" width="300.5" height="22"></rect><text x="280.25" y="247"> любой юникодный цифровой символ </text></g><g><path d="M120 213h0"></path><path d="M221 213h0"></path><a xlink:href="#unicode_digit"><text x="170.5" y="218" class="comment">unicode&#95;digit</text></a></g></g><path d="M440.5 243a10 10 0 0 0 10 -10v-40a10 10 0 0 1 10 -10"></path></g><path d="M460.5 183h10"></path><path d="M100 183a10 10 0 0 0 -10 10v67a10 10 0 0 0 10 10"></path><g><path d="M100 270h360.5"></path></g><path d="M460.5 270a10 10 0 0 0 10 -10v-67a10 10 0 0 0 -10 -10"></path></g><path d="M470.5 183h20"></path></g></g><path d="M500.5 183h10"></path><path d="M510.5 183h0"></path></g><path d="M510.5 183h10"></path><path d="M 520.5 183 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">identifier</span> = <a class="ebnf-non-terminal" href="#letter">letter</a> , { <a class="ebnf-non-terminal" href="#letter">letter</a> | <a class="ebnf-non-terminal" href="#unicode_digit">unicode_digit</a> } <span class="ebnf-end">;</span></code>
+  <p><strong>identifier</strong> is referencing:<p>
+<ul>
+<li><a href="#letter">letter</a></li><li><a href="#unicode_digit">unicode_digit</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="int_lit">int_lit</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="517.5" style="max-height: 844px;" viewBox="0 0 517.5 844"><g transform="translate(.5 .5)"><g><path d="M20 51v20m0 -10h20"></path></g><g><path d="M40 61h0"></path><path d="M477.5 61h0"></path><path d="M40 61h20"></path><g><path d="M60 61h0"></path><path d="M457.5 61h0"></path><rect x="60" y="42" width="397.5" height="346" rx="10" ry="10" class="group-box"></rect><g><path d="M60 61h0"></path><path d="M457.5 61h0"></path><path d="M60 61h20"></path><g class="terminal"><path d="M80 61h164.5"></path><path d="M273 61h164.5"></path><rect x="244.5" y="50" width="28.5" height="22" rx="10" ry="10"></rect><text x="258.75" y="65">0</text></g><path d="M437.5 61h20"></path><path d="M60 61a10 10 0 0 1 10 10v48a10 10 0 0 0 10 10"></path><g><path d="M80 129h0"></path><path d="M437.5 129h0"></path><g><path d="M80 129h0"></path><path d="M148.5 129h0"></path><path d="M80 129h20"></path><g class="terminal"><path d="M100 129h0"></path><path d="M128.5 129h0"></path><rect x="100" y="118" width="28.5" height="22" rx="10" ry="10"></rect><text x="114.25" y="133">1</text></g><path d="M128.5 129h20"></path><path d="M80 129a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M100 159h0"></path><path d="M128.5 159h0"></path><rect x="100" y="148" width="28.5" height="22" rx="10" ry="10"></rect><text x="114.25" y="163">2</text></g><path d="M128.5 159a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path><path d="M80 129a10 10 0 0 1 10 10v40a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M100 189h0"></path><path d="M128.5 189h0"></path><rect x="100" y="178" width="28.5" height="22" rx="10" ry="10"></rect><text x="114.25" y="193">3</text></g><path d="M128.5 189a10 10 0 0 0 10 -10v-40a10 10 0 0 1 10 -10"></path><path d="M80 129a10 10 0 0 1 10 10v70a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M100 219h0"></path><path d="M128.5 219h0"></path><rect x="100" y="208" width="28.5" height="22" rx="10" ry="10"></rect><text x="114.25" y="223">4</text></g><path d="M128.5 219a10 10 0 0 0 10 -10v-70a10 10 0 0 1 10 -10"></path><path d="M80 129a10 10 0 0 1 10 10v100a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M100 249h0"></path><path d="M128.5 249h0"></path><rect x="100" y="238" width="28.5" height="22" rx="10" ry="10"></rect><text x="114.25" y="253">5</text></g><path d="M128.5 249a10 10 0 0 0 10 -10v-100a10 10 0 0 1 10 -10"></path><path d="M80 129a10 10 0 0 1 10 10v130a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M100 279h0"></path><path d="M128.5 279h0"></path><rect x="100" y="268" width="28.5" height="22" rx="10" ry="10"></rect><text x="114.25" y="283">6</text></g><path d="M128.5 279a10 10 0 0 0 10 -10v-130a10 10 0 0 1 10 -10"></path><path d="M80 129a10 10 0 0 1 10 10v160a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M100 309h0"></path><path d="M128.5 309h0"></path><rect x="100" y="298" width="28.5" height="22" rx="10" ry="10"></rect><text x="114.25" y="313">7</text></g><path d="M128.5 309a10 10 0 0 0 10 -10v-160a10 10 0 0 1 10 -10"></path><path d="M80 129a10 10 0 0 1 10 10v190a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M100 339h0"></path><path d="M128.5 339h0"></path><rect x="100" y="328" width="28.5" height="22" rx="10" ry="10"></rect><text x="114.25" y="343">8</text></g><path d="M128.5 339a10 10 0 0 0 10 -10v-190a10 10 0 0 1 10 -10"></path><path d="M80 129a10 10 0 0 1 10 10v220a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M100 369h0"></path><path d="M128.5 369h0"></path><rect x="100" y="358" width="28.5" height="22" rx="10" ry="10"></rect><text x="114.25" y="373">9</text></g><path d="M128.5 369a10 10 0 0 0 10 -10v-220a10 10 0 0 1 10 -10"></path></g><g><path d="M148.5 129h0"></path><path d="M437.5 129h0"></path><path d="M148.5 129a10 10 0 0 0 10 -10v-29a10 10 0 0 1 10 -10"></path><g><path d="M168.5 80h249"></path></g><path d="M417.5 80a10 10 0 0 1 10 10v29a10 10 0 0 0 10 10"></path><path d="M148.5 129h20"></path><g><path d="M168.5 129h0"></path><path d="M417.5 129h0"></path><g><path d="M168.5 129h0"></path><path d="M237 129h0"></path><path d="M168.5 129a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M188.5 109h28.5"></path></g><path d="M217 109a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M168.5 129h20"></path><g class="terminal"><path d="M188.5 129h0"></path><path d="M217 129h0"></path><rect x="188.5" y="118" width="28.5" height="22" rx="10" ry="10"></rect><text x="202.75" y="133">&#95;</text></g><path d="M217 129h20"></path></g><path d="M237 129h10"></path><g><path d="M247 129h0"></path><path d="M417.5 129h0"></path><rect x="247" y="110" width="170.5" height="76" rx="10" ry="10" class="group-box"></rect><g><path d="M247 129h10"></path><path d="M407.5 129h10"></path><path d="M257 129h10"></path><g class="non-terminal"><path d="M267 129h0"></path><path d="M397.5 129h0"></path><rect x="267" y="118" width="130.5" height="22"></rect><a xlink:href="#decimal_digit"><text x="332.25" y="133">decimal&#95;digit</text></a></g><path d="M397.5 129h10"></path><path d="M267 129a10 10 0 0 0 -10 10v18a10 10 0 0 0 10 10"></path><g><path d="M267 167h31"></path><path d="M366.5 167h31"></path><path d="M298 167a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M318 147h28.5"></path></g><path d="M346.5 147a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M298 167h20"></path><g class="terminal"><path d="M318 167h0"></path><path d="M346.5 167h0"></path><rect x="318" y="156" width="28.5" height="22" rx="10" ry="10"></rect><text x="332.25" y="171">&#95;</text></g><path d="M346.5 167h20"></path></g><path d="M397.5 167a10 10 0 0 0 10 -10v-18a10 10 0 0 0 -10 -10"></path></g><g><path d="M247 99h0"></path><path d="M355 99h0"></path><a xlink:href="#decimal_digits"><text x="301" y="104" class="comment">decimal&#95;digits</text></a></g></g></g><path d="M417.5 129h20"></path></g></g><path d="M437.5 129a10 10 0 0 0 10 -10v-48a10 10 0 0 1 10 -10"></path></g><g><path d="M60 31h0"></path><path d="M147 31h0"></path><a xlink:href="#decimal_lit"><text x="103.5" y="36" class="comment">decimal&#95;lit</text></a></g></g><path d="M457.5 61h20"></path><path d="M40 61a10 10 0 0 1 10 10v386a10 10 0 0 0 10 10"></path><g><path d="M60 467h15"></path><path d="M442.5 467h15"></path><rect x="75" y="418" width="367.5" height="114" rx="10" ry="10" class="group-box"></rect><g><path d="M75 467h10"></path><path d="M432.5 467h10"></path><g class="terminal"><path d="M85 467h0"></path><path d="M113.5 467h0"></path><rect x="85" y="456" width="28.5" height="22" rx="10" ry="10"></rect><text x="99.25" y="471">0</text></g><path d="M113.5 467h10"></path><g><path d="M123.5 467h0"></path><path d="M192 467h0"></path><path d="M123.5 467h20"></path><g class="terminal"><path d="M143.5 467h0"></path><path d="M172 467h0"></path><rect x="143.5" y="456" width="28.5" height="22" rx="10" ry="10"></rect><text x="157.75" y="471">b</text></g><path d="M172 467h20"></path><path d="M123.5 467a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M143.5 497h0"></path><path d="M172 497h0"></path><rect x="143.5" y="486" width="28.5" height="22" rx="10" ry="10"></rect><text x="157.75" y="501">B</text></g><path d="M172 497a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><g><path d="M192 467h0"></path><path d="M260.5 467h0"></path><path d="M192 467a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M212 447h28.5"></path></g><path d="M240.5 447a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M192 467h20"></path><g class="terminal"><path d="M212 467h0"></path><path d="M240.5 467h0"></path><rect x="212" y="456" width="28.5" height="22" rx="10" ry="10"></rect><text x="226.25" y="471">&#95;</text></g><path d="M240.5 467h20"></path></g><path d="M260.5 467h10"></path><g><path d="M270.5 467h0"></path><path d="M432.5 467h0"></path><rect x="270.5" y="448" width="162" height="76" rx="10" ry="10" class="group-box"></rect><g><path d="M270.5 467h10"></path><path d="M422.5 467h10"></path><path d="M280.5 467h10"></path><g class="non-terminal"><path d="M290.5 467h0"></path><path d="M412.5 467h0"></path><rect x="290.5" y="456" width="122" height="22"></rect><a xlink:href="#binary_digit"><text x="351.5" y="471">binary&#95;digit</text></a></g><path d="M412.5 467h10"></path><path d="M290.5 467a10 10 0 0 0 -10 10v18a10 10 0 0 0 10 10"></path><g><path d="M290.5 505h26.75"></path><path d="M385.75 505h26.75"></path><path d="M317.25 505a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M337.25 485h28.5"></path></g><path d="M365.75 485a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M317.25 505h20"></path><g class="terminal"><path d="M337.25 505h0"></path><path d="M365.75 505h0"></path><rect x="337.25" y="494" width="28.5" height="22" rx="10" ry="10"></rect><text x="351.5" y="509">&#95;</text></g><path d="M365.75 505h20"></path></g><path d="M412.5 505a10 10 0 0 0 10 -10v-18a10 10 0 0 0 -10 -10"></path></g><g><path d="M270.5 437h0"></path><path d="M371.5 437h0"></path><a xlink:href="#binary_digits"><text x="321" y="442" class="comment">binary&#95;digits</text></a></g></g></g><g><path d="M75 407h0"></path><path d="M155 407h0"></path><a xlink:href="#binary_lit"><text x="115" y="412" class="comment">binary&#95;lit</text></a></g></g><path d="M457.5 467a10 10 0 0 0 10 -10v-386a10 10 0 0 1 10 -10"></path><path d="M40 61a10 10 0 0 1 10 10v530a10 10 0 0 0 10 10"></path><g><path d="M60 611h19.25"></path><path d="M438.25 611h19.25"></path><rect x="79.25" y="562" width="359" height="118" rx="10" ry="10" class="group-box"></rect><g><path d="M79.25 611h10"></path><path d="M428.25 611h10"></path><g class="terminal"><path d="M89.25 611h0"></path><path d="M117.75 611h0"></path><rect x="89.25" y="600" width="28.5" height="22" rx="10" ry="10"></rect><text x="103.5" y="615">0</text></g><path d="M117.75 611h10"></path><g><path d="M127.75 611h0"></path><path d="M196.25 611h0"></path><path d="M127.75 611h20"></path><g><path d="M147.75 611h28.5"></path></g><path d="M176.25 611h20"></path><path d="M127.75 611a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M147.75 631h0"></path><path d="M176.25 631h0"></path><rect x="147.75" y="620" width="28.5" height="22" rx="10" ry="10"></rect><text x="162" y="635">o</text></g><path d="M176.25 631a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M127.75 611a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M147.75 661h0"></path><path d="M176.25 661h0"></path><rect x="147.75" y="650" width="28.5" height="22" rx="10" ry="10"></rect><text x="162" y="665">O</text></g><path d="M176.25 661a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path></g><g><path d="M196.25 611h0"></path><path d="M264.75 611h0"></path><path d="M196.25 611a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M216.25 591h28.5"></path></g><path d="M244.75 591a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M196.25 611h20"></path><g class="terminal"><path d="M216.25 611h0"></path><path d="M244.75 611h0"></path><rect x="216.25" y="600" width="28.5" height="22" rx="10" ry="10"></rect><text x="230.5" y="615">&#95;</text></g><path d="M244.75 611h20"></path></g><path d="M264.75 611h10"></path><g><path d="M274.75 611h0"></path><path d="M428.25 611h0"></path><rect x="274.75" y="592" width="153.5" height="76" rx="10" ry="10" class="group-box"></rect><g><path d="M274.75 611h10"></path><path d="M418.25 611h10"></path><path d="M284.75 611h10"></path><g class="non-terminal"><path d="M294.75 611h0"></path><path d="M408.25 611h0"></path><rect x="294.75" y="600" width="113.5" height="22"></rect><a xlink:href="#octal_digit"><text x="351.5" y="615">octal&#95;digit</text></a></g><path d="M408.25 611h10"></path><path d="M294.75 611a10 10 0 0 0 -10 10v18a10 10 0 0 0 10 10"></path><g><path d="M294.75 649h22.5"></path><path d="M385.75 649h22.5"></path><path d="M317.25 649a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M337.25 629h28.5"></path></g><path d="M365.75 629a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M317.25 649h20"></path><g class="terminal"><path d="M337.25 649h0"></path><path d="M365.75 649h0"></path><rect x="337.25" y="638" width="28.5" height="22" rx="10" ry="10"></rect><text x="351.5" y="653">&#95;</text></g><path d="M365.75 649h20"></path></g><path d="M408.25 649a10 10 0 0 0 10 -10v-18a10 10 0 0 0 -10 -10"></path></g><g><path d="M274.75 581h0"></path><path d="M368.75 581h0"></path><a xlink:href="#octal_digits"><text x="321.75" y="586" class="comment">octal&#95;digits</text></a></g></g></g><g><path d="M79.25 551h0"></path><path d="M152.25 551h0"></path><a xlink:href="#octal_lit"><text x="115.75" y="556" class="comment">octal&#95;lit</text></a></g></g><path d="M457.5 611a10 10 0 0 0 10 -10v-530a10 10 0 0 1 10 -10"></path><path d="M40 61a10 10 0 0 1 10 10v678a10 10 0 0 0 10 10"></path><g><path d="M60 759h27.75"></path><path d="M429.75 759h27.75"></path><rect x="87.75" y="710" width="342" height="114" rx="10" ry="10" class="group-box"></rect><g><path d="M87.75 759h10"></path><path d="M419.75 759h10"></path><g class="terminal"><path d="M97.75 759h0"></path><path d="M126.25 759h0"></path><rect x="97.75" y="748" width="28.5" height="22" rx="10" ry="10"></rect><text x="112" y="763">0</text></g><path d="M126.25 759h10"></path><g><path d="M136.25 759h0"></path><path d="M204.75 759h0"></path><path d="M136.25 759h20"></path><g class="terminal"><path d="M156.25 759h0"></path><path d="M184.75 759h0"></path><rect x="156.25" y="748" width="28.5" height="22" rx="10" ry="10"></rect><text x="170.5" y="763">x</text></g><path d="M184.75 759h20"></path><path d="M136.25 759a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M156.25 789h0"></path><path d="M184.75 789h0"></path><rect x="156.25" y="778" width="28.5" height="22" rx="10" ry="10"></rect><text x="170.5" y="793">X</text></g><path d="M184.75 789a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><g><path d="M204.75 759h0"></path><path d="M273.25 759h0"></path><path d="M204.75 759a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M224.75 739h28.5"></path></g><path d="M253.25 739a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M204.75 759h20"></path><g class="terminal"><path d="M224.75 759h0"></path><path d="M253.25 759h0"></path><rect x="224.75" y="748" width="28.5" height="22" rx="10" ry="10"></rect><text x="239" y="763">&#95;</text></g><path d="M253.25 759h20"></path></g><path d="M273.25 759h10"></path><g><path d="M283.25 759h0"></path><path d="M419.75 759h0"></path><rect x="283.25" y="740" width="136.5" height="76" rx="10" ry="10" class="group-box"></rect><g><path d="M283.25 759h10"></path><path d="M409.75 759h10"></path><path d="M293.25 759h10"></path><g class="non-terminal"><path d="M303.25 759h0"></path><path d="M399.75 759h0"></path><rect x="303.25" y="748" width="96.5" height="22"></rect><a xlink:href="#hex_digit"><text x="351.5" y="763">hex&#95;digit</text></a></g><path d="M399.75 759h10"></path><path d="M303.25 759a10 10 0 0 0 -10 10v18a10 10 0 0 0 10 10"></path><g><path d="M303.25 797h14"></path><path d="M385.75 797h14"></path><path d="M317.25 797a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M337.25 777h28.5"></path></g><path d="M365.75 777a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M317.25 797h20"></path><g class="terminal"><path d="M337.25 797h0"></path><path d="M365.75 797h0"></path><rect x="337.25" y="786" width="28.5" height="22" rx="10" ry="10"></rect><text x="351.5" y="801">&#95;</text></g><path d="M365.75 797h20"></path></g><path d="M399.75 797a10 10 0 0 0 10 -10v-18a10 10 0 0 0 -10 -10"></path></g><g><path d="M283.25 729h0"></path><path d="M363.25 729h0"></path><a xlink:href="#hex_digits"><text x="323.25" y="734" class="comment">hex&#95;digits</text></a></g></g></g><g><path d="M87.75 699h0"></path><path d="M146.75 699h0"></path><a xlink:href="#hex_lit"><text x="117.25" y="704" class="comment">hex&#95;lit</text></a></g></g><path d="M457.5 759a10 10 0 0 0 10 -10v-678a10 10 0 0 1 10 -10"></path></g><path d="M 477.5 61 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">int_lit</span>
+  = <a class="ebnf-non-terminal" href="#decimal_lit">decimal_lit</a>
+  | <a class="ebnf-non-terminal" href="#binary_lit">binary_lit</a>
+  | <a class="ebnf-non-terminal" href="#octal_lit">octal_lit</a>
+  | <a class="ebnf-non-terminal" href="#hex_lit">hex_lit</a>
+  <span class="ebnf-end">;</span></code>
+  <p><strong>int_lit</strong> is referencing:<p>
+<ul>
+<li><a href="#decimal_lit">decimal_lit</a></li><li><a href="#binary_lit">binary_lit</a></li><li><a href="#octal_lit">octal_lit</a></li><li><a href="#hex_lit">hex_lit</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="decimal_lit">decimal_lit</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="446" style="max-height: 348px;" viewBox="0 0 446 348"><g transform="translate(.5 .5)"><g><path d="M20 21v20m0 -10h20"></path></g><g><path d="M40 31h0"></path><path d="M406 31h0"></path><path d="M40 31h20"></path><g class="terminal"><path d="M60 31h148.75"></path><path d="M237.25 31h148.75"></path><rect x="208.75" y="20" width="28.5" height="22" rx="10" ry="10"></rect><text x="223" y="35">0</text></g><path d="M386 31h20"></path><path d="M40 31a10 10 0 0 1 10 10v26a10 10 0 0 0 10 10"></path><g><path d="M60 77h0"></path><path d="M386 77h0"></path><g><path d="M60 77h0"></path><path d="M128.5 77h0"></path><path d="M60 77h20"></path><g class="terminal"><path d="M80 77h0"></path><path d="M108.5 77h0"></path><rect x="80" y="66" width="28.5" height="22" rx="10" ry="10"></rect><text x="94.25" y="81">1</text></g><path d="M108.5 77h20"></path><path d="M60 77a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M80 107h0"></path><path d="M108.5 107h0"></path><rect x="80" y="96" width="28.5" height="22" rx="10" ry="10"></rect><text x="94.25" y="111">2</text></g><path d="M108.5 107a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path><path d="M60 77a10 10 0 0 1 10 10v40a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M80 137h0"></path><path d="M108.5 137h0"></path><rect x="80" y="126" width="28.5" height="22" rx="10" ry="10"></rect><text x="94.25" y="141">3</text></g><path d="M108.5 137a10 10 0 0 0 10 -10v-40a10 10 0 0 1 10 -10"></path><path d="M60 77a10 10 0 0 1 10 10v70a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M80 167h0"></path><path d="M108.5 167h0"></path><rect x="80" y="156" width="28.5" height="22" rx="10" ry="10"></rect><text x="94.25" y="171">4</text></g><path d="M108.5 167a10 10 0 0 0 10 -10v-70a10 10 0 0 1 10 -10"></path><path d="M60 77a10 10 0 0 1 10 10v100a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M80 197h0"></path><path d="M108.5 197h0"></path><rect x="80" y="186" width="28.5" height="22" rx="10" ry="10"></rect><text x="94.25" y="201">5</text></g><path d="M108.5 197a10 10 0 0 0 10 -10v-100a10 10 0 0 1 10 -10"></path><path d="M60 77a10 10 0 0 1 10 10v130a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M80 227h0"></path><path d="M108.5 227h0"></path><rect x="80" y="216" width="28.5" height="22" rx="10" ry="10"></rect><text x="94.25" y="231">6</text></g><path d="M108.5 227a10 10 0 0 0 10 -10v-130a10 10 0 0 1 10 -10"></path><path d="M60 77a10 10 0 0 1 10 10v160a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M80 257h0"></path><path d="M108.5 257h0"></path><rect x="80" y="246" width="28.5" height="22" rx="10" ry="10"></rect><text x="94.25" y="261">7</text></g><path d="M108.5 257a10 10 0 0 0 10 -10v-160a10 10 0 0 1 10 -10"></path><path d="M60 77a10 10 0 0 1 10 10v190a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M80 287h0"></path><path d="M108.5 287h0"></path><rect x="80" y="276" width="28.5" height="22" rx="10" ry="10"></rect><text x="94.25" y="291">8</text></g><path d="M108.5 287a10 10 0 0 0 10 -10v-190a10 10 0 0 1 10 -10"></path><path d="M60 77a10 10 0 0 1 10 10v220a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M80 317h0"></path><path d="M108.5 317h0"></path><rect x="80" y="306" width="28.5" height="22" rx="10" ry="10"></rect><text x="94.25" y="321">9</text></g><path d="M108.5 317a10 10 0 0 0 10 -10v-220a10 10 0 0 1 10 -10"></path></g><g><path d="M128.5 77h0"></path><path d="M386 77h0"></path><path d="M128.5 77a10 10 0 0 0 10 -10v-7a10 10 0 0 1 10 -10"></path><g><path d="M148.5 50h217.5"></path></g><path d="M366 50a10 10 0 0 1 10 10v7a10 10 0 0 0 10 10"></path><path d="M128.5 77h20"></path><g><path d="M148.5 77h0"></path><path d="M366 77h0"></path><g><path d="M148.5 77h0"></path><path d="M217 77h0"></path><path d="M148.5 77a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M168.5 57h28.5"></path></g><path d="M197 57a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M148.5 77h20"></path><g class="terminal"><path d="M168.5 77h0"></path><path d="M197 77h0"></path><rect x="168.5" y="66" width="28.5" height="22" rx="10" ry="10"></rect><text x="182.75" y="81">&#95;</text></g><path d="M197 77h20"></path></g><path d="M217 77h10"></path><g class="non-terminal"><path d="M227 77h0"></path><path d="M366 77h0"></path><rect x="227" y="66" width="139" height="22"></rect><a xlink:href="#decimal_digits"><text x="296.5" y="81">decimal&#95;digits</text></a></g></g><path d="M366 77h20"></path></g></g><path d="M386 77a10 10 0 0 0 10 -10v-26a10 10 0 0 1 10 -10"></path></g><path d="M 406 31 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">decimal_lit</span>
+  = <span class="ebnf-terminal">"0"</span>
+  |
+    ( <span class="ebnf-terminal">"1"</span> | <span class="ebnf-terminal">"2"</span> | <span class="ebnf-terminal">"3"</span> | <span class="ebnf-terminal">"4"</span> | <span class="ebnf-terminal">"5"</span> | <span class="ebnf-terminal">"6"</span> | <span class="ebnf-terminal">"7"</span>
+    | <span class="ebnf-terminal">"8"</span> | <span class="ebnf-terminal">"9"</span>
+    ) , [ [ <span class="ebnf-terminal">"_"</span> ] , <a class="ebnf-non-terminal" href="#decimal_digits">decimal_digits</a> ]
+  <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>decimal_lit</strong>:<p>
+<ul>
+<li><a href="#int_lit">int_lit</a></li>
+</ul>
+  <p><strong>decimal_lit</strong> is referencing:<p>
+<ul>
+<li><a href="#decimal_digits">decimal_digits</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="binary_lit">binary_lit</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="416" style="max-height: 100px;" viewBox="0 0 416 100"><g transform="translate(.5 .5)"><g><path d="M20 29v20m0 -10h20"></path></g><path d="M40 39h10"></path><g><path d="M50 39h0"></path><path d="M366 39h0"></path><g class="terminal"><path d="M50 39h0"></path><path d="M78.5 39h0"></path><rect x="50" y="28" width="28.5" height="22" rx="10" ry="10"></rect><text x="64.25" y="43">0</text></g><path d="M78.5 39h10"></path><g><path d="M88.5 39h0"></path><path d="M157 39h0"></path><path d="M88.5 39h20"></path><g class="terminal"><path d="M108.5 39h0"></path><path d="M137 39h0"></path><rect x="108.5" y="28" width="28.5" height="22" rx="10" ry="10"></rect><text x="122.75" y="43">b</text></g><path d="M137 39h20"></path><path d="M88.5 39a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M108.5 69h0"></path><path d="M137 69h0"></path><rect x="108.5" y="58" width="28.5" height="22" rx="10" ry="10"></rect><text x="122.75" y="73">B</text></g><path d="M137 69a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><g><path d="M157 39h0"></path><path d="M225.5 39h0"></path><path d="M157 39a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M177 19h28.5"></path></g><path d="M205.5 19a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M157 39h20"></path><g class="terminal"><path d="M177 39h0"></path><path d="M205.5 39h0"></path><rect x="177" y="28" width="28.5" height="22" rx="10" ry="10"></rect><text x="191.25" y="43">&#95;</text></g><path d="M205.5 39h20"></path></g><path d="M225.5 39h10"></path><g class="non-terminal"><path d="M235.5 39h0"></path><path d="M366 39h0"></path><rect x="235.5" y="28" width="130.5" height="22"></rect><a xlink:href="#binary_digits"><text x="300.75" y="43">binary&#95;digits</text></a></g></g><path d="M366 39h10"></path><path d="M 376 39 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">binary_lit</span> = <span class="ebnf-terminal">"0"</span> , ( <span class="ebnf-terminal">"b"</span> | <span class="ebnf-terminal">"B"</span> ) , [ <span class="ebnf-terminal">"_"</span> ] ,
+  <a class="ebnf-non-terminal" href="#binary_digits">binary_digits</a> <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>binary_lit</strong>:<p>
+<ul>
+<li><a href="#int_lit">int_lit</a></li>
+</ul>
+  <p><strong>binary_lit</strong> is referencing:<p>
+<ul>
+<li><a href="#binary_digits">binary_digits</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="octal_lit">octal_lit</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="407.5" style="max-height: 120px;" viewBox="0 0 407.5 120"><g transform="translate(.5 .5)"><g><path d="M20 29v20m0 -10h20"></path></g><path d="M40 39h10"></path><g><path d="M50 39h0"></path><path d="M357.5 39h0"></path><g class="terminal"><path d="M50 39h0"></path><path d="M78.5 39h0"></path><rect x="50" y="28" width="28.5" height="22" rx="10" ry="10"></rect><text x="64.25" y="43">0</text></g><path d="M78.5 39h10"></path><g><path d="M88.5 39h0"></path><path d="M157 39h0"></path><path d="M88.5 39h20"></path><g><path d="M108.5 39h28.5"></path></g><path d="M137 39h20"></path><path d="M88.5 39a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M108.5 59h0"></path><path d="M137 59h0"></path><rect x="108.5" y="48" width="28.5" height="22" rx="10" ry="10"></rect><text x="122.75" y="63">o</text></g><path d="M137 59a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M88.5 39a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M108.5 89h0"></path><path d="M137 89h0"></path><rect x="108.5" y="78" width="28.5" height="22" rx="10" ry="10"></rect><text x="122.75" y="93">O</text></g><path d="M137 89a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path></g><g><path d="M157 39h0"></path><path d="M225.5 39h0"></path><path d="M157 39a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M177 19h28.5"></path></g><path d="M205.5 19a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M157 39h20"></path><g class="terminal"><path d="M177 39h0"></path><path d="M205.5 39h0"></path><rect x="177" y="28" width="28.5" height="22" rx="10" ry="10"></rect><text x="191.25" y="43">&#95;</text></g><path d="M205.5 39h20"></path></g><path d="M225.5 39h10"></path><g class="non-terminal"><path d="M235.5 39h0"></path><path d="M357.5 39h0"></path><rect x="235.5" y="28" width="122" height="22"></rect><a xlink:href="#octal_digits"><text x="296.5" y="43">octal&#95;digits</text></a></g></g><path d="M357.5 39h10"></path><path d="M 367.5 39 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">octal_lit</span> = <span class="ebnf-terminal">"0"</span> , [ <span class="ebnf-terminal">"o"</span> | <span class="ebnf-terminal">"O"</span> ] , [ <span class="ebnf-terminal">"_"</span> ] ,
+  <a class="ebnf-non-terminal" href="#octal_digits">octal_digits</a> <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>octal_lit</strong>:<p>
+<ul>
+<li><a href="#int_lit">int_lit</a></li>
+</ul>
+  <p><strong>octal_lit</strong> is referencing:<p>
+<ul>
+<li><a href="#octal_digits">octal_digits</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="hex_lit">hex_lit</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="390.5" style="max-height: 100px;" viewBox="0 0 390.5 100"><g transform="translate(.5 .5)"><g><path d="M20 29v20m0 -10h20"></path></g><path d="M40 39h10"></path><g><path d="M50 39h0"></path><path d="M340.5 39h0"></path><g class="terminal"><path d="M50 39h0"></path><path d="M78.5 39h0"></path><rect x="50" y="28" width="28.5" height="22" rx="10" ry="10"></rect><text x="64.25" y="43">0</text></g><path d="M78.5 39h10"></path><g><path d="M88.5 39h0"></path><path d="M157 39h0"></path><path d="M88.5 39h20"></path><g class="terminal"><path d="M108.5 39h0"></path><path d="M137 39h0"></path><rect x="108.5" y="28" width="28.5" height="22" rx="10" ry="10"></rect><text x="122.75" y="43">x</text></g><path d="M137 39h20"></path><path d="M88.5 39a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M108.5 69h0"></path><path d="M137 69h0"></path><rect x="108.5" y="58" width="28.5" height="22" rx="10" ry="10"></rect><text x="122.75" y="73">X</text></g><path d="M137 69a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><g><path d="M157 39h0"></path><path d="M225.5 39h0"></path><path d="M157 39a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M177 19h28.5"></path></g><path d="M205.5 19a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M157 39h20"></path><g class="terminal"><path d="M177 39h0"></path><path d="M205.5 39h0"></path><rect x="177" y="28" width="28.5" height="22" rx="10" ry="10"></rect><text x="191.25" y="43">&#95;</text></g><path d="M205.5 39h20"></path></g><path d="M225.5 39h10"></path><g class="non-terminal"><path d="M235.5 39h0"></path><path d="M340.5 39h0"></path><rect x="235.5" y="28" width="105" height="22"></rect><a xlink:href="#hex_digits"><text x="288" y="43">hex&#95;digits</text></a></g></g><path d="M340.5 39h10"></path><path d="M 350.5 39 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">hex_lit</span> = <span class="ebnf-terminal">"0"</span> , ( <span class="ebnf-terminal">"x"</span> | <span class="ebnf-terminal">"X"</span> ) , [ <span class="ebnf-terminal">"_"</span> ] , <a class="ebnf-non-terminal" href="#hex_digits">hex_digits</a> <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>hex_lit</strong>:<p>
+<ul>
+<li><a href="#int_lit">int_lit</a></li>
+</ul>
+  <p><strong>hex_lit</strong> is referencing:<p>
+<ul>
+<li><a href="#hex_digits">hex_digits</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="decimal_digits">decimal_digits</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="250.5" style="max-height: 100px;" viewBox="0 0 250.5 100"><g transform="translate(.5 .5)"><g><path d="M20 21v20m0 -10h20"></path></g><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M200.5 31h0"></path><path d="M50 31h10"></path><g class="non-terminal"><path d="M60 31h0"></path><path d="M190.5 31h0"></path><rect x="60" y="20" width="130.5" height="22"></rect><a xlink:href="#decimal_digit"><text x="125.25" y="35">decimal&#95;digit</text></a></g><path d="M190.5 31h10"></path><path d="M60 31a10 10 0 0 0 -10 10v18a10 10 0 0 0 10 10"></path><g><path d="M60 69h31"></path><path d="M159.5 69h31"></path><path d="M91 69a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M111 49h28.5"></path></g><path d="M139.5 49a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M91 69h20"></path><g class="terminal"><path d="M111 69h0"></path><path d="M139.5 69h0"></path><rect x="111" y="58" width="28.5" height="22" rx="10" ry="10"></rect><text x="125.25" y="73">&#95;</text></g><path d="M139.5 69h20"></path></g><path d="M190.5 69a10 10 0 0 0 10 -10v-18a10 10 0 0 0 -10 -10"></path></g><path d="M200.5 31h10"></path><path d="M 210.5 31 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">decimal_digits</span> = <a class="ebnf-non-terminal" href="#decimal_digit">decimal_digit</a> , { [ <span class="ebnf-terminal">"_"</span> ] , <a class="ebnf-non-terminal" href="#decimal_digit">decimal_digit</a> } <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>decimal_digits</strong>:<p>
+<ul>
+<li><a href="#decimal_lit">decimal_lit</a></li><li><a href="#decimal_float_lit">decimal_float_lit</a></li><li><a href="#hex_exponent">hex_exponent</a></li><li><a href="#decimal_exponent">decimal_exponent</a></li>
+</ul>
+  <p><strong>decimal_digits</strong> is referencing:<p>
+<ul>
+<li><a href="#decimal_digit">decimal_digit</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="binary_digits">binary_digits</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="242" style="max-height: 100px;" viewBox="0 0 242 100"><g transform="translate(.5 .5)"><g><path d="M20 21v20m0 -10h20"></path></g><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M192 31h0"></path><path d="M50 31h10"></path><g class="non-terminal"><path d="M60 31h0"></path><path d="M182 31h0"></path><rect x="60" y="20" width="122" height="22"></rect><a xlink:href="#binary_digit"><text x="121" y="35">binary&#95;digit</text></a></g><path d="M182 31h10"></path><path d="M60 31a10 10 0 0 0 -10 10v18a10 10 0 0 0 10 10"></path><g><path d="M60 69h26.75"></path><path d="M155.25 69h26.75"></path><path d="M86.75 69a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M106.75 49h28.5"></path></g><path d="M135.25 49a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M86.75 69h20"></path><g class="terminal"><path d="M106.75 69h0"></path><path d="M135.25 69h0"></path><rect x="106.75" y="58" width="28.5" height="22" rx="10" ry="10"></rect><text x="121" y="73">&#95;</text></g><path d="M135.25 69h20"></path></g><path d="M182 69a10 10 0 0 0 10 -10v-18a10 10 0 0 0 -10 -10"></path></g><path d="M192 31h10"></path><path d="M 202 31 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">binary_digits</span> = <a class="ebnf-non-terminal" href="#binary_digit">binary_digit</a> , { [ <span class="ebnf-terminal">"_"</span> ] , <a class="ebnf-non-terminal" href="#binary_digit">binary_digit</a> } <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>binary_digits</strong>:<p>
+<ul>
+<li><a href="#binary_lit">binary_lit</a></li>
+</ul>
+  <p><strong>binary_digits</strong> is referencing:<p>
+<ul>
+<li><a href="#binary_digit">binary_digit</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="octal_digits">octal_digits</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="233.5" style="max-height: 100px;" viewBox="0 0 233.5 100"><g transform="translate(.5 .5)"><g><path d="M20 21v20m0 -10h20"></path></g><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M183.5 31h0"></path><path d="M50 31h10"></path><g class="non-terminal"><path d="M60 31h0"></path><path d="M173.5 31h0"></path><rect x="60" y="20" width="113.5" height="22"></rect><a xlink:href="#octal_digit"><text x="116.75" y="35">octal&#95;digit</text></a></g><path d="M173.5 31h10"></path><path d="M60 31a10 10 0 0 0 -10 10v18a10 10 0 0 0 10 10"></path><g><path d="M60 69h22.5"></path><path d="M151 69h22.5"></path><path d="M82.5 69a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M102.5 49h28.5"></path></g><path d="M131 49a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M82.5 69h20"></path><g class="terminal"><path d="M102.5 69h0"></path><path d="M131 69h0"></path><rect x="102.5" y="58" width="28.5" height="22" rx="10" ry="10"></rect><text x="116.75" y="73">&#95;</text></g><path d="M131 69h20"></path></g><path d="M173.5 69a10 10 0 0 0 10 -10v-18a10 10 0 0 0 -10 -10"></path></g><path d="M183.5 31h10"></path><path d="M 193.5 31 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">octal_digits</span> = <a class="ebnf-non-terminal" href="#octal_digit">octal_digit</a> , { [ <span class="ebnf-terminal">"_"</span> ] , <a class="ebnf-non-terminal" href="#octal_digit">octal_digit</a> } <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>octal_digits</strong>:<p>
+<ul>
+<li><a href="#octal_lit">octal_lit</a></li>
+</ul>
+  <p><strong>octal_digits</strong> is referencing:<p>
+<ul>
+<li><a href="#octal_digit">octal_digit</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="hex_digits">hex_digits</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="216.5" style="max-height: 100px;" viewBox="0 0 216.5 100"><g transform="translate(.5 .5)"><g><path d="M20 21v20m0 -10h20"></path></g><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M166.5 31h0"></path><path d="M50 31h10"></path><g class="non-terminal"><path d="M60 31h0"></path><path d="M156.5 31h0"></path><rect x="60" y="20" width="96.5" height="22"></rect><a xlink:href="#hex_digit"><text x="108.25" y="35">hex&#95;digit</text></a></g><path d="M156.5 31h10"></path><path d="M60 31a10 10 0 0 0 -10 10v18a10 10 0 0 0 10 10"></path><g><path d="M60 69h14"></path><path d="M142.5 69h14"></path><path d="M74 69a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M94 49h28.5"></path></g><path d="M122.5 49a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M74 69h20"></path><g class="terminal"><path d="M94 69h0"></path><path d="M122.5 69h0"></path><rect x="94" y="58" width="28.5" height="22" rx="10" ry="10"></rect><text x="108.25" y="73">&#95;</text></g><path d="M122.5 69h20"></path></g><path d="M156.5 69a10 10 0 0 0 10 -10v-18a10 10 0 0 0 -10 -10"></path></g><path d="M166.5 31h10"></path><path d="M 176.5 31 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">hex_digits</span> = <a class="ebnf-non-terminal" href="#hex_digit">hex_digit</a> , { [ <span class="ebnf-terminal">"_"</span> ] , <a class="ebnf-non-terminal" href="#hex_digit">hex_digit</a> } <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>hex_digits</strong>:<p>
+<ul>
+<li><a href="#hex_lit">hex_lit</a></li><li><a href="#hex_mantissa">hex_mantissa</a></li>
+</ul>
+  <p><strong>hex_digits</strong> is referencing:<p>
+<ul>
+<li><a href="#hex_digit">hex_digit</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="float_lit">float_lit</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="944" style="max-height: 640px;" viewBox="0 0 944 640"><g transform="translate(.5 .5)"><g><path d="M20 89v20m0 -10h20"></path></g><g><path d="M40 99h0"></path><path d="M904 99h0"></path><path d="M40 99h20"></path><g><path d="M60 99h0"></path><path d="M884 99h0"></path><rect x="60" y="42" width="824" height="202" rx="10" ry="10" class="group-box"></rect><g><path d="M60 99h0"></path><path d="M884 99h0"></path><path d="M60 99h20"></path><g><path d="M80 99h0"></path><path d="M864 99h0"></path><g><path d="M80 99h0"></path><path d="M250.5 99h0"></path><rect x="80" y="80" width="170.5" height="76" rx="10" ry="10" class="group-box"></rect><g><path d="M80 99h10"></path><path d="M240.5 99h10"></path><path d="M90 99h10"></path><g class="non-terminal"><path d="M100 99h0"></path><path d="M230.5 99h0"></path><rect x="100" y="88" width="130.5" height="22"></rect><a xlink:href="#decimal_digit"><text x="165.25" y="103">decimal&#95;digit</text></a></g><path d="M230.5 99h10"></path><path d="M100 99a10 10 0 0 0 -10 10v18a10 10 0 0 0 10 10"></path><g><path d="M100 137h31"></path><path d="M199.5 137h31"></path><path d="M131 137a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M151 117h28.5"></path></g><path d="M179.5 117a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M131 137h20"></path><g class="terminal"><path d="M151 137h0"></path><path d="M179.5 137h0"></path><rect x="151" y="126" width="28.5" height="22" rx="10" ry="10"></rect><text x="165.25" y="141">&#95;</text></g><path d="M179.5 137h20"></path></g><path d="M230.5 137a10 10 0 0 0 10 -10v-18a10 10 0 0 0 -10 -10"></path></g><g><path d="M80 69h0"></path><path d="M188 69h0"></path><a xlink:href="#decimal_digits"><text x="134" y="74" class="comment">decimal&#95;digits</text></a></g></g><path d="M250.5 99h10"></path><g><path d="M260.5 99h0"></path><path d="M864 99h0"></path><path d="M260.5 99h20"></path><g><path d="M280.5 99h0"></path><path d="M844 99h0"></path><g class="terminal"><path d="M280.5 99h0"></path><path d="M309 99h0"></path><rect x="280.5" y="88" width="28.5" height="22" rx="10" ry="10"></rect><text x="294.75" y="103">.</text></g><path d="M309 99h10"></path><g><path d="M319 99h0"></path><path d="M498 99h0"></path><path d="M319 99a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M339 79h139"></path></g><path d="M478 79a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M319 99h20"></path><g class="non-terminal"><path d="M339 99h0"></path><path d="M478 99h0"></path><rect x="339" y="88" width="139" height="22"></rect><a xlink:href="#decimal_digits"><text x="408.5" y="103">decimal&#95;digits</text></a></g><path d="M478 99h20"></path></g><g><path d="M498 99h0"></path><path d="M844 99h0"></path><path d="M498 99a10 10 0 0 0 10 -10v-29a10 10 0 0 1 10 -10"></path><g><path d="M518 50h306"></path></g><path d="M824 50a10 10 0 0 1 10 10v29a10 10 0 0 0 10 10"></path><path d="M498 99h20"></path><g><path d="M518 99h0"></path><path d="M824 99h0"></path><rect x="518" y="80" width="306" height="88" rx="10" ry="10" class="group-box"></rect><g><path d="M518 99h10"></path><path d="M814 99h10"></path><g><path d="M528 99h0"></path><path d="M596.5 99h0"></path><path d="M528 99h20"></path><g class="terminal"><path d="M548 99h0"></path><path d="M576.5 99h0"></path><rect x="548" y="88" width="28.5" height="22" rx="10" ry="10"></rect><text x="562.25" y="103">e</text></g><path d="M576.5 99h20"></path><path d="M528 99a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M548 129h0"></path><path d="M576.5 129h0"></path><rect x="548" y="118" width="28.5" height="22" rx="10" ry="10"></rect><text x="562.25" y="133">E</text></g><path d="M576.5 129a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><g><path d="M596.5 99h0"></path><path d="M665 99h0"></path><path d="M596.5 99h20"></path><g><path d="M616.5 99h28.5"></path></g><path d="M645 99h20"></path><path d="M596.5 99a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M616.5 119h0"></path><path d="M645 119h0"></path><rect x="616.5" y="108" width="28.5" height="22" rx="10" ry="10"></rect><text x="630.75" y="123">+</text></g><path d="M645 119a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M596.5 99a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M616.5 149h0"></path><path d="M645 149h0"></path><rect x="616.5" y="138" width="28.5" height="22" rx="10" ry="10"></rect><text x="630.75" y="153">-</text></g><path d="M645 149a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path></g><path d="M665 99h10"></path><g class="non-terminal"><path d="M675 99h0"></path><path d="M814 99h0"></path><rect x="675" y="88" width="139" height="22"></rect><a xlink:href="#decimal_digits"><text x="744.5" y="103">decimal&#95;digits</text></a></g></g><g><path d="M518 69h0"></path><path d="M640 69h0"></path><a xlink:href="#decimal_exponent"><text x="579" y="74" class="comment">decimal&#95;exponent</text></a></g></g><path d="M824 99h20"></path></g></g><path d="M844 99h20"></path><path d="M260.5 99a10 10 0 0 1 10 10v68a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M280.5 187h203.75"></path><path d="M640.25 187h203.75"></path><rect x="484.25" y="176" width="156" height="22"></rect><a xlink:href="#decimal_exponent"><text x="562.25" y="191">decimal&#95;exponent</text></a></g><path d="M844 187a10 10 0 0 0 10 -10v-68a10 10 0 0 1 10 -10"></path></g></g><path d="M864 99h20"></path><path d="M60 99a10 10 0 0 1 10 10v106a10 10 0 0 0 10 10"></path><g><path d="M80 225h195.25"></path><path d="M668.75 225h195.25"></path><g class="terminal"><path d="M275.25 225h0"></path><path d="M303.75 225h0"></path><rect x="275.25" y="214" width="28.5" height="22" rx="10" ry="10"></rect><text x="289.5" y="229">.</text></g><path d="M303.75 225h10"></path><path d="M313.75 225h10"></path><g class="non-terminal"><path d="M323.75 225h0"></path><path d="M462.75 225h0"></path><rect x="323.75" y="214" width="139" height="22"></rect><a xlink:href="#decimal_digits"><text x="393.25" y="229">decimal&#95;digits</text></a></g><path d="M462.75 225h10"></path><g><path d="M472.75 225h0"></path><path d="M668.75 225h0"></path><path d="M472.75 225a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M492.75 205h156"></path></g><path d="M648.75 205a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M472.75 225h20"></path><g class="non-terminal"><path d="M492.75 225h0"></path><path d="M648.75 225h0"></path><rect x="492.75" y="214" width="156" height="22"></rect><a xlink:href="#decimal_exponent"><text x="570.75" y="229">decimal&#95;exponent</text></a></g><path d="M648.75 225h20"></path></g></g><path d="M864 225a10 10 0 0 0 10 -10v-106a10 10 0 0 1 10 -10"></path></g><g><path d="M60 31h0"></path><path d="M189 31h0"></path><a xlink:href="#decimal_float_lit"><text x="124.5" y="36" class="comment">decimal&#95;float&#95;lit</text></a></g></g><path d="M884 99h20"></path><path d="M40 99a10 10 0 0 1 10 10v234a10 10 0 0 0 10 10"></path><g><path d="M60 353h94.25"></path><path d="M789.75 543h94.25"></path><rect x="154.25" y="274" width="635.5" height="346" rx="10" ry="10" class="group-box"></rect><g><path d="M154.25 353h10"></path><path d="M164.25 353h10"></path><g><path d="M174.25 353h10"></path><path d="M759.75 353h10"></path><g class="terminal"><path d="M184.25 353h0"></path><path d="M212.75 353h0"></path><rect x="184.25" y="342" width="28.5" height="22" rx="10" ry="10"></rect><text x="198.5" y="357">0</text></g><path d="M212.75 353h10"></path><g><path d="M222.75 353h0"></path><path d="M291.25 353h0"></path><path d="M222.75 353h20"></path><g class="terminal"><path d="M242.75 353h0"></path><path d="M271.25 353h0"></path><rect x="242.75" y="342" width="28.5" height="22" rx="10" ry="10"></rect><text x="257" y="357">x</text></g><path d="M271.25 353h20"></path><path d="M222.75 353a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M242.75 383h0"></path><path d="M271.25 383h0"></path><rect x="242.75" y="372" width="28.5" height="22" rx="10" ry="10"></rect><text x="257" y="387">X</text></g><path d="M271.25 383a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><path d="M291.25 353h10"></path><g><path d="M301.25 353h0"></path><path d="M759.75 353h0"></path><rect x="301.25" y="304" width="458.5" height="182" rx="10" ry="10" class="group-box"></rect><g><path d="M301.25 353h0"></path><path d="M759.75 353h0"></path><path d="M301.25 353h20"></path><g><path d="M321.25 353h0"></path><path d="M739.75 353h0"></path><g><path d="M321.25 353h0"></path><path d="M389.75 353h0"></path><path d="M321.25 353a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M341.25 333h28.5"></path></g><path d="M369.75 333a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M321.25 353h20"></path><g class="terminal"><path d="M341.25 353h0"></path><path d="M369.75 353h0"></path><rect x="341.25" y="342" width="28.5" height="22" rx="10" ry="10"></rect><text x="355.5" y="357">&#95;</text></g><path d="M369.75 353h20"></path></g><path d="M389.75 353h10"></path><g><path d="M399.75 353h0"></path><path d="M536.25 353h0"></path><rect x="399.75" y="334" width="136.5" height="76" rx="10" ry="10" class="group-box"></rect><g><path d="M399.75 353h10"></path><path d="M526.25 353h10"></path><path d="M409.75 353h10"></path><g class="non-terminal"><path d="M419.75 353h0"></path><path d="M516.25 353h0"></path><rect x="419.75" y="342" width="96.5" height="22"></rect><a xlink:href="#hex_digit"><text x="468" y="357">hex&#95;digit</text></a></g><path d="M516.25 353h10"></path><path d="M419.75 353a10 10 0 0 0 -10 10v18a10 10 0 0 0 10 10"></path><g><path d="M419.75 391h14"></path><path d="M502.25 391h14"></path><path d="M433.75 391a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M453.75 371h28.5"></path></g><path d="M482.25 371a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M433.75 391h20"></path><g class="terminal"><path d="M453.75 391h0"></path><path d="M482.25 391h0"></path><rect x="453.75" y="380" width="28.5" height="22" rx="10" ry="10"></rect><text x="468" y="395">&#95;</text></g><path d="M482.25 391h20"></path></g><path d="M516.25 391a10 10 0 0 0 10 -10v-18a10 10 0 0 0 -10 -10"></path></g><g><path d="M399.75 323h0"></path><path d="M479.75 323h0"></path><a xlink:href="#hex_digits"><text x="439.75" y="328" class="comment">hex&#95;digits</text></a></g></g><path d="M536.25 353h10"></path><path d="M546.25 353h10"></path><g class="terminal"><path d="M556.25 353h0"></path><path d="M584.75 353h0"></path><rect x="556.25" y="342" width="28.5" height="22" rx="10" ry="10"></rect><text x="570.5" y="357">.</text></g><path d="M584.75 353h10"></path><g><path d="M594.75 353h0"></path><path d="M739.75 353h0"></path><path d="M594.75 353a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M614.75 333h105"></path></g><path d="M719.75 333a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M594.75 353h20"></path><g class="non-terminal"><path d="M614.75 353h0"></path><path d="M719.75 353h0"></path><rect x="614.75" y="342" width="105" height="22"></rect><a xlink:href="#hex_digits"><text x="667.25" y="357">hex&#95;digits</text></a></g><path d="M719.75 353h20"></path></g></g><path d="M739.75 353h20"></path><path d="M301.25 353a10 10 0 0 1 10 10v64a10 10 0 0 0 10 10"></path><g><path d="M321.25 437h117.5"></path><path d="M622.25 437h117.5"></path><g><path d="M438.75 437h0"></path><path d="M507.25 437h0"></path><path d="M438.75 437a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M458.75 417h28.5"></path></g><path d="M487.25 417a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M438.75 437h20"></path><g class="terminal"><path d="M458.75 437h0"></path><path d="M487.25 437h0"></path><rect x="458.75" y="426" width="28.5" height="22" rx="10" ry="10"></rect><text x="473" y="441">&#95;</text></g><path d="M487.25 437h20"></path></g><path d="M507.25 437h10"></path><g class="non-terminal"><path d="M517.25 437h0"></path><path d="M622.25 437h0"></path><rect x="517.25" y="426" width="105" height="22"></rect><a xlink:href="#hex_digits"><text x="569.75" y="441">hex&#95;digits</text></a></g></g><path d="M739.75 437a10 10 0 0 0 10 -10v-64a10 10 0 0 1 10 -10"></path><path d="M301.25 353a10 10 0 0 1 10 10v94a10 10 0 0 0 10 10"></path><g><path d="M321.25 467h132.5"></path><path d="M607.25 467h132.5"></path><g class="terminal"><path d="M453.75 467h0"></path><path d="M482.25 467h0"></path><rect x="453.75" y="456" width="28.5" height="22" rx="10" ry="10"></rect><text x="468" y="471">.</text></g><path d="M482.25 467h10"></path><path d="M492.25 467h10"></path><g class="non-terminal"><path d="M502.25 467h0"></path><path d="M607.25 467h0"></path><rect x="502.25" y="456" width="105" height="22"></rect><a xlink:href="#hex_digits"><text x="554.75" y="471">hex&#95;digits</text></a></g></g><path d="M739.75 467a10 10 0 0 0 10 -10v-94a10 10 0 0 1 10 -10"></path></g><g><path d="M301.25 293h0"></path><path d="M395.25 293h0"></path><a xlink:href="#hex_mantissa"><text x="348.25" y="298" class="comment">hex&#95;mantissa</text></a></g></g></g><path d="M769.75 353a10 10 0 0 1 10 10v121a10 10 0 0 1 -10 10h-595.5a10 10 0 0 0 -10 10v29a10 10 0 0 0 10 10"></path><g><path d="M174.25 543h144.75"></path><path d="M625 543h144.75"></path><g><path d="M319 543h0"></path><path d="M625 543h0"></path><rect x="319" y="524" width="306" height="88" rx="10" ry="10" class="group-box"></rect><g><path d="M319 543h10"></path><path d="M615 543h10"></path><g><path d="M329 543h0"></path><path d="M397.5 543h0"></path><path d="M329 543h20"></path><g class="terminal"><path d="M349 543h0"></path><path d="M377.5 543h0"></path><rect x="349" y="532" width="28.5" height="22" rx="10" ry="10"></rect><text x="363.25" y="547">p</text></g><path d="M377.5 543h20"></path><path d="M329 543a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M349 573h0"></path><path d="M377.5 573h0"></path><rect x="349" y="562" width="28.5" height="22" rx="10" ry="10"></rect><text x="363.25" y="577">P</text></g><path d="M377.5 573a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><g><path d="M397.5 543h0"></path><path d="M466 543h0"></path><path d="M397.5 543h20"></path><g><path d="M417.5 543h28.5"></path></g><path d="M446 543h20"></path><path d="M397.5 543a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M417.5 563h0"></path><path d="M446 563h0"></path><rect x="417.5" y="552" width="28.5" height="22" rx="10" ry="10"></rect><text x="431.75" y="567">+</text></g><path d="M446 563a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M397.5 543a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M417.5 593h0"></path><path d="M446 593h0"></path><rect x="417.5" y="582" width="28.5" height="22" rx="10" ry="10"></rect><text x="431.75" y="597">-</text></g><path d="M446 593a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path></g><path d="M466 543h10"></path><g class="non-terminal"><path d="M476 543h0"></path><path d="M615 543h0"></path><rect x="476" y="532" width="139" height="22"></rect><a xlink:href="#decimal_digits"><text x="545.5" y="547">decimal&#95;digits</text></a></g></g><g><path d="M319 513h0"></path><path d="M413 513h0"></path><a xlink:href="#hex_exponent"><text x="366" y="518" class="comment">hex&#95;exponent</text></a></g></g></g><path d="M769.75 543h10"></path><path d="M779.75 543h10"></path></g><g><path d="M154.25 263h0"></path><path d="M255.25 263h0"></path><a xlink:href="#hex_float_lit"><text x="204.75" y="268" class="comment">hex&#95;float&#95;lit</text></a></g></g><path d="M884 543a10 10 0 0 0 10 -10v-424a10 10 0 0 1 10 -10"></path></g><path d="M 904 99 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">float_lit</span> = <a class="ebnf-non-terminal" href="#decimal_float_lit">decimal_float_lit</a> | <a class="ebnf-non-terminal" href="#hex_float_lit">hex_float_lit</a> <span class="ebnf-end">;</span></code>
+  <p><strong>float_lit</strong> is referencing:<p>
+<ul>
+<li><a href="#decimal_float_lit">decimal_float_lit</a></li><li><a href="#hex_float_lit">hex_float_lit</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="decimal_float_lit">decimal_float_lit</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="722.5" style="max-height: 138px;" viewBox="0 0 722.5 138"><g transform="translate(.5 .5)"><g><path d="M20 29v20m0 -10h20"></path></g><g><path d="M40 39h0"></path><path d="M682.5 39h0"></path><path d="M40 39h20"></path><g><path d="M60 39h0"></path><path d="M662.5 39h0"></path><g class="non-terminal"><path d="M60 39h0"></path><path d="M199 39h0"></path><rect x="60" y="28" width="139" height="22"></rect><a xlink:href="#decimal_digits"><text x="129.5" y="43">decimal&#95;digits</text></a></g><path d="M199 39h10"></path><g><path d="M209 39h0"></path><path d="M662.5 39h0"></path><path d="M209 39h20"></path><g><path d="M229 39h0"></path><path d="M642.5 39h0"></path><g class="terminal"><path d="M229 39h0"></path><path d="M257.5 39h0"></path><rect x="229" y="28" width="28.5" height="22" rx="10" ry="10"></rect><text x="243.25" y="43">.</text></g><path d="M257.5 39h10"></path><g><path d="M267.5 39h0"></path><path d="M446.5 39h0"></path><path d="M267.5 39a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M287.5 19h139"></path></g><path d="M426.5 19a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M267.5 39h20"></path><g class="non-terminal"><path d="M287.5 39h0"></path><path d="M426.5 39h0"></path><rect x="287.5" y="28" width="139" height="22"></rect><a xlink:href="#decimal_digits"><text x="357" y="43">decimal&#95;digits</text></a></g><path d="M426.5 39h20"></path></g><g><path d="M446.5 39h0"></path><path d="M642.5 39h0"></path><path d="M446.5 39a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M466.5 19h156"></path></g><path d="M622.5 19a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M446.5 39h20"></path><g class="non-terminal"><path d="M466.5 39h0"></path><path d="M622.5 39h0"></path><rect x="466.5" y="28" width="156" height="22"></rect><a xlink:href="#decimal_exponent"><text x="544.5" y="43">decimal&#95;exponent</text></a></g><path d="M622.5 39h20"></path></g></g><path d="M642.5 39h20"></path><path d="M209 39a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M229 69h128.75"></path><path d="M513.75 69h128.75"></path><rect x="357.75" y="58" width="156" height="22"></rect><a xlink:href="#decimal_exponent"><text x="435.75" y="73">decimal&#95;exponent</text></a></g><path d="M642.5 69a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g></g><path d="M662.5 39h20"></path><path d="M40 39a10 10 0 0 1 10 10v48a10 10 0 0 0 10 10"></path><g><path d="M60 107h104.5"></path><path d="M558 107h104.5"></path><g class="terminal"><path d="M164.5 107h0"></path><path d="M193 107h0"></path><rect x="164.5" y="96" width="28.5" height="22" rx="10" ry="10"></rect><text x="178.75" y="111">.</text></g><path d="M193 107h10"></path><path d="M203 107h10"></path><g class="non-terminal"><path d="M213 107h0"></path><path d="M352 107h0"></path><rect x="213" y="96" width="139" height="22"></rect><a xlink:href="#decimal_digits"><text x="282.5" y="111">decimal&#95;digits</text></a></g><path d="M352 107h10"></path><g><path d="M362 107h0"></path><path d="M558 107h0"></path><path d="M362 107a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M382 87h156"></path></g><path d="M538 87a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M362 107h20"></path><g class="non-terminal"><path d="M382 107h0"></path><path d="M538 107h0"></path><rect x="382" y="96" width="156" height="22"></rect><a xlink:href="#decimal_exponent"><text x="460" y="111">decimal&#95;exponent</text></a></g><path d="M538 107h20"></path></g></g><path d="M662.5 107a10 10 0 0 0 10 -10v-48a10 10 0 0 1 10 -10"></path></g><path d="M 682.5 39 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">decimal_float_lit</span>
+  = <a class="ebnf-non-terminal" href="#decimal_digits">decimal_digits</a> , <span class="ebnf-terminal">"."</span> , [ <a class="ebnf-non-terminal" href="#decimal_digits">decimal_digits</a> ] ,
+    [ <a class="ebnf-non-terminal" href="#decimal_exponent">decimal_exponent</a> ]
+  | <a class="ebnf-non-terminal" href="#decimal_digits">decimal_digits</a> , <a class="ebnf-non-terminal" href="#decimal_exponent">decimal_exponent</a>
+  | <span class="ebnf-terminal">"."</span> , <a class="ebnf-non-terminal" href="#decimal_digits">decimal_digits</a> , [ <a class="ebnf-non-terminal" href="#decimal_exponent">decimal_exponent</a> ]
+  <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>decimal_float_lit</strong>:<p>
+<ul>
+<li><a href="#float_lit">float_lit</a></li>
+</ul>
+  <p><strong>decimal_float_lit</strong> is referencing:<p>
+<ul>
+<li><a href="#decimal_digits">decimal_digits</a></li><li><a href="#decimal_exponent">decimal_exponent</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="hex_float_lit">hex_float_lit</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="481" style="max-height: 92px;" viewBox="0 0 481 92"><g transform="translate(.5 .5)"><g><path d="M20 21v20m0 -10h20"></path></g><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M431 31h0"></path><g class="terminal"><path d="M50 31h0"></path><path d="M78.5 31h0"></path><rect x="50" y="20" width="28.5" height="22" rx="10" ry="10"></rect><text x="64.25" y="35">0</text></g><path d="M78.5 31h10"></path><g><path d="M88.5 31h0"></path><path d="M157 31h0"></path><path d="M88.5 31h20"></path><g class="terminal"><path d="M108.5 31h0"></path><path d="M137 31h0"></path><rect x="108.5" y="20" width="28.5" height="22" rx="10" ry="10"></rect><text x="122.75" y="35">x</text></g><path d="M137 31h20"></path><path d="M88.5 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M108.5 61h0"></path><path d="M137 61h0"></path><rect x="108.5" y="50" width="28.5" height="22" rx="10" ry="10"></rect><text x="122.75" y="65">X</text></g><path d="M137 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><path d="M157 31h10"></path><g class="non-terminal"><path d="M167 31h0"></path><path d="M289 31h0"></path><rect x="167" y="20" width="122" height="22"></rect><a xlink:href="#hex_mantissa"><text x="228" y="35">hex&#95;mantissa</text></a></g><path d="M289 31h10"></path><path d="M299 31h10"></path><g class="non-terminal"><path d="M309 31h0"></path><path d="M431 31h0"></path><rect x="309" y="20" width="122" height="22"></rect><a xlink:href="#hex_exponent"><text x="370" y="35">hex&#95;exponent</text></a></g></g><path d="M431 31h10"></path><path d="M 441 31 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">hex_float_lit</span> = <span class="ebnf-terminal">"0"</span> , ( <span class="ebnf-terminal">"x"</span> | <span class="ebnf-terminal">"X"</span> ) , <a class="ebnf-non-terminal" href="#hex_mantissa">hex_mantissa</a> ,
+  <a class="ebnf-non-terminal" href="#hex_exponent">hex_exponent</a> <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>hex_float_lit</strong>:<p>
+<ul>
+<li><a href="#float_lit">float_lit</a></li>
+</ul>
+  <p><strong>hex_float_lit</strong> is referencing:<p>
+<ul>
+<li><a href="#hex_mantissa">hex_mantissa</a></li><li><a href="#hex_exponent">hex_exponent</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="hex_mantissa">hex_mantissa</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="507" style="max-height: 138px;" viewBox="0 0 507 138"><g transform="translate(.5 .5)"><g><path d="M20 29v20m0 -10h20"></path></g><g><path d="M40 39h0"></path><path d="M467 39h0"></path><path d="M40 39h20"></path><g><path d="M60 39h0"></path><path d="M447 39h0"></path><g><path d="M60 39h0"></path><path d="M128.5 39h0"></path><path d="M60 39a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M80 19h28.5"></path></g><path d="M108.5 19a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M60 39h20"></path><g class="terminal"><path d="M80 39h0"></path><path d="M108.5 39h0"></path><rect x="80" y="28" width="28.5" height="22" rx="10" ry="10"></rect><text x="94.25" y="43">&#95;</text></g><path d="M108.5 39h20"></path></g><path d="M128.5 39h10"></path><g class="non-terminal"><path d="M138.5 39h0"></path><path d="M243.5 39h0"></path><rect x="138.5" y="28" width="105" height="22"></rect><a xlink:href="#hex_digits"><text x="191" y="43">hex&#95;digits</text></a></g><path d="M243.5 39h10"></path><path d="M253.5 39h10"></path><g class="terminal"><path d="M263.5 39h0"></path><path d="M292 39h0"></path><rect x="263.5" y="28" width="28.5" height="22" rx="10" ry="10"></rect><text x="277.75" y="43">.</text></g><path d="M292 39h10"></path><g><path d="M302 39h0"></path><path d="M447 39h0"></path><path d="M302 39a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M322 19h105"></path></g><path d="M427 19a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M302 39h20"></path><g class="non-terminal"><path d="M322 39h0"></path><path d="M427 39h0"></path><rect x="322" y="28" width="105" height="22"></rect><a xlink:href="#hex_digits"><text x="374.5" y="43">hex&#95;digits</text></a></g><path d="M427 39h20"></path></g></g><path d="M447 39h20"></path><path d="M40 39a10 10 0 0 1 10 10v18a10 10 0 0 0 10 10"></path><g><path d="M60 77h101.75"></path><path d="M345.25 77h101.75"></path><g><path d="M161.75 77h0"></path><path d="M230.25 77h0"></path><path d="M161.75 77a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M181.75 57h28.5"></path></g><path d="M210.25 57a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M161.75 77h20"></path><g class="terminal"><path d="M181.75 77h0"></path><path d="M210.25 77h0"></path><rect x="181.75" y="66" width="28.5" height="22" rx="10" ry="10"></rect><text x="196" y="81">&#95;</text></g><path d="M210.25 77h20"></path></g><path d="M230.25 77h10"></path><g class="non-terminal"><path d="M240.25 77h0"></path><path d="M345.25 77h0"></path><rect x="240.25" y="66" width="105" height="22"></rect><a xlink:href="#hex_digits"><text x="292.75" y="81">hex&#95;digits</text></a></g></g><path d="M447 77a10 10 0 0 0 10 -10v-18a10 10 0 0 1 10 -10"></path><path d="M40 39a10 10 0 0 1 10 10v48a10 10 0 0 0 10 10"></path><g><path d="M60 107h116.75"></path><path d="M330.25 107h116.75"></path><g class="terminal"><path d="M176.75 107h0"></path><path d="M205.25 107h0"></path><rect x="176.75" y="96" width="28.5" height="22" rx="10" ry="10"></rect><text x="191" y="111">.</text></g><path d="M205.25 107h10"></path><path d="M215.25 107h10"></path><g class="non-terminal"><path d="M225.25 107h0"></path><path d="M330.25 107h0"></path><rect x="225.25" y="96" width="105" height="22"></rect><a xlink:href="#hex_digits"><text x="277.75" y="111">hex&#95;digits</text></a></g></g><path d="M447 107a10 10 0 0 0 10 -10v-48a10 10 0 0 1 10 -10"></path></g><path d="M 467 39 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">hex_mantissa</span>
+  = [ <span class="ebnf-terminal">"_"</span> ] , <a class="ebnf-non-terminal" href="#hex_digits">hex_digits</a> , <span class="ebnf-terminal">"."</span> , [ <a class="ebnf-non-terminal" href="#hex_digits">hex_digits</a> ]
+  | [ <span class="ebnf-terminal">"_"</span> ] , <a class="ebnf-non-terminal" href="#hex_digits">hex_digits</a>
+  | <span class="ebnf-terminal">"."</span> , <a class="ebnf-non-terminal" href="#hex_digits">hex_digits</a>
+  <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>hex_mantissa</strong>:<p>
+<ul>
+<li><a href="#hex_float_lit">hex_float_lit</a></li>
+</ul>
+  <p><strong>hex_mantissa</strong> is referencing:<p>
+<ul>
+<li><a href="#hex_digits">hex_digits</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="hex_exponent">hex_exponent</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="386" style="max-height: 112px;" viewBox="0 0 386 112"><g transform="translate(.5 .5)"><g><path d="M20 21v20m0 -10h20"></path></g><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M336 31h0"></path><g><path d="M50 31h0"></path><path d="M118.5 31h0"></path><path d="M50 31h20"></path><g class="terminal"><path d="M70 31h0"></path><path d="M98.5 31h0"></path><rect x="70" y="20" width="28.5" height="22" rx="10" ry="10"></rect><text x="84.25" y="35">p</text></g><path d="M98.5 31h20"></path><path d="M50 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M70 61h0"></path><path d="M98.5 61h0"></path><rect x="70" y="50" width="28.5" height="22" rx="10" ry="10"></rect><text x="84.25" y="65">P</text></g><path d="M98.5 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><g><path d="M118.5 31h0"></path><path d="M187 31h0"></path><path d="M118.5 31h20"></path><g><path d="M138.5 31h28.5"></path></g><path d="M167 31h20"></path><path d="M118.5 31a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M138.5 51h0"></path><path d="M167 51h0"></path><rect x="138.5" y="40" width="28.5" height="22" rx="10" ry="10"></rect><text x="152.75" y="55">+</text></g><path d="M167 51a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M118.5 31a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M138.5 81h0"></path><path d="M167 81h0"></path><rect x="138.5" y="70" width="28.5" height="22" rx="10" ry="10"></rect><text x="152.75" y="85">-</text></g><path d="M167 81a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path></g><path d="M187 31h10"></path><g class="non-terminal"><path d="M197 31h0"></path><path d="M336 31h0"></path><rect x="197" y="20" width="139" height="22"></rect><a xlink:href="#decimal_digits"><text x="266.5" y="35">decimal&#95;digits</text></a></g></g><path d="M336 31h10"></path><path d="M 346 31 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">hex_exponent</span> = ( <span class="ebnf-terminal">"p"</span> | <span class="ebnf-terminal">"P"</span> ) , [ <span class="ebnf-terminal">"+"</span> | <span class="ebnf-terminal">"-"</span> ] ,
+  <a class="ebnf-non-terminal" href="#decimal_digits">decimal_digits</a> <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>hex_exponent</strong>:<p>
+<ul>
+<li><a href="#hex_float_lit">hex_float_lit</a></li>
+</ul>
+  <p><strong>hex_exponent</strong> is referencing:<p>
+<ul>
+<li><a href="#decimal_digits">decimal_digits</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="decimal_exponent">decimal_exponent</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="386" style="max-height: 112px;" viewBox="0 0 386 112"><g transform="translate(.5 .5)"><g><path d="M20 21v20m0 -10h20"></path></g><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M336 31h0"></path><g><path d="M50 31h0"></path><path d="M118.5 31h0"></path><path d="M50 31h20"></path><g class="terminal"><path d="M70 31h0"></path><path d="M98.5 31h0"></path><rect x="70" y="20" width="28.5" height="22" rx="10" ry="10"></rect><text x="84.25" y="35">e</text></g><path d="M98.5 31h20"></path><path d="M50 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M70 61h0"></path><path d="M98.5 61h0"></path><rect x="70" y="50" width="28.5" height="22" rx="10" ry="10"></rect><text x="84.25" y="65">E</text></g><path d="M98.5 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><g><path d="M118.5 31h0"></path><path d="M187 31h0"></path><path d="M118.5 31h20"></path><g><path d="M138.5 31h28.5"></path></g><path d="M167 31h20"></path><path d="M118.5 31a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M138.5 51h0"></path><path d="M167 51h0"></path><rect x="138.5" y="40" width="28.5" height="22" rx="10" ry="10"></rect><text x="152.75" y="55">+</text></g><path d="M167 51a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><path d="M118.5 31a10 10 0 0 1 10 10v30a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M138.5 81h0"></path><path d="M167 81h0"></path><rect x="138.5" y="70" width="28.5" height="22" rx="10" ry="10"></rect><text x="152.75" y="85">-</text></g><path d="M167 81a10 10 0 0 0 10 -10v-30a10 10 0 0 1 10 -10"></path></g><path d="M187 31h10"></path><g class="non-terminal"><path d="M197 31h0"></path><path d="M336 31h0"></path><rect x="197" y="20" width="139" height="22"></rect><a xlink:href="#decimal_digits"><text x="266.5" y="35">decimal&#95;digits</text></a></g></g><path d="M336 31h10"></path><path d="M 346 31 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">decimal_exponent</span> = ( <span class="ebnf-terminal">"e"</span> | <span class="ebnf-terminal">"E"</span> ) , [ <span class="ebnf-terminal">"+"</span> | <span class="ebnf-terminal">"-"</span> ] ,
+  <a class="ebnf-non-terminal" href="#decimal_digits">decimal_digits</a> <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>decimal_exponent</strong>:<p>
+<ul>
+<li><a href="#decimal_float_lit">decimal_float_lit</a></li>
+</ul>
+  <p><strong>decimal_exponent</strong> is referencing:<p>
+<ul>
+<li><a href="#decimal_digits">decimal_digits</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="string_lit">string_lit</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="814.5" style="max-height: 856px;" viewBox="0 0 814.5 856"><g transform="translate(.5 .5)"><g><path d="M20 89v20m0 -10h20"></path></g><g><path d="M40 99h0"></path><path d="M774.5 99h0"></path><path d="M40 99h20"></path><g><path d="M60 99h92.75"></path><path d="M661.75 99h92.75"></path><rect x="152.75" y="42" width="509" height="160" rx="10" ry="10" class="group-box"></rect><g><path d="M152.75 99h10"></path><path d="M651.75 99h10"></path><g class="terminal"><path d="M162.75 99h0"></path><path d="M191.25 99h0"></path><rect x="162.75" y="88" width="28.5" height="22" rx="10" ry="10"></rect><text x="177" y="103">&#96;</text></g><path d="M191.25 99h10"></path><g><path d="M201.25 99h0"></path><path d="M613.25 99h0"></path><path d="M201.25 99a10 10 0 0 0 10 -10v-29a10 10 0 0 1 10 -10"></path><g><path d="M221.25 50h372"></path></g><path d="M593.25 50a10 10 0 0 1 10 10v29a10 10 0 0 0 10 10"></path><path d="M201.25 99h20"></path><g><path d="M221.25 99h0"></path><path d="M593.25 99h0"></path><path d="M221.25 99h10"></path><g><path d="M231.25 99h0"></path><path d="M583.25 99h0"></path><path d="M231.25 99h20"></path><g><path d="M251.25 99h0"></path><path d="M563.25 99h0"></path><rect x="251.25" y="80" width="312" height="38" rx="10" ry="10" class="group-box"></rect><g class="special-sequence"><path d="M251.25 99h10"></path><path d="M553.25 99h10"></path><rect x="261.25" y="88" width="292" height="22"></rect><text x="407.25" y="103"> любой юникодный символ кроме &#96; </text></g><g><path d="M251.25 69h0"></path><path d="M345.25 69h0"></path><a xlink:href="#unicode_char"><text x="298.25" y="74" class="comment">unicode&#95;char</text></a></g></g><path d="M563.25 99h20"></path><path d="M231.25 99a10 10 0 0 1 10 10v48a10 10 0 0 0 10 10"></path><g><path d="M251.25 167h46.75"></path><path d="M516.5 167h46.75"></path><rect x="298" y="148" width="218.5" height="38" rx="10" ry="10" class="group-box"></rect><g class="special-sequence"><path d="M298 167h10"></path><path d="M506.5 167h10"></path><rect x="308" y="156" width="198.5" height="22"></rect><text x="407.25" y="171"> символ новой строки </text></g><g><path d="M298 137h0"></path><path d="M357 137h0"></path><a xlink:href="#newline"><text x="327.5" y="142" class="comment">newline</text></a></g></g><path d="M563.25 167a10 10 0 0 0 10 -10v-48a10 10 0 0 1 10 -10"></path></g><path d="M583.25 99h10"></path><path d="M231.25 99a10 10 0 0 0 -10 10v75a10 10 0 0 0 10 10"></path><g><path d="M231.25 194h352"></path></g><path d="M583.25 194a10 10 0 0 0 10 -10v-75a10 10 0 0 0 -10 -10"></path></g><path d="M593.25 99h20"></path></g><path d="M613.25 99h10"></path><g class="terminal"><path d="M623.25 99h0"></path><path d="M651.75 99h0"></path><rect x="623.25" y="88" width="28.5" height="22" rx="10" ry="10"></rect><text x="637.5" y="103">&#96;</text></g></g><g><path d="M152.75 31h0"></path><path d="M260.75 31h0"></path><a xlink:href="#raw_string_lit"><text x="206.75" y="36" class="comment">raw&#95;string&#95;lit</text></a></g></g><path d="M754.5 99h20"></path><path d="M40 99a10 10 0 0 1 10 10v170a10 10 0 0 0 10 10"></path><g><path d="M60 289h0"></path><path d="M754.5 289h0"></path><rect x="60" y="232" width="694.5" height="604" rx="10" ry="10" class="group-box"></rect><g><path d="M60 289h10"></path><path d="M744.5 289h10"></path><g class="terminal"><path d="M70 289h0"></path><path d="M98.5 289h0"></path><rect x="70" y="278" width="28.5" height="22" rx="10" ry="10"></rect><text x="84.25" y="293">"</text></g><path d="M98.5 289h10"></path><g><path d="M108.5 289h0"></path><path d="M706 289h0"></path><path d="M108.5 289a10 10 0 0 0 10 -10v-29a10 10 0 0 1 10 -10"></path><g><path d="M128.5 240h557.5"></path></g><path d="M686 240a10 10 0 0 1 10 10v29a10 10 0 0 0 10 10"></path><path d="M108.5 289h20"></path><g><path d="M128.5 289h0"></path><path d="M686 289h0"></path><path d="M128.5 289h10"></path><g><path d="M138.5 289h0"></path><path d="M676 289h0"></path><path d="M138.5 289h20"></path><g><path d="M158.5 289h65.75"></path><path d="M590.25 289h65.75"></path><rect x="224.25" y="270" width="366" height="376" rx="10" ry="10" class="group-box"></rect><g><path d="M224.25 289h0"></path><path d="M590.25 289h0"></path><path d="M224.25 289h20"></path><g class="special-sequence"><path d="M244.25 289h0"></path><path d="M570.25 289h0"></path><rect x="244.25" y="278" width="326" height="22"></rect><text x="407.25" y="293"> любой юникодный символ кроме " и \ </text></g><path d="M570.25 289h20"></path><path d="M224.25 289a10 10 0 0 1 10 10v40a10 10 0 0 0 10 10"></path><g><path d="M244.25 349h91"></path><path d="M479.25 349h91"></path><rect x="335.25" y="330" width="144" height="308" rx="10" ry="10" class="group-box"></rect><g><path d="M335.25 349h10"></path><path d="M469.25 349h10"></path><g class="terminal"><path d="M345.25 349h0"></path><path d="M382.25 349h0"></path><rect x="345.25" y="338" width="37" height="22" rx="10" ry="10"></rect><text x="363.75" y="353">\\</text></g><path d="M382.25 349h10"></path><g><path d="M392.25 349h0"></path><path d="M469.25 349h0"></path><path d="M392.25 349h20"></path><g class="terminal"><path d="M412.25 349h4.25"></path><path d="M445 349h4.25"></path><rect x="416.5" y="338" width="28.5" height="22" rx="10" ry="10"></rect><text x="430.75" y="353">a</text></g><path d="M449.25 349h20"></path><path d="M392.25 349a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M412.25 379h4.25"></path><path d="M445 379h4.25"></path><rect x="416.5" y="368" width="28.5" height="22" rx="10" ry="10"></rect><text x="430.75" y="383">b</text></g><path d="M449.25 379a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path><path d="M392.25 349a10 10 0 0 1 10 10v40a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M412.25 409h4.25"></path><path d="M445 409h4.25"></path><rect x="416.5" y="398" width="28.5" height="22" rx="10" ry="10"></rect><text x="430.75" y="413">f</text></g><path d="M449.25 409a10 10 0 0 0 10 -10v-40a10 10 0 0 1 10 -10"></path><path d="M392.25 349a10 10 0 0 1 10 10v70a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M412.25 439h4.25"></path><path d="M445 439h4.25"></path><rect x="416.5" y="428" width="28.5" height="22" rx="10" ry="10"></rect><text x="430.75" y="443">n</text></g><path d="M449.25 439a10 10 0 0 0 10 -10v-70a10 10 0 0 1 10 -10"></path><path d="M392.25 349a10 10 0 0 1 10 10v100a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M412.25 469h4.25"></path><path d="M445 469h4.25"></path><rect x="416.5" y="458" width="28.5" height="22" rx="10" ry="10"></rect><text x="430.75" y="473">r</text></g><path d="M449.25 469a10 10 0 0 0 10 -10v-100a10 10 0 0 1 10 -10"></path><path d="M392.25 349a10 10 0 0 1 10 10v130a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M412.25 499h4.25"></path><path d="M445 499h4.25"></path><rect x="416.5" y="488" width="28.5" height="22" rx="10" ry="10"></rect><text x="430.75" y="503">t</text></g><path d="M449.25 499a10 10 0 0 0 10 -10v-130a10 10 0 0 1 10 -10"></path><path d="M392.25 349a10 10 0 0 1 10 10v160a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M412.25 529h4.25"></path><path d="M445 529h4.25"></path><rect x="416.5" y="518" width="28.5" height="22" rx="10" ry="10"></rect><text x="430.75" y="533">v</text></g><path d="M449.25 529a10 10 0 0 0 10 -10v-160a10 10 0 0 1 10 -10"></path><path d="M392.25 349a10 10 0 0 1 10 10v190a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M412.25 559h0"></path><path d="M449.25 559h0"></path><rect x="412.25" y="548" width="37" height="22" rx="10" ry="10"></rect><text x="430.75" y="563">\\</text></g><path d="M449.25 559a10 10 0 0 0 10 -10v-190a10 10 0 0 1 10 -10"></path><path d="M392.25 349a10 10 0 0 1 10 10v220a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M412.25 589h4.25"></path><path d="M445 589h4.25"></path><rect x="416.5" y="578" width="28.5" height="22" rx="10" ry="10"></rect><text x="430.75" y="593">'</text></g><path d="M449.25 589a10 10 0 0 0 10 -10v-220a10 10 0 0 1 10 -10"></path><path d="M392.25 349a10 10 0 0 1 10 10v250a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M412.25 619h4.25"></path><path d="M445 619h4.25"></path><rect x="416.5" y="608" width="28.5" height="22" rx="10" ry="10"></rect><text x="430.75" y="623">"</text></g><path d="M449.25 619a10 10 0 0 0 10 -10v-250a10 10 0 0 1 10 -10"></path></g></g><g><path d="M335.25 319h0"></path><path d="M429.25 319h0"></path><a xlink:href="#escaped_char"><text x="382.25" y="324" class="comment">escaped&#95;char</text></a></g></g><path d="M570.25 349a10 10 0 0 0 10 -10v-40a10 10 0 0 1 10 -10"></path></g><g><path d="M224.25 259h0"></path><path d="M325.25 259h0"></path><a xlink:href="#unicode_value"><text x="274.75" y="264" class="comment">unicode&#95;value</text></a></g></g><path d="M656 289h20"></path><path d="M138.5 289a10 10 0 0 1 10 10v416a10 10 0 0 0 10 10"></path><g><path d="M158.5 725h0"></path><path d="M656 725h0"></path><rect x="158.5" y="676" width="497.5" height="144" rx="10" ry="10" class="group-box"></rect><g><path d="M158.5 725h0"></path><path d="M656 725h0"></path><path d="M158.5 725h20"></path><g><path d="M178.5 725h0"></path><path d="M636 725h0"></path><rect x="178.5" y="706" width="457.5" height="38" rx="10" ry="10" class="group-box"></rect><g><path d="M178.5 725h10"></path><path d="M626 725h10"></path><g class="terminal"><path d="M188.5 725h0"></path><path d="M225.5 725h0"></path><rect x="188.5" y="714" width="37" height="22" rx="10" ry="10"></rect><text x="207" y="729">\\</text></g><path d="M225.5 725h10"></path><path d="M235.5 725h10"></path><g class="non-terminal"><path d="M245.5 725h0"></path><path d="M359 725h0"></path><rect x="245.5" y="714" width="113.5" height="22"></rect><a xlink:href="#octal_digit"><text x="302.25" y="729">octal&#95;digit</text></a></g><path d="M359 725h10"></path><path d="M369 725h10"></path><g class="non-terminal"><path d="M379 725h0"></path><path d="M492.5 725h0"></path><rect x="379" y="714" width="113.5" height="22"></rect><a xlink:href="#octal_digit"><text x="435.75" y="729">octal&#95;digit</text></a></g><path d="M492.5 725h10"></path><path d="M502.5 725h10"></path><g class="non-terminal"><path d="M512.5 725h0"></path><path d="M626 725h0"></path><rect x="512.5" y="714" width="113.5" height="22"></rect><a xlink:href="#octal_digit"><text x="569.25" y="729">octal&#95;digit</text></a></g></g><g><path d="M178.5 695h0"></path><path d="M300.5 695h0"></path><a xlink:href="#octal_byte_value"><text x="239.5" y="700" class="comment">octal&#95;byte&#95;value</text></a></g></g><path d="M636 725h20"></path><path d="M158.5 725a10 10 0 0 1 10 10v48a10 10 0 0 0 10 10"></path><g><path d="M178.5 793h59.5"></path><path d="M576.5 793h59.5"></path><rect x="238" y="774" width="338.5" height="38" rx="10" ry="10" class="group-box"></rect><g><path d="M238 793h10"></path><path d="M566.5 793h10"></path><g class="terminal"><path d="M248 793h0"></path><path d="M285 793h0"></path><rect x="248" y="782" width="37" height="22" rx="10" ry="10"></rect><text x="266.5" y="797">\\</text></g><path d="M285 793h10"></path><path d="M295 793h10"></path><g class="terminal"><path d="M305 793h0"></path><path d="M333.5 793h0"></path><rect x="305" y="782" width="28.5" height="22" rx="10" ry="10"></rect><text x="319.25" y="797">x</text></g><path d="M333.5 793h10"></path><path d="M343.5 793h10"></path><g class="non-terminal"><path d="M353.5 793h0"></path><path d="M450 793h0"></path><rect x="353.5" y="782" width="96.5" height="22"></rect><a xlink:href="#hex_digit"><text x="401.75" y="797">hex&#95;digit</text></a></g><path d="M450 793h10"></path><path d="M460 793h10"></path><g class="non-terminal"><path d="M470 793h0"></path><path d="M566.5 793h0"></path><rect x="470" y="782" width="96.5" height="22"></rect><a xlink:href="#hex_digit"><text x="518.25" y="797">hex&#95;digit</text></a></g></g><g><path d="M238 763h0"></path><path d="M346 763h0"></path><a xlink:href="#hex_byte_value"><text x="292" y="768" class="comment">hex&#95;byte&#95;value</text></a></g></g><path d="M636 793a10 10 0 0 0 10 -10v-48a10 10 0 0 1 10 -10"></path></g><g><path d="M158.5 665h0"></path><path d="M238.5 665h0"></path><a xlink:href="#byte_value"><text x="198.5" y="670" class="comment">byte&#95;value</text></a></g></g><path d="M656 725a10 10 0 0 0 10 -10v-416a10 10 0 0 1 10 -10"></path></g><path d="M676 289h10"></path><path d="M138.5 289a10 10 0 0 0 -10 10v519a10 10 0 0 0 10 10"></path><g><path d="M138.5 828h537.5"></path></g><path d="M676 828a10 10 0 0 0 10 -10v-519a10 10 0 0 0 -10 -10"></path></g><path d="M686 289h20"></path></g><path d="M706 289h10"></path><g class="terminal"><path d="M716 289h0"></path><path d="M744.5 289h0"></path><rect x="716" y="278" width="28.5" height="22" rx="10" ry="10"></rect><text x="730.25" y="293">"</text></g></g><g><path d="M60 221h0"></path><path d="M224 221h0"></path><a xlink:href="#interpreted_string_lit"><text x="142" y="226" class="comment">interpreted&#95;string&#95;lit</text></a></g></g><path d="M754.5 289a10 10 0 0 0 10 -10v-170a10 10 0 0 1 10 -10"></path></g><path d="M 774.5 99 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">string_lit</span> = <a class="ebnf-non-terminal" href="#raw_string_lit">raw_string_lit</a> | <a class="ebnf-non-terminal" href="#interpreted_string_lit">interpreted_string_lit</a> <span class="ebnf-end">;</span></code>
+  <p><strong>string_lit</strong> is referencing:<p>
+<ul>
+<li><a href="#raw_string_lit">raw_string_lit</a></li><li><a href="#interpreted_string_lit">interpreted_string_lit</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="raw_string_lit">raw_string_lit</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="399" style="max-height: 108px;" viewBox="0 0 399 108"><g transform="translate(.5 .5)"><g><path d="M20 29v20m0 -10h20"></path></g><path d="M40 39h10"></path><g><path d="M50 39h0"></path><path d="M349 39h0"></path><g class="terminal"><path d="M50 39h0"></path><path d="M78.5 39h0"></path><rect x="50" y="28" width="28.5" height="22" rx="10" ry="10"></rect><text x="64.25" y="43">&#96;</text></g><path d="M78.5 39h10"></path><g><path d="M88.5 39h0"></path><path d="M310.5 39h0"></path><path d="M88.5 39a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M108.5 19h182"></path></g><path d="M290.5 19a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M88.5 39h20"></path><g><path d="M108.5 39h0"></path><path d="M290.5 39h0"></path><path d="M108.5 39h10"></path><g><path d="M118.5 39h0"></path><path d="M280.5 39h0"></path><path d="M118.5 39h20"></path><g class="non-terminal"><path d="M138.5 39h0"></path><path d="M260.5 39h0"></path><rect x="138.5" y="28" width="122" height="22"></rect><a xlink:href="#unicode_char"><text x="199.5" y="43">unicode&#95;char</text></a></g><path d="M260.5 39h20"></path><path d="M118.5 39a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M138.5 69h21.25"></path><path d="M239.25 69h21.25"></path><rect x="159.75" y="58" width="79.5" height="22"></rect><a xlink:href="#newline"><text x="199.5" y="73">newline</text></a></g><path d="M260.5 69a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><path d="M280.5 39h10"></path><path d="M118.5 39a10 10 0 0 0 -10 10v29a10 10 0 0 0 10 10"></path><g><path d="M118.5 88h162"></path></g><path d="M280.5 88a10 10 0 0 0 10 -10v-29a10 10 0 0 0 -10 -10"></path></g><path d="M290.5 39h20"></path></g><path d="M310.5 39h10"></path><g class="terminal"><path d="M320.5 39h0"></path><path d="M349 39h0"></path><rect x="320.5" y="28" width="28.5" height="22" rx="10" ry="10"></rect><text x="334.75" y="43">&#96;</text></g></g><path d="M349 39h10"></path><path d="M 359 39 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">raw_string_lit</span> = <span class="ebnf-terminal">"`"</span> , { <a class="ebnf-non-terminal" href="#unicode_char">unicode_char</a> | <a class="ebnf-non-terminal" href="#newline">newline</a> } , <span class="ebnf-terminal">"`"</span> <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>raw_string_lit</strong>:<p>
+<ul>
+<li><a href="#string_lit">string_lit</a></li>
+</ul>
+  <p><strong>raw_string_lit</strong> is referencing:<p>
+<ul>
+<li><a href="#unicode_char">unicode_char</a></li><li><a href="#newline">newline</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="interpreted_string_lit">interpreted_string_lit</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="407.5" style="max-height: 108px;" viewBox="0 0 407.5 108"><g transform="translate(.5 .5)"><g><path d="M20 29v20m0 -10h20"></path></g><path d="M40 39h10"></path><g><path d="M50 39h0"></path><path d="M357.5 39h0"></path><g class="terminal"><path d="M50 39h0"></path><path d="M78.5 39h0"></path><rect x="50" y="28" width="28.5" height="22" rx="10" ry="10"></rect><text x="64.25" y="43">"</text></g><path d="M78.5 39h10"></path><g><path d="M88.5 39h0"></path><path d="M319 39h0"></path><path d="M88.5 39a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path><g><path d="M108.5 19h190.5"></path></g><path d="M299 19a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path><path d="M88.5 39h20"></path><g><path d="M108.5 39h0"></path><path d="M299 39h0"></path><path d="M108.5 39h10"></path><g><path d="M118.5 39h0"></path><path d="M289 39h0"></path><path d="M118.5 39h20"></path><g class="non-terminal"><path d="M138.5 39h0"></path><path d="M269 39h0"></path><rect x="138.5" y="28" width="130.5" height="22"></rect><a xlink:href="#unicode_value"><text x="203.75" y="43">unicode&#95;value</text></a></g><path d="M269 39h20"></path><path d="M118.5 39a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M138.5 69h12.75"></path><path d="M256.25 69h12.75"></path><rect x="151.25" y="58" width="105" height="22"></rect><a xlink:href="#byte_value"><text x="203.75" y="73">byte&#95;value</text></a></g><path d="M269 69a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><path d="M289 39h10"></path><path d="M118.5 39a10 10 0 0 0 -10 10v29a10 10 0 0 0 10 10"></path><g><path d="M118.5 88h170.5"></path></g><path d="M289 88a10 10 0 0 0 10 -10v-29a10 10 0 0 0 -10 -10"></path></g><path d="M299 39h20"></path></g><path d="M319 39h10"></path><g class="terminal"><path d="M329 39h0"></path><path d="M357.5 39h0"></path><rect x="329" y="28" width="28.5" height="22" rx="10" ry="10"></rect><text x="343.25" y="43">"</text></g></g><path d="M357.5 39h10"></path><path d="M 367.5 39 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">interpreted_string_lit</span> = <span class="ebnf-terminal">'"'</span> , { <a class="ebnf-non-terminal" href="#unicode_value">unicode_value</a> | <a class="ebnf-non-terminal" href="#byte_value">byte_value</a> } , <span class="ebnf-terminal">'"'</span> <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>interpreted_string_lit</strong>:<p>
+<ul>
+<li><a href="#string_lit">string_lit</a></li>
+</ul>
+  <p><strong>interpreted_string_lit</strong> is referencing:<p>
+<ul>
+<li><a href="#unicode_value">unicode_value</a></li><li><a href="#byte_value">byte_value</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="unicode_char">unicode_char</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="392" style="max-height: 62px;" viewBox="0 0 392 62"><g transform="translate(.5 .5)"><g><path d="M20 21v20m10 -20v20m-10 -10h20"></path></g><path d="M40 31h10"></path><g class="special-sequence"><path d="M50 31h0"></path><path d="M342 31h0"></path><rect x="50" y="20" width="292" height="22"></rect><text x="196" y="35"> любой юникодный символ кроме &#96; </text></g><path d="M342 31h10"></path><path d="M 352 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">unicode_char</span> = <span class="ebnf-special-sequence">? любой юникодный символ кроме ` ?</span> <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>unicode_char</strong>:<p>
+<ul>
+<li><a href="#raw_string_lit">raw_string_lit</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="newline">newline</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="298.5" style="max-height: 62px;" viewBox="0 0 298.5 62"><g transform="translate(.5 .5)"><g><path d="M20 21v20m10 -20v20m-10 -10h20"></path></g><path d="M40 31h10"></path><g class="special-sequence"><path d="M50 31h0"></path><path d="M248.5 31h0"></path><rect x="50" y="20" width="198.5" height="22"></rect><text x="149.25" y="35"> символ новой строки </text></g><path d="M248.5 31h10"></path><path d="M 258.5 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">newline</span> = <span class="ebnf-special-sequence">? символ новой строки ?</span> <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>newline</strong>:<p>
+<ul>
+<li><a href="#raw_string_lit">raw_string_lit</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="unicode_value">unicode_value</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="446" style="max-height: 92px;" viewBox="0 0 446 92"><g transform="translate(.5 .5)"><g><path d="M20 21v20m0 -10h20"></path></g><g><path d="M40 31h0"></path><path d="M406 31h0"></path><path d="M40 31h20"></path><g class="special-sequence"><path d="M60 31h0"></path><path d="M386 31h0"></path><rect x="60" y="20" width="326" height="22"></rect><text x="223" y="35"> любой юникодный символ кроме " и \ </text></g><path d="M386 31h20"></path><path d="M40 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M60 61h102"></path><path d="M284 61h102"></path><rect x="162" y="50" width="122" height="22"></rect><a xlink:href="#escaped_char"><text x="223" y="65">escaped&#95;char</text></a></g><path d="M386 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><path d="M 406 31 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">unicode_value</span>
+  = <span class="ebnf-special-sequence">? любой юникодный символ кроме " и \ ?</span>
+  | <a class="ebnf-non-terminal" href="#escaped_char">escaped_char</a>
+  <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>unicode_value</strong>:<p>
+<ul>
+<li><a href="#interpreted_string_lit">interpreted_string_lit</a></li>
+</ul>
+  <p><strong>unicode_value</strong> is referencing:<p>
+<ul>
+<li><a href="#escaped_char">escaped_char</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="byte_value">byte_value</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="276" style="max-height: 92px;" viewBox="0 0 276 92"><g transform="translate(.5 .5)"><g><path d="M20 21v20m0 -10h20"></path></g><g><path d="M40 31h0"></path><path d="M236 31h0"></path><path d="M40 31h20"></path><g class="non-terminal"><path d="M60 31h0"></path><path d="M216 31h0"></path><rect x="60" y="20" width="156" height="22"></rect><a xlink:href="#octal_byte_value"><text x="138" y="35">octal&#95;byte&#95;value</text></a></g><path d="M216 31h20"></path><path d="M40 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="non-terminal"><path d="M60 61h8.5"></path><path d="M207.5 61h8.5"></path><rect x="68.5" y="50" width="139" height="22"></rect><a xlink:href="#hex_byte_value"><text x="138" y="65">hex&#95;byte&#95;value</text></a></g><path d="M216 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path></g><path d="M 236 31 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">byte_value</span> = <a class="ebnf-non-terminal" href="#octal_byte_value">octal_byte_value</a> | <a class="ebnf-non-terminal" href="#hex_byte_value">hex_byte_value</a> <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>byte_value</strong>:<p>
+<ul>
+<li><a href="#interpreted_string_lit">interpreted_string_lit</a></li>
+</ul>
+  <p><strong>byte_value</strong> is referencing:<p>
+<ul>
+<li><a href="#octal_byte_value">octal_byte_value</a></li><li><a href="#hex_byte_value">hex_byte_value</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="escaped_char">escaped_char</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="224" style="max-height: 332px;" viewBox="0 0 224 332"><g transform="translate(.5 .5)"><g><path d="M20 21v20m10 -20v20m-10 -10h20"></path></g><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M174 31h0"></path><g class="terminal"><path d="M50 31h0"></path><path d="M87 31h0"></path><rect x="50" y="20" width="37" height="22" rx="10" ry="10"></rect><text x="68.5" y="35">\\</text></g><path d="M87 31h10"></path><g><path d="M97 31h0"></path><path d="M174 31h0"></path><path d="M97 31h20"></path><g class="terminal"><path d="M117 31h4.25"></path><path d="M149.75 31h4.25"></path><rect x="121.25" y="20" width="28.5" height="22" rx="10" ry="10"></rect><text x="135.5" y="35">a</text></g><path d="M154 31h20"></path><path d="M97 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M117 61h4.25"></path><path d="M149.75 61h4.25"></path><rect x="121.25" y="50" width="28.5" height="22" rx="10" ry="10"></rect><text x="135.5" y="65">b</text></g><path d="M154 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"></path><path d="M97 31a10 10 0 0 1 10 10v40a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M117 91h4.25"></path><path d="M149.75 91h4.25"></path><rect x="121.25" y="80" width="28.5" height="22" rx="10" ry="10"></rect><text x="135.5" y="95">f</text></g><path d="M154 91a10 10 0 0 0 10 -10v-40a10 10 0 0 1 10 -10"></path><path d="M97 31a10 10 0 0 1 10 10v70a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M117 121h4.25"></path><path d="M149.75 121h4.25"></path><rect x="121.25" y="110" width="28.5" height="22" rx="10" ry="10"></rect><text x="135.5" y="125">n</text></g><path d="M154 121a10 10 0 0 0 10 -10v-70a10 10 0 0 1 10 -10"></path><path d="M97 31a10 10 0 0 1 10 10v100a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M117 151h4.25"></path><path d="M149.75 151h4.25"></path><rect x="121.25" y="140" width="28.5" height="22" rx="10" ry="10"></rect><text x="135.5" y="155">r</text></g><path d="M154 151a10 10 0 0 0 10 -10v-100a10 10 0 0 1 10 -10"></path><path d="M97 31a10 10 0 0 1 10 10v130a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M117 181h4.25"></path><path d="M149.75 181h4.25"></path><rect x="121.25" y="170" width="28.5" height="22" rx="10" ry="10"></rect><text x="135.5" y="185">t</text></g><path d="M154 181a10 10 0 0 0 10 -10v-130a10 10 0 0 1 10 -10"></path><path d="M97 31a10 10 0 0 1 10 10v160a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M117 211h4.25"></path><path d="M149.75 211h4.25"></path><rect x="121.25" y="200" width="28.5" height="22" rx="10" ry="10"></rect><text x="135.5" y="215">v</text></g><path d="M154 211a10 10 0 0 0 10 -10v-160a10 10 0 0 1 10 -10"></path><path d="M97 31a10 10 0 0 1 10 10v190a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M117 241h0"></path><path d="M154 241h0"></path><rect x="117" y="230" width="37" height="22" rx="10" ry="10"></rect><text x="135.5" y="245">\\</text></g><path d="M154 241a10 10 0 0 0 10 -10v-190a10 10 0 0 1 10 -10"></path><path d="M97 31a10 10 0 0 1 10 10v220a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M117 271h4.25"></path><path d="M149.75 271h4.25"></path><rect x="121.25" y="260" width="28.5" height="22" rx="10" ry="10"></rect><text x="135.5" y="275">'</text></g><path d="M154 271a10 10 0 0 0 10 -10v-220a10 10 0 0 1 10 -10"></path><path d="M97 31a10 10 0 0 1 10 10v250a10 10 0 0 0 10 10"></path><g class="terminal"><path d="M117 301h4.25"></path><path d="M149.75 301h4.25"></path><rect x="121.25" y="290" width="28.5" height="22" rx="10" ry="10"></rect><text x="135.5" y="305">"</text></g><path d="M154 301a10 10 0 0 0 10 -10v-250a10 10 0 0 1 10 -10"></path></g></g><path d="M174 31h10"></path><path d="M 184 31 h 20 m -10 -10 v 20 m 10 -20 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">escaped_char</span> = <span class="ebnf-terminal">"\\"</span> ,
+  ( <span class="ebnf-terminal">"a"</span> | <span class="ebnf-terminal">"b"</span>  | <span class="ebnf-terminal">"f"</span> | <span class="ebnf-terminal">"n"</span> | <span class="ebnf-terminal">"r"</span> | <span class="ebnf-terminal">"t"</span>
+  | <span class="ebnf-terminal">"v"</span> | <span class="ebnf-terminal">"\\"</span> | <span class="ebnf-terminal">"'"</span> | <span class="ebnf-terminal">'"'</span>
+  ) <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>escaped_char</strong>:<p>
+<ul>
+<li><a href="#unicode_value">unicode_value</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="octal_byte_value">octal_byte_value</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="537.5" style="max-height: 62px;" viewBox="0 0 537.5 62"><g transform="translate(.5 .5)"><g><path d="M20 21v20m0 -10h20"></path></g><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M487.5 31h0"></path><g class="terminal"><path d="M50 31h0"></path><path d="M87 31h0"></path><rect x="50" y="20" width="37" height="22" rx="10" ry="10"></rect><text x="68.5" y="35">\\</text></g><path d="M87 31h10"></path><path d="M97 31h10"></path><g class="non-terminal"><path d="M107 31h0"></path><path d="M220.5 31h0"></path><rect x="107" y="20" width="113.5" height="22"></rect><a xlink:href="#octal_digit"><text x="163.75" y="35">octal&#95;digit</text></a></g><path d="M220.5 31h10"></path><path d="M230.5 31h10"></path><g class="non-terminal"><path d="M240.5 31h0"></path><path d="M354 31h0"></path><rect x="240.5" y="20" width="113.5" height="22"></rect><a xlink:href="#octal_digit"><text x="297.25" y="35">octal&#95;digit</text></a></g><path d="M354 31h10"></path><path d="M364 31h10"></path><g class="non-terminal"><path d="M374 31h0"></path><path d="M487.5 31h0"></path><rect x="374" y="20" width="113.5" height="22"></rect><a xlink:href="#octal_digit"><text x="430.75" y="35">octal&#95;digit</text></a></g></g><path d="M487.5 31h10"></path><path d="M 497.5 31 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">octal_byte_value</span> = <span class="ebnf-terminal">"\\"</span> , <a class="ebnf-non-terminal" href="#octal_digit">octal_digit</a> , <a class="ebnf-non-terminal" href="#octal_digit">octal_digit</a> ,
+  <a class="ebnf-non-terminal" href="#octal_digit">octal_digit</a> <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>octal_byte_value</strong>:<p>
+<ul>
+<li><a href="#byte_value">byte_value</a></li>
+</ul>
+  <p><strong>octal_byte_value</strong> is referencing:<p>
+<ul>
+<li><a href="#octal_digit">octal_digit</a></li>
+</ul>
+</section>
+<section>
+  <h4 id="hex_byte_value">hex_byte_value</h4>
+  <div class="diagram-container"><svg class="railroad-diagram" width="418.5" style="max-height: 62px;" viewBox="0 0 418.5 62"><g transform="translate(.5 .5)"><g><path d="M20 21v20m0 -10h20"></path></g><path d="M40 31h10"></path><g><path d="M50 31h0"></path><path d="M368.5 31h0"></path><g class="terminal"><path d="M50 31h0"></path><path d="M87 31h0"></path><rect x="50" y="20" width="37" height="22" rx="10" ry="10"></rect><text x="68.5" y="35">\\</text></g><path d="M87 31h10"></path><path d="M97 31h10"></path><g class="terminal"><path d="M107 31h0"></path><path d="M135.5 31h0"></path><rect x="107" y="20" width="28.5" height="22" rx="10" ry="10"></rect><text x="121.25" y="35">x</text></g><path d="M135.5 31h10"></path><path d="M145.5 31h10"></path><g class="non-terminal"><path d="M155.5 31h0"></path><path d="M252 31h0"></path><rect x="155.5" y="20" width="96.5" height="22"></rect><a xlink:href="#hex_digit"><text x="203.75" y="35">hex&#95;digit</text></a></g><path d="M252 31h10"></path><path d="M262 31h10"></path><g class="non-terminal"><path d="M272 31h0"></path><path d="M368.5 31h0"></path><rect x="272" y="20" width="96.5" height="22"></rect><a xlink:href="#hex_digit"><text x="320.25" y="35">hex&#95;digit</text></a></g></g><path d="M368.5 31h10"></path><path d="M 378.5 31 h 20 m 0 -10 v 20"></path></g></svg>
+</div>
+  <code class="ebnf"><span class="ebnf-identifier">hex_byte_value</span> = <span class="ebnf-terminal">"\\"</span> , <span class="ebnf-terminal">"x"</span> , <a class="ebnf-non-terminal" href="#hex_digit">hex_digit</a> , <a class="ebnf-non-terminal" href="#hex_digit">hex_digit</a> <span class="ebnf-end">;</span></code>
+  <p>Items referencing <strong>hex_byte_value</strong>:<p>
+<ul>
+<li><a href="#byte_value">byte_value</a></li>
+</ul>
+  <p><strong>hex_byte_value</strong> is referencing:<p>
+<ul>
+<li><a href="#hex_digit">hex_digit</a></li>
+</ul>
+</section>
+
+  </article>
+  <footer>
+    <p>Date: 2025-10-01T18:55 - <a href="?theme=dark" data-theme="dark">Dark</a> - <a href="?theme=light" data-theme="light">Light</a></p>
+  </footer>
+  </main>
+  <script type="text/javascript">
+    document.querySelector("header button").addEventListener("click", function() {
+      document.getElementsByTagName("html")[0].classList.toggle("menu-open");
+    });
+    document.querySelector("nav").addEventListener("click", function(event) {
+      if (event.target.tagName !== "A") return;
+      htmlTag.classList.remove("menu-open");
+    });
+    document.querySelectorAll("footer a").forEach(element =>
+      element.addEventListener("click", function(event) {
+        event.preventDefault();
+        const theme = event.target.getAttribute("data-theme");
+        const remove = Array.from(htmlTag.classList).filter(className => className.startsWith("theme-"));
+        remove.forEach(name => htmlTag.classList.remove(name));
+        htmlTag.classList.add("theme-" + theme);
+      })
+    );
+  </script>
+
+</body>
+</html>

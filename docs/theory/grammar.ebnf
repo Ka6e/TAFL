@@ -1,0 +1,39 @@
+letter = unicode_letter | "_" .
+unicode_letter = ? любой символ юникодной буквы ? .
+unicode_digit = ? любой юникодный цифровой символ ? .
+decimal_digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" .
+binary_digit = "0" | "1" .
+octal_digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" .
+hex_digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "A" | "B" | "C" | "D" | "E" | "F" | "a" | "b" | "c" | "d" | "e" | "f" .
+
+identifier = letter , { letter | unicode_digit } .
+
+int_lit = decimal_lit | binary_lit | octal_lit | hex_lit .
+decimal_lit = "0" | ( "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ) , [ [ "_" ] , decimal_digits ] .
+binary_lit = "0" , ( "b" | "B" ) , [ "_" ] , binary_digits .
+octal_lit = "0" , [ "o" | "O" ] , [ "_" ] , octal_digits .
+hex_lit = "0" , ( "x" | "X" ) , [ "_" ] , hex_digits .
+
+decimal_digits = decimal_digit , { [ "_" ] , decimal_digit } .
+binary_digits = binary_digit , { [ "_" ] , binary_digit } .
+octal_digits = octal_digit , { [ "_" ] , octal_digit } .
+hex_digits = hex_digit , { [ "_" ] , hex_digit } .
+
+float_lit = decimal_float_lit | hex_float_lit .
+decimal_float_lit = decimal_digits , "." , [ decimal_digits ] , [ decimal_exponent ] | decimal_digits , decimal_exponent | "." , decimal_digits , [ decimal_exponent ] .
+hex_float_lit = "0" , ( "x" | "X" ) , hex_mantissa , hex_exponent .
+hex_mantissa = [ "_" ] , hex_digits , "." , [ hex_digits ] | [ "_" ] , hex_digits | "." , hex_digits .
+hex_exponent = ( "p" | "P" ) , [ "+" | "-" ] , decimal_digits .
+decimal_exponent = ( "e" | "E" ) , [ "+" | "-" ] , decimal_digits .
+
+string_lit = raw_string_lit | interpreted_string_lit .
+raw_string_lit = "`" , { unicode_char | newline } , "`" .
+interpreted_string_lit = '"' , { unicode_value | byte_value } , '"' .
+
+unicode_char = ? любой юникодный символ кроме ` ? .
+newline = ? символ новой строки ? .
+unicode_value = ? любой юникодный символ кроме " и \ ? | escaped_char .
+byte_value = octal_byte_value | hex_byte_value .
+escaped_char = "\\" , ( "a" | "b" | "f" | "n" | "r" | "t" | "v" | "\\" | "'" | '"' ) .
+octal_byte_value = "\\" , octal_digit , octal_digit , octal_digit .
+hex_byte_value = "\\" , "x" , hex_digit , hex_digit .
