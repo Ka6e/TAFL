@@ -3,7 +3,7 @@
 - **Go**: классическое структурное программирование, императивный стиль.
   ```
   for i := 0; i < 10; i++ {
-      if i%2 == 0 {
+      if i % 2 == 0 {
           fmt.Println("even")
       }
   }
@@ -36,19 +36,14 @@ add a b = a + b
 
 ## 3. Набор типов данных
 
-Категория | Go | Haskell
-
-Целые | int, int8 … uint64 | Int, Integer
-
-Вещественные | float32, float64 | Float, Double
-
-Логический | bool | Bool
-
-Символ | rune (UTF-32) | Char
-
-Строки | string (байты UTF-8) | [Char] или Text
-
-Массив/список | []T (срезы) | [a] (связанный список)
+|Категория|Go|Haskell|
+|-|--------|---|
+|Целые|int, int8 … uint64|Int, Integer|
+|Вещественные| float32, float64 | Float, Double|
+|Логический| bool | Bool|
+|Символ|rune (UTF-32) | Char|
+|Строки|string (байты UTF-8) | [Char] или Text|
+|Массив/список|[]T (срезы) | [a] (связанный список)|
 
 
 ⸻
