@@ -84,12 +84,24 @@ fact n = n * fact (n - 1)
 
 ```
 type Point struct {
-    X, Y int
+    X int
+    Y int
 }
 
-// метод со значением (копия)
-func (p Point) Move(dx int) Point {
-    return Point{p.X + dx, p.Y}
+func move(p Point, dx int) Point {
+    x := p.X
+    y := p.Y
+
+    // Создаём новую структуру (аналог Point (x+dx) y)
+    return Point {
+        X: x + dx,
+        Y: y,
+    }
+}
+
+// Или в одну строку:
+func moveShort(p Point, dx int) Point {
+    return Point{X: p.X + dx, Y: p.Y}
 }
 ```
 
