@@ -111,6 +111,15 @@ func main(): Void {
 <li><code>type</code></li>
 <li><code>var</code></li>
 <li><code>where</code></li>
+<li><code>true</code></li>
+<li><code>false</code></li>
+<li><code>null</code></li>
+<li><code>int</code></li>
+<li><code>char</code></li>
+<li><code>string</code></li>
+<li><code>float</code></li>
+<li><code>void</code></li>
+<li><code>char</code></li>
 </ul>
 <p><strong>Ключевые слова регистрочувствительные.</strong> Например, <code>Let</code> и <code>let</code> — разные идентификаторы, и только <code>let</code> имеет зарезервированное значение.</p>
 <hr>
@@ -162,7 +171,8 @@ func main(): Void {
 <section id="функциональные-и-специальные" class="level3">
 <h3 class="anchored" data-anchor-id="функциональные-и-специальные">Функциональные и специальные</h3>
 <ul>
-<li><code>++</code> — конкатенация строк или списков (как в Haskell)</li>
+<li><code>++</code> — инкремент</li>
+<li><code>--</code> —дикремент</li>
 <li><code>..</code> — диапазон чисел (<code>1..10</code>)</li>
 <li><code>-&gt;</code> — тип функции (<code>Int -&gt; String</code>)</li>
 <li><code>:</code> — аннотация типа</li>
@@ -184,7 +194,6 @@ func main(): Void {
 <h3 class="anchored" data-anchor-id="строковые">Строковые</h3>
 <ul>
 <li><strong>Обычные</strong>: <code>"Hello"</code></li>
-<li><strong>С интерполяцией</strong>: <code>"Value: ${x}"</code></li>
 <li><strong>Многострочные</strong>: <code>"""Line1\nLine2"""</code></li>
 <li><strong>Сырые (raw)</strong>: <code>`C:\path\file`</code></li>
 </ul>
@@ -193,7 +202,7 @@ func main(): Void {
 <h3 class="anchored" data-anchor-id="логические-и-специальные">Логические и специальные</h3>
 <ul>
 <li><code>true</code>, <code>false</code></li>
-<li><code>null</code> или <code>None</code> — отсутствие значения (в функциональном стиле)</li>
+<li><code>null</code> — отсутствие значения</li>
 </ul>
 <hr>
 </section>

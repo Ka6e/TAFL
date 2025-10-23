@@ -9,36 +9,36 @@
 ```glacier
 module Main
 
-import IO, Collections
+import IO
 
-enum Result[T, E] {
-  Ok(value: T)
-  Err(error: E)
+enum DivisionResult {
+    Success(value: Int)
+    Failure(message: String)
 }
 
-class Calculator {
-  let factor: Int
+class Divider {
+    let factor: Int
 
-  new(f: Int) {
-    this.factor = f
-  }
+    new(f: Int) {
+        this.factor = f
+    }
 
-  func safeDivide(x: Int, y: Int): Result[Int, String] {
-    if y == 0 then
-      return Result.Err("division by zero")
-    else
-      return Result.Ok(x / y)
-  }
+    func divide(x: Int, y: Int): DivisionResult {
+        if y == 0 then
+            return DivisionResult.Failure("Cannot divide by zero")
+        else
+            return DivisionResult.Success(x / y)
+    }
 }
 
 func main(): Void {
-  let calc = Calculator.new(3)
-  let r = calc.safeDivide(10, 0)
+    let divider = Divider.new(2)
+    let result = divider.divide(10, 0)
 
-  match r {
-    case Ok(v): print("Result: " ++ show(v))
-    case Err(e): print("Error: " ++ e)
-  }
+    match result {
+        case Success(v): print("Quotient: " ++ show(v))
+        case Failure(msg): print("Error: " ++ msg)
+    }
 }
 ```
 
@@ -69,6 +69,12 @@ func main(): Void {
 - `true`
 - `false`
 - `null`
+- `int`
+- `char`
+- `string`
+- `float`
+- `void`
+- `char`
 
 **Ключевые слова регистрочувствительные.**
 Например, `Let` и `let` — разные идентификаторы, и только `let` имеет зарезервированное значение.
@@ -146,7 +152,6 @@ x, factor, _hidden, showValue, Point3D, calc_result
 | `( )` | Группировка выражений, вызовы функций |
 | `{ }` | Блоки кода, тела классов и функций |
 | `[ ]` | Списки, массивы |
-| `< >` | Объявление дженериков |
 | `,` | Разделитель элементов |
 | `;` | Необязательный разделитель выражений |
 | `:` | Аннотация типа или тег в enum |
