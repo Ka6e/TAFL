@@ -71,6 +71,29 @@ public class ProgrammStructureTests
                     new Token(TokenType.RBrace)
                 ]
             },
+            {
+                "for i in 0 .. (arr.length - 1) { print(i) }",
+                [
+                    new Token(TokenType.For),
+                    new Token(TokenType.Identifier, new TokenValue("i")),
+                    new Token(TokenType.In),
+                    new Token(TokenType.Integer, new TokenValue(0)),
+                    new Token(TokenType.Range),
+                    new Token(TokenType.LParenthesis),
+                    new Token(TokenType.Identifier, new TokenValue("arr")),
+                    new Token(TokenType.Access),
+                    new Token(TokenType.Identifier, new TokenValue("length")),
+                    new Token(TokenType.MinusSign),
+                    new Token(TokenType.Integer, new TokenValue(1)),
+                    new Token(TokenType.RParenthesis),
+                    new Token(TokenType.LBrace),
+                    new Token(TokenType.Identifier, new TokenValue("print")),
+                    new Token(TokenType.LParenthesis),
+                    new Token(TokenType.Identifier, new TokenValue("i")),
+                    new Token(TokenType.RParenthesis),
+                    new Token(TokenType.RBrace)
+                ]
+            },
         };
     }
 
@@ -87,7 +110,7 @@ public class ProgrammStructureTests
         return new TheoryData<string, List<Token>>()
         {
             {
-                "func add(a: int, b: int) -> int { return a + b }",
+                "func add(a: int, b: int): int { return a + b }",
                 [
                     new Token(TokenType.Func),
                     new Token(TokenType.Identifier, new TokenValue("add")),
@@ -100,7 +123,7 @@ public class ProgrammStructureTests
                     new Token(TokenType.Annotation),
                     new Token(TokenType.IntegerType),
                     new Token(TokenType.RParenthesis),
-                    new Token(TokenType.FuncType),
+                    new Token(TokenType.Annotation),
                     new Token(TokenType.IntegerType),
                     new Token(TokenType.LBrace),
                     new Token(TokenType.Return),

@@ -3,21 +3,21 @@
 namespace Lexer;
 public class TokenValue
 {
-    private readonly object _value;
+    private readonly object value;
 
     public TokenValue(string value)
     {
-        _value = value;
+        this.value = value;
     }
 
     public TokenValue(decimal value)
     {
-        _value = value;
+        this.value = value;
     }
 
     public override string ToString()
     {
-        return _value switch
+        return value switch
         {
             string s => s,
             decimal d => d.ToString(CultureInfo.InvariantCulture),
@@ -27,7 +27,7 @@ public class TokenValue
 
     public decimal ToDecimal()
     {
-        return _value switch
+        return value switch
         {
             string s => decimal.Parse(s, CultureInfo.InvariantCulture),
             decimal d => d,
@@ -39,10 +39,10 @@ public class TokenValue
     {
         if (obj is TokenValue other)
         {
-            return _value switch
+            return value switch
             {
-                string s => (string)other._value == s,
-                decimal d => (decimal)other._value == d,
+                string s => (string)other.value == s,
+                decimal d => (decimal)other.value == d,
                 _ => throw new NotImplementedException()
             };
         }
@@ -52,6 +52,6 @@ public class TokenValue
 
     public override int GetHashCode()
     {
-        return _value.GetHashCode();
+        return value.GetHashCode();
     }
 }

@@ -113,12 +113,11 @@ public class OperatorTests
         return new TheoryData<string, List<Token>>()
         {
             {
-                "++ -- .. -> : =",
+                "++ -- .. : =",
                 [
                     new Token(TokenType.Increment),
                     new Token(TokenType.Dicrement),
                     new Token(TokenType.Range),
-                    new Token(TokenType.FuncType),
                     new Token(TokenType.Annotation),
                     new Token(TokenType.Assign),
                 ]

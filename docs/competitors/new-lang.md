@@ -12,18 +12,18 @@ module Main
 import IO
 
 enum DivisionResult {
-    Success(value: Int)
-    Failure(message: String)
+    Success(value: int)
+    Failure(message: string)
 }
 
 class Divider {
-    let factor: Int
+    let factor: int
 
-    new(f: Int) {
+    new(f: int) {
         this.factor = f
     }
 
-    func divide(x: Int, y: Int): DivisionResult {
+    func divide(x: int, y: int): DivisionResult {
         if y == 0 then
             return DivisionResult.Failure("Cannot divide by zero")
         else
@@ -31,13 +31,13 @@ class Divider {
     }
 }
 
-func main(): Void {
+func main(): void {
     let divider = Divider.new(2)
     let result = divider.divide(10, 0)
 
     match result {
-        case Success(v): print("Quotient: " ++ show(v))
-        case Failure(msg): print("Error: " ++ msg)
+        case Success(v): print("Quotient: " + show(v))
+        case Failure(msg): print("Error: " + msg)
     }
 }
 ```
@@ -122,7 +122,6 @@ x, factor, _hidden, showValue, Point3D, calc_result
 - `++` — инкремент
 - `--` —дикремент
 - `..` — диапазон чисел (`1..10`)
-- `->` — тип функции (`Int -> String`)
 - `:` — аннотация типа
 - `=` — присваивание (для `var`)
 

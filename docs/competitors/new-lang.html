@@ -56,36 +56,36 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="пример-программы">Пример программы</h2>
 <pre class="glacier"><code>module Main
 
-import IO, Collections
+import IO
 
-enum Result[T, E] {
-  Ok(value: T)
-  Err(error: E)
+enum DivisionResult {
+    Success(value: int)
+    Failure(message: string)
 }
 
-class Calculator {
-  let factor: Int
+class Divider {
+    let factor: int
 
-  new(f: Int) {
-    this.factor = f
-  }
+    new(f: int) {
+        this.factor = f
+    }
 
-  func safeDivide(x: Int, y: Int): Result[Int, String] {
-    if y == 0 then
-      return Result.Err("division by zero")
-    else
-      return Result.Ok(x / y)
-  }
+    func divide(x: int, y: int) -&gt; DivisionResult {
+        if y == 0 then
+            return DivisionResult.Failure("Cannot divide by zero")
+        else
+            return DivisionResult.Success(x / y)
+    }
 }
 
-func main(): Void {
-  let calc = Calculator.new(3)
-  let r = calc.safeDivide(10, 0)
+func main(): void {
+    let divider = Divider.new(2)
+    let result = divider.divide(10, 0)
 
-  match r {
-    case Ok(v): print("Result: " ++ show(v))
-    case Err(e): print("Error: " ++ e)
-  }
+    match result {
+        case Success(v): print("Quotient: " + show(v))
+        case Failure(msg): print("Error: " + msg)
+    }
 }</code></pre>
 <hr>
 </section>
@@ -174,7 +174,7 @@ func main(): Void {
 <li><code>++</code> — инкремент</li>
 <li><code>--</code> —дикремент</li>
 <li><code>..</code> — диапазон чисел (<code>1..10</code>)</li>
-<li><code>-&gt;</code> — тип функции (<code>Int -&gt; String</code>)</li>
+<li><code>-&gt;</code> — тип функции</li>
 <li><code>:</code> — аннотация типа</li>
 <li><code>=</code> — присваивание (для <code>var</code>)</li>
 </ul>
@@ -230,22 +230,18 @@ func main(): Void {
 <td>Списки, массивы</td>
 </tr>
 <tr class="even">
-<td><code>&lt; &gt;</code></td>
-<td>Объявление дженериков</td>
-</tr>
-<tr class="odd">
 <td><code>,</code></td>
 <td>Разделитель элементов</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>;</code></td>
 <td>Необязательный разделитель выражений</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>:</code></td>
 <td>Аннотация типа или тег в enum</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>.</code></td>
 <td>Доступ к полю/методу (<code>this.field</code>)</td>
 </tr>

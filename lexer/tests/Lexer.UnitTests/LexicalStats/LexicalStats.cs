@@ -23,7 +23,7 @@ public static class LexicalStats
         TokenType.Implements, TokenType.This,
         TokenType.True, TokenType.False, TokenType.NullLiteral,
         TokenType.IntegerType, TokenType.FloatType, TokenType.StringType, TokenType.CharType,
-        TokenType.BooleanType, TokenType.VoidType, TokenType.In,
+        TokenType.BooleanType, TokenType.VoidType, TokenType.In, TokenType.Case,
     };
 
     private static readonly HashSet<TokenType> Operators = new()
@@ -33,10 +33,10 @@ public static class LexicalStats
         TokenType.ModSign, TokenType.Assign, TokenType.Equal,
         TokenType.LogicalOr, TokenType.BitwiseOr, TokenType.LogicalAnd, TokenType.BitwiseAnd,
         TokenType.LogicalNot, TokenType.LogicalNotEqual, TokenType.BitwiseNot, TokenType.BitwiseXOR,
-        TokenType.FuncType, TokenType.Range, TokenType.Annotation,
+        TokenType.Range, TokenType.Annotation,
         TokenType.Increment, TokenType.Dicrement,
         TokenType.LessThan, TokenType.LessThanOrEqual,
-        TokenType.GreaterThan, TokenType.GreaterThanOrEqual,
+        TokenType.GreaterThan, TokenType.GreaterThanOrEqual, TokenType.Access,
     };
 
     public static string CollectFromFile(string path)

@@ -67,6 +67,11 @@ public enum TokenType
     Match,
 
     /// <summary>
+    /// Ключевое слово case
+    /// </summary>
+    Case,
+
+    /// <summary>
     /// Ключевое слово for
     /// </summary>
     For,
@@ -284,11 +289,6 @@ public enum TokenType
     /// Побитовое XOR ~
     /// </summary>
     BitwiseXOR,
-
-    /// <summary>
-    /// Тип функции
-    /// </summary>
-    FuncType,
 
     /// <summary>
     /// Диапазон ..
