@@ -1,7 +1,6 @@
 ﻿using ExampleLib.UnitTests.Helpers;
 
 using Xunit;
-using Xunit.Sdk;
 
 namespace ExampleLib.UnitTests;
 
@@ -71,12 +70,12 @@ public class FileUtilTests
                                 Увы! он счастия не ищет
                                 И не от счастия бежит!
                                 """;
-        string expectedStr = """
+        const string expectedStr = """
                                 1. Играют волны — ветер свищет,
                                 2. И мачта гнется и скрыпит…
                                 3. Увы! он счастия не ищет
                                 4. И не от счастия бежит!
-                                """.Replace("\r\n", "\n");
+                                """;
         using TempFile file = TempFile.Create(str);
 
         FileUtil.AddLineNumbers(file.Path);
@@ -94,5 +93,34 @@ public class FileUtilTests
 
         string actual = File.ReadAllText(file.Path);
         Assert.Equal("", actual);
+    }
+
+    [Fact]
+    public void AddLineNumbers_FileWithEmptyStrings_FileContainsNumberedLines()
+    {
+        const string str = """
+
+
+
+            """;
+        const string expected = """
+            1. 
+            2. 
+            3. 
+            """;
+        using TempFile file = TempFile.Create(str);
+
+        FileUtil.AddLineNumbers(file.Path);
+
+        string actual = File.ReadAllText(file.Path);
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void AddLineNumbers_IncorrectPath_Exception()
+    {
+        using TempFile file = TempFile.Create("");
+
+        Assert.Throws<FileNotFoundException>(() => FileUtil.AddLineNumbers("Unexisted file"));
     }
 }

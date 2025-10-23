@@ -4,7 +4,7 @@ namespace ExampleLib;
 
 public static class TextUtil
 {
-    // Символы Unicode, которые мы принимаем как дефис.
+    // Символы Unicode, которые мы принимаем как дефис.[
     private static readonly Rune[] Hyphens = [new Rune('‐'), new Rune('-')];
 
     // Символы Unicode, которые мы принимаем как апостроф.
@@ -17,22 +17,6 @@ public static class TextUtil
         Letter,
         Hyphen,
         Apostrophe,
-    }
-
-    public struct RgbColor
-    {
-        public RgbColor(byte red, byte green, byte blue)
-        {
-            Red = red;
-            Green = green;
-            Blue = blue;
-        }
-
-        public byte Red { get; }
-
-        public byte Green { get; }
-
-        public byte Blue { get; }
     }
 
     /// <summary>
@@ -190,10 +174,10 @@ public static class TextUtil
             hex = new string(hex[0], 2);
         }
 
-        int highByte = HexToInt(hex[0]);
-        int lowByte = HexToInt(hex[1]);
+        int highNibble = HexToInt(hex[0]);
+        int lowNibble = HexToInt(hex[1]);
 
-        return (byte)((highByte << 4) + lowByte);
+        return (byte)((highNibble << 4) | lowNibble);
     }
 
     private static int HexToInt(char ch)

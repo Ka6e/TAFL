@@ -4,6 +4,31 @@ namespace ExampleLib.UnitTests;
 
 public class TextUtilTest
 {
+    public static TheoryData<string, RgbColor> GetTheoryColor()
+    {
+        return new TheoryData<string, RgbColor>()
+        {
+            { "#fff", new RgbColor(255, 255, 255) },
+            { "#ffa500", new RgbColor(255, 165, 0) },
+            { "#ffffff", new RgbColor(255, 255, 255) },
+            { "#FFFFFF", new RgbColor(255, 255, 255) },
+        };
+    }
+
+    public static TheoryData<string> GetTheoryInvalidColor()
+    {
+        return new TheoryData<string>()
+        {
+            "#A",
+            "#AA",
+            "#AAAA",
+            "#AAAAA",
+            "#AAAAAAA",
+            "abcdef",
+            "#abcdeg",
+        };
+    }
+
     [Fact]
     public void Can_extract_russian_words()
     {
@@ -100,74 +125,29 @@ public class TextUtilTest
         Assert.Equal(expected, actual);
     }
 
-    [Fact]
-    public void ParseRgbColor_ShortHex_White()
+    [Theory]
+    [MemberData(nameof(GetTheoryColor))]
+    public void ParseRgbColor_ValidData_CanParse(string colorStr, RgbColor color)
     {
-        string colorStr = "#fff";
+        RgbColor testColor = TextUtil.ParseRgbColor(colorStr);
 
-        TextUtil.RgbColor color = TextUtil.ParseRgbColor(colorStr);
-
-        Assert.Equal(255, color.Red);
-        Assert.Equal(255, color.Green);
-        Assert.Equal(255, color.Blue);
-    }
-
-    [Fact]
-    public void ParseRgbColor_LongHex_Orange()
-    {
-        string colorStr = "#ffa500";
-
-        TextUtil.RgbColor color = TextUtil.ParseRgbColor(colorStr);
-
-        Assert.Equal(255, color.Red);
-        Assert.Equal(165, color.Green);
-        Assert.Equal(0, color.Blue);
-    }
-
-    [Fact]
-    public void ParseRgbColor_UpperCase_White()
-    {
-        string colorStr = "#FFFFFF";
-
-        TextUtil.RgbColor color = TextUtil.ParseRgbColor(colorStr);
-
-        Assert.Equal(255, color.Red);
-        Assert.Equal(255, color.Green);
-        Assert.Equal(255, color.Blue);
-    }
-
-    [Fact]
-    public void ParseRgbColor_InvalidString_Exception()
-    {
-        string invalidColor = "abcdef";
-
-        Assert.Throws<FormatException>(() => TextUtil.ParseRgbColor(invalidColor));
-    }
-
-    [Fact]
-    public void ParseRgbColor_EmptyString_Exception()
-    {
-        string emptyStr = "";
-
-        Assert.Throws<ArgumentNullException>(() => TextUtil.ParseRgbColor(emptyStr));
+        Assert.Equal(testColor.Red, color.Red);
+        Assert.Equal(testColor.Green, color.Green);
+        Assert.Equal(testColor.Blue, color.Blue);
     }
 
     [Theory]
-    [InlineData("#A")]
-    [InlineData("#AB")]
-    [InlineData("#ABCD")]
-    [InlineData("#ABCDE")]
-    [InlineData("#ABCDEFF")]
-    public void ParseRgbColor_InvalidStringSize_Exception(string str)
+    [MemberData(nameof(GetTheoryInvalidColor))]
+    public void ParseRgbColor_InvalidData_FormatException(string colorStr)
     {
-        Assert.Throws<FormatException>(() => TextUtil.ParseRgbColor(str));
+        Assert.Throws<FormatException>(() => TextUtil.ParseRgbColor(colorStr));
     }
 
     [Fact]
-    public void ParseRgbColor_InvalidSymbol_Exception()
+    public void ParseRgbColor_EmptyString_ArgumentNullException()
     {
-        string str = "#abcdeg";
+        string emptyStr = string.Empty;
 
-        Assert.Throws<FormatException>(() => TextUtil.ParseRgbColor(str));
+        Assert.Throws<ArgumentNullException>(() => TextUtil.ParseRgbColor(emptyStr));
     }
 }

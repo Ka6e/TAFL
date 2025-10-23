@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace ExampleLib;
@@ -30,17 +31,25 @@ public static class FileUtil
 
     public static void AddLineNumbers(string path)
     {
-        List<string> lines = File.ReadLines(path, Encoding.UTF8).ToList();
+        string text = File.ReadAllText(path);
+
+        if (string.IsNullOrEmpty(text))
+        {
+            return;
+        }
+
+        string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
 
         using FileStream file = File.Open(path, FileMode.Truncate, FileAccess.Write);
-        for (int i = 0, iMax = lines.Count; i < iMax; i++)
+        for (int i = 0; i < lines.Length; i++)
         {
             string str = $"{i + 1}. {lines[i]}";
             byte[] bytes = Encoding.UTF8.GetBytes(str);
             file.Write(bytes);
-            if (i != iMax - 1)
+            if (i != lines.Length - 1)
             {
-                file.Write("\n"u8);
+                byte[] sep = Encoding.UTF8.GetBytes(Environment.NewLine);
+                file.Write(sep);
             }
         }
     }
