@@ -107,13 +107,13 @@ bitwise_or_expression  = bitwise_xor_expression, { "|", bitwise_xor_expression }
 bitwise_xor_expression = bitwise_and_expression, { "^", bitwise_and_expression } ;
 bitwise_and_expression = additive_expression, { "&", additive_expression } ;
 additive_expression    = multiplicative_expression, { ("+" | "-"), multiplicative_expression } ;
-multiplicative_expression = power_expression, { ("*" | "/" | "%" | "//"), power_expression } ;
+multiplicative_expression = unary_expression, { ("*" | "/" | "%" | "//"), unary_expression } ;
 
 (* ⚡ Правильный приоритет: возведение в степень сильнее унарных операторов *)
-power_expression       = unary_expression, { "**", power_expression } ;
+power_expression       = primary_expression, { "**", power_expression } ;
 
 (* Унарные операторы применяются после возведения в степень *)
-unary_expression       = [ "+" | "-" | "~" | "!" ], primary_expression ;
+unary_expression       = [ "+" | "-" | "~" | "!" ], power_expression ;
 
 primary_expression     = number
                        | identifier
