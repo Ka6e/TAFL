@@ -108,8 +108,13 @@ bitwise_xor_expression = bitwise_and_expression, { "^", bitwise_and_expression }
 bitwise_and_expression = additive_expression, { "&", additive_expression } ;
 additive_expression    = multiplicative_expression, { ("+" | "-"), multiplicative_expression } ;
 multiplicative_expression = power_expression, { ("*" | "/" | "%" | "//"), power_expression } ;
+
+(* ⚡ Правильный приоритет: возведение в степень сильнее унарных операторов *)
 power_expression       = unary_expression, { "**", power_expression } ;
+
+(* Унарные операторы применяются после возведения в степень *)
 unary_expression       = [ "+" | "-" | "~" | "!" ], primary_expression ;
+
 primary_expression     = number
                        | identifier
                        | function_call
@@ -122,8 +127,8 @@ identifier    = ( letter | "_" ), { letter | digit | "_" } ;
 
 (* Литералы *)
 integer_literal = digit, { digit | "_" } ;
-float_literal = digit, { digit | "_" }, ".", digit, { digit | "_" }, [ exponent ] ;
-exponent = ( "e" | "E" ), [ "+" | "-" ], digit, { digit } ;
+float_literal   = digit, { digit | "_" }, ".", digit, { digit | "_" }, [ exponent ] ;
+exponent        = ( "e" | "E" ), [ "+" | "-" ], digit, { digit } ;
 
 (* Базовые символы *)
 digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
@@ -149,6 +154,3 @@ abs(-5) + max(1, 2, 3)
 ~0xF & 0xFF
 Pi * r ** 2
 ```
-
-TODO: -1^2 явно и стабильно
-Сдел общий префикс, встроить одно правило в другое primary exp
