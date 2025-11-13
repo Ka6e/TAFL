@@ -9,7 +9,6 @@ namespace GlacierGrammar.UnitTests
         [MemberData(nameof(GetValidExpressions))]
         public void Accepts_valid_expressions(string expression)
         {   
-            // Act & Assert - не должно бросать исключение
             GlacierGrammar.ValidateExpression(expression);
         }
 
@@ -17,7 +16,6 @@ namespace GlacierGrammar.UnitTests
         [MemberData(nameof(GetInvalidExpressions))]
         public void Rejects_invalid_expressions(string expression)
         {
-            // Act & Assert - должно бросить исключение
             Assert.Throws<ParseCanceledException>(() => GlacierGrammar.ValidateExpression(expression));
         }
 
