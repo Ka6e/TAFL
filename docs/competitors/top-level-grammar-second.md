@@ -22,8 +22,8 @@ print(sum)
 
 ```glacier
 // GeometricMean
-let x: float = readInt()
-let y: float = readInt()
+let x: int = readInt()
+let y: int = readInt()
 let mean: float = (x * y) ** 0.5
 print(mean)
 ```
@@ -36,7 +36,7 @@ print(mean)
 
 ```glacier
 // CircleSquare
-let r: float = readInt()
+let r: int = readInt()
 let area: float = Pi * r ** 2
 print(area)
 ```
