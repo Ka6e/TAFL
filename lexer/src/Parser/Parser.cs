@@ -1,13 +1,46 @@
-﻿using Lexer;
+﻿using Execution;
+
+using Lexer;
 
 namespace Parser;
 public class Parser
 {
     private readonly TokenStream tokens;
+    private readonly Context context;
+    private readonly IEnvironment environment;
 
-    public Parser(string code)
+    public Parser(Context context, IEnvironment environment, string code)
     {
+        this.context = context;
+        this.environment = environment;
         tokens = new TokenStream(code);
+    }
+
+    public void ParseProgram()
+    {
+        do
+        {
+            decimal result = ParseTopLevelStatement();
+
+            if (tokens.Peek().Type == TokenType.Semicolon)
+            {
+                Match(TokenType.Semicolon);
+            }
+
+            environment.AddResult(result);
+        }
+        while (tokens.Peek().Type != TokenType.EndOfFile);
+
+    }
+
+    private decimal ParseTopLevelStatement()
+    {
+        return ParseStatement();
+    }
+
+    private decimal ParseStatement()
+    {
+
     }
 
     public static decimal EvaluateExpression(string code)
@@ -271,5 +304,19 @@ public class Parser
         }
 
         return values;
+    }
+
+    private Token Match(TokenType expected)
+    {
+        Token t = tokens.Peek();
+
+        if (t.Type != expected)
+        {
+            throw new UnexpectedLexemException(expected, t);
+        }
+
+        tokens.Advance();
+
+        return t;
     }
 }
