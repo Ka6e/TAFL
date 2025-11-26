@@ -1,11 +1,24 @@
-﻿namespace Parser.UnitTests;
+﻿using Execution;
+
+namespace Parser.UnitTests;
 public class ErrorsTests
 {
+    private readonly Context context;
+    private readonly FakeEnvironment environment;
+
+    public ErrorsTests()
+    {
+        context = new Context();
+        environment = new FakeEnvironment();
+    }
+
     [Theory]
     [MemberData(nameof(GetErrors))]
     public void Handle_Invalid_Expression(string expression)
     {
-        Assert.Throws<UnexpectedLexemException>(() => Parser.EvaluateExpression(expression));
+        Parser parser = new Parser(context, environment, expression);
+
+        Assert.Throws<UnexpectedLexemeException>(() => parser.ParseProgram());
     }
 
     public static TheoryData<string> GetErrors()
@@ -25,7 +38,8 @@ public class ErrorsTests
     public void Max_InvalidArguments_Exception()
     {
         string expression = "max()";
+        Parser parser = new Parser(context, environment, expression);
 
-        Assert.Throws<ArgumentException>(() => Parser.EvaluateExpression(expression));
+        Assert.Throws<ArgumentException>(() => parser.ParseProgram());
     }
 }

@@ -18,19 +18,26 @@ public class Parser
 
     public void ParseProgram()
     {
-        do
+        context.PushScope(new Scope());
+        try
         {
-            decimal result = ParseTopLevelStatement();
-
-            if (tokens.Peek().Type == TokenType.Semicolon)
+            do
             {
-                Match(TokenType.Semicolon);
+                decimal result = ParseTopLevelStatement();
+
+                if (tokens.Peek().Type == TokenType.Semicolon)
+                {
+                    Match(TokenType.Semicolon);
+                }
+
+                environment.AddResult(result);
             }
-
-            environment.AddResult(result);
+            while (tokens.Peek().Type != TokenType.EndOfFile);
         }
-        while (tokens.Peek().Type != TokenType.EndOfFile);
-
+        finally
+        {
+            context.PopScope();
+        }
     }
 
     private decimal ParseTopLevelStatement()
@@ -40,24 +47,97 @@ public class Parser
 
     private decimal ParseStatement()
     {
-
+        Token t = tokens.Peek();
+        switch (t.Type)
+        {
+            case TokenType.Let:
+            case TokenType.Var:
+                return ParseVariableDecl();
+            default:
+                return ParseExpressionStatement();
+        }
     }
 
-    public static decimal EvaluateExpression(string code)
+    private decimal ParseExpressionStatement()
     {
-        Parser parser = new Parser(code);
+        decimal value = ParseExpression();
+        Match(TokenType.Semicolon);
 
-        decimal result = parser.ParseExpression();
+        return value;
+    }
 
-        if (parser.tokens.Peek().Type != TokenType.EndOfFile)
+    // todo: убрать 
+    // todo: прописать все грамматики для всех функций
+    private decimal ParseVariableDecl()
+    {
+        switch (tokens.Peek().Type)
         {
-            throw new UnexpectedLexemException(TokenType.EndOfFile, parser.tokens.Peek());
+            case TokenType.Let:
+                return ParseConstantDefinition();
+            case TokenType.Var:
+                return ParseVariableDefinition();
+            default:
+                // todo: бросать исключение 
+                throw new Exception("Unexpected lexeme");
+        }
+    }
+
+    private decimal ParseVariableDefinition()
+    {
+        Match(TokenType.Var);
+        string name = Match(TokenType.Identifier).Value!.ToString();
+        decimal value = 0;
+        if (tokens.Peek().Type == TokenType.Assign)
+        {
+            Match(TokenType.Assign);
+            value = ParseExpression();
         }
 
-        return result;
+        context.DefineVariable(name, value);
+
+        return value;
     }
 
-    private decimal ParseExpression() => ParseLogicalOrExpression();
+    private decimal ParseConstantDefinition()
+    {
+        Match(TokenType.Let);
+        string name = Match(TokenType.Identifier).Value!.ToString();
+        Match(TokenType.Annotation);
+        string type = ParseTypeAnnotation();
+        tokens.Advance();
+
+        decimal value = 0;
+        if (tokens.Peek().Type == TokenType.Assign)
+        {
+            Match(TokenType.Assign);
+            value = ParseExpression();
+        }
+
+        context.DefineConstant(name, value);
+
+        return value;
+    }
+
+    private string ParseTypeAnnotation()
+    {
+        Token t = tokens.Peek();
+        switch (t.Type)
+        {
+            case TokenType.IntegerType:
+                return "int";
+            case TokenType.FloatType:
+                return "float";
+            case TokenType.Identifier:
+                return t.Value!.ToString();
+            default:
+                throw new UnexpectedLexemeException(t.Type, t);
+        }
+    }
+
+    private decimal ParseExpression()
+    {
+        return ParseLogicalOrExpression();
+    }
 
     private decimal ParseLogicalOrExpression()
     {
@@ -250,6 +330,7 @@ public class Parser
                 return t.Value!.ToDecimal();
             case TokenType.Identifier:
                 tokens.Advance();
+                string name = t.Value!.ToString();
                 if (tokens.Peek().Type == TokenType.LParenthesis)
                 {
                     tokens.Advance();
@@ -260,7 +341,14 @@ public class Parser
                     }
 
                     tokens.Advance();
-                    return BuiltinFunctions.Invoke(t.Value!.ToString(), args);
+                    return BuiltinFunctions.Invoke(name, args);
+                }
+                else if (tokens.Peek().Type == TokenType.Assign)
+                {
+                    tokens.Advance();
+                    decimal result = ParseExpression();
+                    context.AssignVariable(name, result);
+                    return result;
                 }
                 else
                 {
@@ -271,7 +359,7 @@ public class Parser
                         case "Euler":
                             return (decimal)Math.PI;
                         default:
-                            throw new Exception($"Unknown identifier: {t.Value}");
+                            return context.GetValue(t.Value.ToString());
                     }
                 }
 
@@ -280,13 +368,13 @@ public class Parser
                 decimal value = ParseExpression();
                 if (tokens.Peek().Type != TokenType.RParenthesis)
                 {
-                    throw new UnexpectedLexemException(tokens.Peek().Type, t);
+                    throw new UnexpectedLexemeException(tokens.Peek().Type, t);
                 }
 
                 tokens.Advance();
                 return value;
             default:
-                throw new UnexpectedLexemException(TokenType.Integer, t);
+                throw new UnexpectedLexemeException(TokenType.Integer, t);
         }
     }
 
@@ -312,7 +400,7 @@ public class Parser
 
         if (t.Type != expected)
         {
-            throw new UnexpectedLexemException(expected, t);
+            throw new UnexpectedLexemeException(expected, t);
         }
 
         tokens.Advance();

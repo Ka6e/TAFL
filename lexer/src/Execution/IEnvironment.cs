@@ -4,5 +4,5 @@ public interface IEnvironment
     /// <summary>
     /// Вызывается после вычисления результата очередной инструкции программы.
     /// </summary>
-    public void AddResult(decimal result);
+    void AddResult(decimal result);
 }
