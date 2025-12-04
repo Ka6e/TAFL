@@ -1,0 +1,14 @@
+module Main
+
+func main() {
+    let A: int = input();
+    let B: int = input();
+
+    let result: int = 1;
+
+    for (let i: int = 0; i < B; i = i + 1) {
+        result = result * A;
+    }
+
+    print(result);
+}
