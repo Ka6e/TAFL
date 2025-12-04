@@ -5,28 +5,16 @@ public static class Program
 {
     public static int Main(string[] args)
     {
-        if (args.Length != 1)
-        {
-            Console.Error.WriteLine("Usage: PsKaleidoscope.Interpreter <file-path>");
-            return 1;
-        }
-
-        string filePath = args[0];
-
         try
         {
-            // Проверяем существование файла
-            if (!File.Exists(filePath))
+            string sourceCode = string.Empty;
+            string? line;
+            while ((line = Console.ReadLine()) != null)
             {
-                Console.Error.WriteLine($"Error: File '{filePath}' not found.");
-                return 1;
+                sourceCode += line;
             }
 
-            // Читаем исходный код целиком
-            string sourceCode = File.ReadAllText(filePath);
-
-            // Выполняем программу
-            GlacierInterpreter interpreter = new GlacierInterpreter();
+            GlacierInterpreter interpreter = new GlacierInterpreter(new ConsoleEnvironment());
             interpreter.Execute(sourceCode);
 
             return 0;

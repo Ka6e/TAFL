@@ -122,7 +122,12 @@ statement = variable_decl
            | match_statement
            | expression_statement ;
 
-variable_decl = ("let" | "var"), identifier, [ ":", type_annotation ], [ "=", expression ], ";" ;
+variable_decl = let_variable_decl | var_variable_decl;
+
+let_variable_decl = "let", identifier, ":", type_annotation, [ "=", expression ], ";" ;
+
+var_variable_decl = "var, identifier, [ "=", expression ], ";" ;
+
 assignment = identifier, "=", expression, ";" ;
 
 if_statement = "if", expression, "then", block, [ "else", block ] ;
@@ -137,7 +142,7 @@ expression_statement = expression, ";" ;
 block = "{", { statement }, "}" ;
 
 (* Типы и базовые элементы *)
-type_annotation = identifier ;
+type_annotation = "int" | "float" | identifier ;
 expression = (* см. docs/specification/expressions-grammar.md *) ;
 identifier = letter, { letter | digit | "_" } ;
 ```

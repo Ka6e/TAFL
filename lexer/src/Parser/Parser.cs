@@ -16,6 +16,9 @@ public class Parser
         tokens = new TokenStream(code);
     }
 
+    /// <summary>
+    /// program = module_decl, { import_decl }, { top_level_decl } ;.
+    /// </summary>
     public void ParseProgram()
     {
         context.PushScope(new Scope());
@@ -40,11 +43,26 @@ public class Parser
         }
     }
 
+    /// <summary>
+    /// top_level_decl = class_decl
+    ///                | enum_decl
+    ///                | function_decl
+    ///                | statement ;.
+    /// </summary>
     private decimal ParseTopLevelStatement()
     {
         return ParseStatement();
     }
 
+    /// <summary>
+    /// statement = variable_decl
+    ///           | assignment
+    ///           | if_statement
+    ///           | for_statement
+    ///           | return_statement
+    ///           | match_statement
+    ///           | expression_statement ;.
+    /// </summary>
     private decimal ParseStatement()
     {
         Token t = tokens.Peek();
@@ -58,6 +76,9 @@ public class Parser
         }
     }
 
+    /// <summary>
+    /// expression_statement = expression, ";" ;.
+    /// </summary>
     private decimal ParseExpressionStatement()
     {
         decimal value = ParseExpression();
@@ -66,23 +87,26 @@ public class Parser
         return value;
     }
 
-    // todo: убрать 
-    // todo: прописать все грамматики для всех функций
+    /// <summary>
+    /// variable_decl = let_variable_decl | var_variable_decl;.
+    /// </summary>
     private decimal ParseVariableDecl()
     {
         switch (tokens.Peek().Type)
         {
             case TokenType.Let:
-                return ParseConstantDefinition();
+                return ParseLetVariableDecl();
             case TokenType.Var:
-                return ParseVariableDefinition();
+                return ParseVarVariableDecl();
             default:
-                // todo: бросать исключение 
-                throw new Exception("Unexpected lexeme");
+                throw new UnexpectedLexemeException(TokenType.Let | TokenType.Var, tokens.Peek());
         }
     }
 
-    private decimal ParseVariableDefinition()
+    /// <summary>
+    /// var_variable_decl = "var, identifier, [ "=", expression ], ";" ;.
+    /// </summary>
+    private decimal ParseVarVariableDecl()
     {
         Match(TokenType.Var);
         string name = Match(TokenType.Identifier).Value!.ToString();
@@ -98,7 +122,10 @@ public class Parser
         return value;
     }
 
-    private decimal ParseConstantDefinition()
+    /// <summary>
+    /// let_variable_decl = "let", identifier, ":", type_annotation, [ "=", expression ], ";" ;.
+    /// </summary>
+    private decimal ParseLetVariableDecl()
     {
         Match(TokenType.Let);
         string name = Match(TokenType.Identifier).Value!.ToString();
@@ -134,11 +161,36 @@ public class Parser
         }
     }
 
+    /// <summary>
+    /// expressions_list = expression, { ",", expression } ;.
+    /// </summary>
+    private List<decimal> ParseExpressionList()
+    {
+        List<decimal> values = new()
+        {
+            ParseExpression(),
+        };
+
+        while (tokens.Peek().Type == TokenType.Comma)
+        {
+            tokens.Advance();
+            values.Add(ParseExpression());
+        }
+
+        return values;
+    }
+
+    /// <summary>
+    /// expression = logical_or_expression ;.
+    /// </summary>
     private decimal ParseExpression()
     {
         return ParseLogicalOrExpression();
     }
 
+    /// <summary>
+    /// logical_or_expression  = logical_and_expression, { "||", logical_and_expression } ;.
+    /// </summary>
     private decimal ParseLogicalOrExpression()
     {
         decimal value = ParseLogicalAndExpression();
@@ -152,6 +204,9 @@ public class Parser
         return value;
     }
 
+    /// <summary>
+    /// logical_and_expression = equality_expression, { "&&", equality_expression } ;.
+    /// </summary>
     private decimal ParseLogicalAndExpression()
     {
         decimal value = ParseEqualityExpression();
@@ -165,6 +220,9 @@ public class Parser
         return value;
     }
 
+    /// <summary>
+    /// equality_expression = bitwise_or_expression, { ("==" | "!=" | ".<" | "<=" | ">" | ">="), bitwise_or_expression } ;
+    /// </summary>
     private decimal ParseEqualityExpression()
     {
         decimal value = ParseBitwiseOrExpression();
@@ -202,6 +260,9 @@ public class Parser
         }
     }
 
+    /// <summary>
+    /// bitwise_or_expression = bitwise_xor_expression, { "|", bitwise_xor_expression } ;.
+    /// </summary>
     private decimal ParseBitwiseOrExpression()
     {
         decimal value = ParseBitwiseXorExpression();
@@ -214,6 +275,9 @@ public class Parser
         return value;
     }
 
+    /// <summary>
+    /// bitwise_xor_expression = bitwise_and_expression, { "^", bitwise_and_expression } ;.
+    /// </summary>
     private decimal ParseBitwiseXorExpression()
     {
         decimal value = ParseBitwiseAndExpression();
@@ -226,6 +290,9 @@ public class Parser
         return value;
     }
 
+    /// <summary>
+    /// bitwise_and_expression = additive_expression, { "&", additive_expression } ;.
+    /// </summary>
     private decimal ParseBitwiseAndExpression()
     {
         decimal value = ParseAdditiveExpression();
@@ -238,6 +305,9 @@ public class Parser
         return value;
     }
 
+    /// <summary>
+    /// additive_expression = multiplicative_expression, { ("+" | "-"), multiplicative_expression } ;.
+    /// </summary>
     private decimal ParseAdditiveExpression()
     {
         decimal value = ParseMultiplicativeExpression();
@@ -259,6 +329,9 @@ public class Parser
         }
     }
 
+    /// <summary>
+    /// multiplicative_expression = unary_expression, { ("*" | "/" | "%" ), unary_expression } ;.
+    /// </summary>
     private decimal ParseMultiplicativeExpression()
     {
         decimal value = ParseUnaryExpression();
@@ -284,6 +357,9 @@ public class Parser
         }
     }
 
+    /// <summary>
+    /// power_expression = primary_expression, { "**", unary_expression } ;.
+    /// </summary>
     private decimal ParsePowerExpression()
     {
         decimal value = ParsePrimaryExpression();
@@ -297,6 +373,9 @@ public class Parser
         return value;
     }
 
+    /// <summary>
+    /// unary_expression = [ "+" | "-" | "~" | "!" ], power_expression ;.
+    /// </summary>
     private decimal ParseUnaryExpression()
     {
         switch (tokens.Peek().Type)
@@ -319,6 +398,12 @@ public class Parser
         }
     }
 
+    /// <summary>
+    /// primary_expression = number
+    ///                    | identifier
+    ///                    | function_call
+    ///                    | "(", expression, ")" ;.
+    /// </summary>
     private decimal ParsePrimaryExpression()
     {
         Token t = tokens.Peek();
@@ -331,6 +416,7 @@ public class Parser
             case TokenType.Identifier:
                 tokens.Advance();
                 string name = t.Value!.ToString();
+
                 if (tokens.Peek().Type == TokenType.LParenthesis)
                 {
                     tokens.Advance();
@@ -340,7 +426,23 @@ public class Parser
                         args = ParseExpressionList();
                     }
 
-                    tokens.Advance();
+                    Match(TokenType.RParenthesis);
+                    if (name == "readNumber")
+                    {
+                        return environment.ReadNumber();
+                    }
+
+                    if (name == "print")
+                    {
+                        if (args.Count != 1)
+                        {
+                            throw new ArgumentException("print() expects exactly one argument");
+                        }
+
+                        environment.WriteNumber(args[0]);
+                        return args[0];
+                    }
+
                     return BuiltinFunctions.Invoke(name, args);
                 }
                 else if (tokens.Peek().Type == TokenType.Assign)
@@ -376,22 +478,6 @@ public class Parser
             default:
                 throw new UnexpectedLexemeException(TokenType.Integer, t);
         }
-    }
-
-    private List<decimal> ParseExpressionList()
-    {
-        List<decimal> values = new()
-        {
-            ParseExpression(),
-        };
-
-        while (tokens.Peek().Type == TokenType.Comma)
-        {
-            tokens.Advance();
-            values.Add(ParseExpression());
-        }
-
-        return values;
     }
 
     private Token Match(TokenType expected)

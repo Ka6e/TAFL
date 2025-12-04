@@ -1,4 +1,6 @@
-﻿using Execution;
+﻿using System.Globalization;
+
+using Execution;
 
 namespace Parser;
 
@@ -14,5 +16,17 @@ public class FakeEnvironment : IEnvironment
     public void AddResult(decimal result)
     {
         results.Add(result);
+    }
+
+    public decimal ReadNumber()
+    {
+        decimal.TryParse(Console.ReadLine() ?? "", out decimal result);
+
+        return result;
+    }
+
+    public void WriteNumber(decimal result)
+    {
+        Console.WriteLine(result.ToString("0.#####", CultureInfo.InvariantCulture));
     }
 }

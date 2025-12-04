@@ -8,13 +8,15 @@ public class ConsoleEnvironment : IEnvironment
         Console.WriteLine("Result: " + result.ToString("0.#####", CultureInfo.InvariantCulture));
     }
 
-    public decimal ReadInt()
+    public decimal ReadNumber()
     {
-        throw new NotImplementedException();
+        decimal.TryParse(Console.ReadLine() ?? "", out decimal result);
+
+        return result;
     }
 
-    public void WriteInt(decimal result)
+    public void WriteNumber(decimal result)
     {
-        Console.WriteLine("Result: " + result.ToString("0.#####", CultureInfo.InvariantCulture));
+        Console.WriteLine(result.ToString("0.#####", CultureInfo.InvariantCulture));
     }
 }

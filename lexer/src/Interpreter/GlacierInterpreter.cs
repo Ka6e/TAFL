@@ -6,16 +6,12 @@ public class GlacierInterpreter
     private readonly Context context;
     private readonly IEnvironment environment;
 
-    public GlacierInterpreter()
+    public GlacierInterpreter(IEnvironment environment)
     {
         context = new Context();
-        environment = new ConsoleEnvironment();
+        this.environment = environment;
     }
 
-    /// <summary>
-    /// Выполняет программу на языке Glacier.
-    /// </summary>
-    /// <param name="sourceCode">Исходный код программы.</param>
     public void Execute(string sourceCode)
     {
         if (string.IsNullOrEmpty(sourceCode))
@@ -23,7 +19,6 @@ public class GlacierInterpreter
             throw new ArgumentException("Source code cannot be null or empty", nameof(sourceCode));
         }
 
-        // Создаем парсер и выполняем программу
         Parser.Parser parser = new(context, environment, sourceCode);
         parser.ParseProgram();
     }

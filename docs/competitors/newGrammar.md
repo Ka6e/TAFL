@@ -107,7 +107,7 @@ bitwise_or_expression  = bitwise_xor_expression, { "|", bitwise_xor_expression }
 bitwise_xor_expression = bitwise_and_expression, { "^", bitwise_and_expression } ;
 bitwise_and_expression = additive_expression, { "&", additive_expression } ;
 additive_expression    = multiplicative_expression, { ("+" | "-"), multiplicative_expression } ;
-multiplicative_expression = unary_expression, { ("*" | "/" | "%" | "//"), unary_expression } ;
+multiplicative_expression = unary_expression, { ("*" | "/" | "%"), unary_expression } ;
 
 (* ⚡ Правильный приоритет: возведение в степень сильнее унарных операторов *)
 power_expression       = primary_expression, { "**", power_expression } ;
