@@ -1,4 +1,6 @@
-﻿using Parser;
+﻿using Execution;
+
+using Parser;
 
 namespace Interpreter;
 public static class Program

@@ -26,15 +26,6 @@ public class TestEnvironment : IEnvironment
         }
     }
 
-    public void SetInputValues(params decimal[] values)
-    {
-        inputQueue.Clear();
-        foreach (decimal v in values)
-        {
-            inputQueue.Enqueue(v);
-        }
-    }
-
     public decimal ReadNumber()
     {
         if (inputQueue.Count == 0)
@@ -51,13 +42,6 @@ public class TestEnvironment : IEnvironment
     }
 
     public void ClearOutput() => Output = string.Empty;
-
-    public void Clear()
-    {
-        Output = string.Empty;
-        inputQueue.Clear();
-        Results.Clear();
-    }
 
     public void WriteNumber(decimal result)
     {

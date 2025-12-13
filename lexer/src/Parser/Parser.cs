@@ -145,6 +145,9 @@ public class Parser
         return value;
     }
 
+    /// <summary>
+    ///    type_annotation = "int" | "float" | identifier ;.
+    /// </summary>
     private string ParseTypeAnnotation()
     {
         Token t = tokens.Peek();

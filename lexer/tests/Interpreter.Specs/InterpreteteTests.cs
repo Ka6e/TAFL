@@ -34,12 +34,12 @@ public class InterpreterStepDefinitions
     [Then("I should get the output:")]
     public void ThenIShouldGetTheOutput(string expectedOutput)
     {
-        string actual = environment.Output.Trim();
-        string expected = expectedOutput.Trim();
+        string actual = environment.Output;
+        string expected = expectedOutput;
 
         Assert.Equal(Normalize(expected), Normalize(actual));
     }
 
     private string Normalize(string s)
-        => s.Replace("\r\n", "\n").Trim();
+        => s.Replace("\r\n", "\n");
 }
