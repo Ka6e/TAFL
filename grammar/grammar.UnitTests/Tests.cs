@@ -183,7 +183,8 @@ namespace GlacierGrammar.UnitTests
                         n = n / 10;
                     }
                     print(sum);
-                }"
+                }",
+                @
             };
         }
     }
