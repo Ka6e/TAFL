@@ -1,4 +1,6 @@
-﻿using Execution;
+﻿using Ast.Expressions;
+
+using Execution;
 
 using Lexer;
 
@@ -6,41 +8,37 @@ namespace Parser;
 public class Parser
 {
     private readonly TokenStream tokens;
-    private readonly Context context;
-    private readonly IEnvironment environment;
 
-    public Parser(Context context, IEnvironment environment, string code)
+    public Parser(string code)
     {
-        this.context = context;
-        this.environment = environment;
         tokens = new TokenStream(code);
     }
 
     /// <summary>
     /// program = module_decl, { import_decl }, { top_level_decl } ;.
     /// </summary>
-    public void ParseProgram()
+    public Expression ParseProgram()
     {
-        context.PushScope(new Scope());
-        try
-        {
-            do
-            {
-                decimal result = ParseTopLevelStatement();
+        //context.PushScope(new Scope());
+        //try
+        //{
+        //    do
+        //    {
+        //        decimal result = ParseTopLevelStatement();
 
-                if (tokens.Peek().Type == TokenType.Semicolon)
-                {
-                    Match(TokenType.Semicolon);
-                }
+        //        if (tokens.Peek().Type == TokenType.Semicolon)
+        //        {
+        //            Match(TokenType.Semicolon);
+        //        }
 
-                environment.AddResult(result);
-            }
-            while (tokens.Peek().Type != TokenType.EndOfFile);
-        }
-        finally
-        {
-            context.PopScope();
-        }
+        //        environment.AddResult(result);
+        //    }
+        //    while (tokens.Peek().Type != TokenType.EndOfFile);
+        //}
+        //finally
+        //{
+        //    context.PopScope();
+        //}
     }
 
     /// <summary>
@@ -183,10 +181,31 @@ public class Parser
         return values;
     }
 
+    private Expression ParseFunctionCall(string name)
+    {
+        Match(TokenType.LParenthesis);
+
+        List<Expression> args = new List<Expression>();
+        if (tokens.Peek().Type != TokenType.RParenthesis)
+        {
+            args.Add(ParseExpression());
+            while (tokens.Peek().Type == TokenType.Comma)
+            {
+                tokens.Advance();
+                args.Add(ParseExpression());
+            }
+        }
+
+        Match(TokenType.RParenthesis);
+
+        return new FunctionCallExpression(name, args);
+    }
+
+
     /// <summary>
     /// expression = logical_or_expression ;.
     /// </summary>
-    private decimal ParseExpression()
+    private Expression ParseExpression()
     {
         return ParseLogicalOrExpression();
     }
@@ -194,140 +213,166 @@ public class Parser
     /// <summary>
     /// logical_or_expression  = logical_and_expression, { "||", logical_and_expression } ;.
     /// </summary>
-    private decimal ParseLogicalOrExpression()
+    private Expression ParseLogicalOrExpression()
     {
-        decimal value = ParseLogicalAndExpression();
+        Expression left = ParseLogicalAndExpression();
         while (tokens.Peek().Type == TokenType.LogicalOr)
         {
             tokens.Advance();
-            decimal right = ParseLogicalAndExpression();
-            value = (value != 0 || right != 0) ? 1 : 0;
+            Expression right = ParseLogicalAndExpression();
+            left = new BinaryOperationExpression(left, BinaryOperation.Or, right);
         }
 
-        return value;
+        return left;
     }
 
     /// <summary>
     /// logical_and_expression = equality_expression, { "&&", equality_expression } ;.
     /// </summary>
-    private decimal ParseLogicalAndExpression()
+    private Expression ParseLogicalAndExpression()
     {
-        decimal value = ParseEqualityExpression();
+        Expression left = ParseEqualityExpression();
         while (tokens.Peek().Type == TokenType.LogicalAnd)
         {
             tokens.Advance();
-            decimal right = ParseEqualityExpression();
-            value = (value != 0 && right != 0) ? 1 : 0;
+            Expression right = ParseEqualityExpression();
+            left = new BinaryOperationExpression(left, BinaryOperation.And, right);
         }
 
-        return value;
+        return left;
     }
 
     /// <summary>
     /// equality_expression = bitwise_or_expression, { ("==" | "!=" | ".<" | "<=" | ">" | ">="), bitwise_or_expression } ;
     /// </summary>
-    private decimal ParseEqualityExpression()
+    private Expression ParseEqualityExpression()
     {
-        decimal value = ParseBitwiseOrExpression();
-        while (true)
+        Expression left = ParseBitwiseOrExpression();
+        if (IsComprassionOperator(tokens.Peek().Type))
         {
-            switch (tokens.Peek().Type)
+            BinaryOperation operation = tokens.Peek().Type switch
             {
-                case TokenType.Equal:
-                    tokens.Advance();
-                    value = (value == ParseBitwiseOrExpression()) ? 1 : 0;
-                    break;
-                case TokenType.LogicalNotEqual:
-                    tokens.Advance();
-                    value = (value != ParseBitwiseOrExpression()) ? 1 : 0;
-                    break;
-                case TokenType.LessThan:
-                    tokens.Advance();
-                    value = (value < ParseBitwiseOrExpression()) ? 1 : 0;
-                    break;
-                case TokenType.LessThanOrEqual:
-                    tokens.Advance();
-                    value = (value <= ParseBitwiseOrExpression()) ? 1 : 0;
-                    break;
-                case TokenType.GreaterThan:
-                    tokens.Advance();
-                    value = (value > ParseBitwiseOrExpression()) ? 1 : 0;
-                    break;
-                case TokenType.GreaterThanOrEqual:
-                    tokens.Advance();
-                    value = (value >= ParseBitwiseOrExpression()) ? 1 : 0;
-                    break;
-                default:
-                    return value;
-            }
+                TokenType.Equal => BinaryOperation.Equal,
+                TokenType.LogicalNotEqual => BinaryOperation.NotEqual,
+                TokenType.LessThan => BinaryOperation.LessThan,
+                TokenType.GreaterThan => BinaryOperation.GreaterThan,
+                TokenType.LessThanOrEqual => BinaryOperation.LessThanOrEqual,
+                TokenType.GreaterThanOrEqual => BinaryOperation.GreaterThanOrEqual,
+                _ => throw new UnexpectedLexemeException(tokens.Peek())
+            };
+
+            tokens.Advance();
+            Expression right = ParseBitwiseOrExpression();
+
+            return new BinaryOperationExpression(left, operation, right);
         }
+        //while (true)
+        //{
+        //    switch (tokens.Peek().Type)
+        //    {
+        //        case TokenType.Equal:
+        //            tokens.Advance();
+        //            value = (value == ParseBitwiseOrExpression()) ? 1 : 0;
+        //            break;
+        //        case TokenType.LogicalNotEqual:
+        //            tokens.Advance();
+        //            value = (value != ParseBitwiseOrExpression()) ? 1 : 0;
+        //            break;
+        //        case TokenType.LessThan:
+        //            tokens.Advance();
+        //            value = (value < ParseBitwiseOrExpression()) ? 1 : 0;
+        //            break;
+        //        case TokenType.LessThanOrEqual:
+        //            tokens.Advance();
+        //            value = (value <= ParseBitwiseOrExpression()) ? 1 : 0;
+        //            break;
+        //        case TokenType.GreaterThan:
+        //            tokens.Advance();
+        //            value = (value > ParseBitwiseOrExpression()) ? 1 : 0;
+        //            break;
+        //        case TokenType.GreaterThanOrEqual:
+        //            tokens.Advance();
+        //            value = (value >= ParseBitwiseOrExpression()) ? 1 : 0;
+        //            break;
+        //        default:
+        //            return value;
+        //    }
+        //}
+
+        return left;
     }
 
     /// <summary>
     /// bitwise_or_expression = bitwise_xor_expression, { "|", bitwise_xor_expression } ;.
     /// </summary>
-    private decimal ParseBitwiseOrExpression()
+    private Expression ParseBitwiseOrExpression()
     {
-        decimal value = ParseBitwiseXorExpression();
+        Expression left = ParseBitwiseXorExpression();
         while (tokens.Peek().Type == TokenType.BitwiseOr)
         {
             tokens.Advance();
-            value = (decimal)((long)value | (long)ParseBitwiseXorExpression());
+            Expression right = ParseBitwiseXorExpression();
+            left = new BitwiseOperationExpression(left, BitwiseOperation.Or, right);
         }
 
-        return value;
+        return left;
     }
 
     /// <summary>
     /// bitwise_xor_expression = bitwise_and_expression, { "^", bitwise_and_expression } ;.
     /// </summary>
-    private decimal ParseBitwiseXorExpression()
+    private Expression ParseBitwiseXorExpression()
     {
-        decimal value = ParseBitwiseAndExpression();
+        Expression left = ParseBitwiseAndExpression();
         while (tokens.Peek().Type == TokenType.BitwiseXOR)
         {
             tokens.Advance();
-            value = (decimal)((long)value ^ (long)ParseBitwiseAndExpression());
+            Expression right = ParseBitwiseAndExpression();
+            left = new BitwiseOperationExpression(left, BitwiseOperation.XOR, right);
+            //left = (decimal)((long)left ^ (long)ParseBitwiseAndExpression());
         }
 
-        return value;
+        return left;
     }
 
     /// <summary>
     /// bitwise_and_expression = additive_expression, { "&", additive_expression } ;.
     /// </summary>
-    private decimal ParseBitwiseAndExpression()
+    private Expression ParseBitwiseAndExpression()
     {
-        decimal value = ParseAdditiveExpression();
+        Expression left = ParseAdditiveExpression();
         while (tokens.Peek().Type == TokenType.BitwiseAnd)
         {
             tokens.Advance();
-            value = (decimal)((long)value & (long)ParseAdditiveExpression());
+            Expression right = ParseAdditiveExpression();
+            left = new BitwiseOperationExpression(left, BitwiseOperation.And, right);
         }
 
-        return value;
+        return left;
     }
 
     /// <summary>
     /// additive_expression = multiplicative_expression, { ("+" | "-"), multiplicative_expression } ;.
     /// </summary>
-    private decimal ParseAdditiveExpression()
+    private Expression ParseAdditiveExpression()
     {
-        decimal value = ParseMultiplicativeExpression();
+        Expression left = ParseMultiplicativeExpression();
         while (true)
         {
             switch (tokens.Peek().Type)
             {
                 case TokenType.PlusSign:
                     tokens.Advance();
-                    value += ParseMultiplicativeExpression();
+                    Expression plusRight = ParseMultiplicativeExpression();
+                    left = new BinaryOperationExpression(left, BinaryOperation.Add, plusRight);
                     break;
                 case TokenType.MinusSign:
                     tokens.Advance();
-                    value -= ParseMultiplicativeExpression();
+                    Expression minusRight = ParseMultiplicativeExpression();
+                    left = new BinaryOperationExpression(left, BinaryOperation.Subtract, minusRight);
                     break;
                 default:
-                    return value;
+                    return left;
             }
         }
     }
@@ -335,27 +380,30 @@ public class Parser
     /// <summary>
     /// multiplicative_expression = unary_expression, { ("*" | "/" | "%" ), unary_expression } ;.
     /// </summary>
-    private decimal ParseMultiplicativeExpression()
+    private Expression ParseMultiplicativeExpression()
     {
-        decimal value = ParseUnaryExpression();
+        Expression left = ParseUnaryExpression();
         while (true)
         {
             switch (tokens.Peek().Type)
             {
                 case TokenType.MultiplySign:
                     tokens.Advance();
-                    value *= ParseUnaryExpression();
+                    Expression multiplyRight = ParseMultiplicativeExpression();
+                    left = new BinaryOperationExpression(left, BinaryOperation.Multiply, multiplyRight);
                     break;
                 case TokenType.DivideSign:
                     tokens.Advance();
-                    value /= ParseUnaryExpression();
+                    Expression devideRight = ParseMultiplicativeExpression();
+                    left = new BinaryOperationExpression(left, BinaryOperation.Divide, devideRight);
                     break;
                 case TokenType.ModSign:
                     tokens.Advance();
-                    value %= ParseUnaryExpression();
+                    Expression moduleRight = ParseMultiplicativeExpression();
+                    left = new BinaryOperationExpression(left, BinaryOperation.Module, moduleRight);
                     break;
                 default:
-                    return value;
+                    return left;
             }
         }
     }
@@ -363,39 +411,38 @@ public class Parser
     /// <summary>
     /// power_expression = primary_expression, { "**", unary_expression } ;.
     /// </summary>
-    private decimal ParsePowerExpression()
+    private Expression ParsePowerExpression()
     {
-        decimal value = ParsePrimaryExpression();
+        Expression left = ParsePrimaryExpression();
         while (tokens.Peek().Type == TokenType.Exponent)
         {
             tokens.Advance();
-            decimal exponent = ParseUnaryExpression();
-            value = (decimal)Math.Pow((double)value, (double)exponent);
+            Expression right = ParseUnaryExpression();
+            left = new BinaryOperationExpression(left, BinaryOperation.Exponent, right);
         }
 
-        return value;
+        return left;
     }
 
     /// <summary>
     /// unary_expression = [ "+" | "-" | "~" | "!" ], power_expression ;.
     /// </summary>
-    private decimal ParseUnaryExpression()
+    private Expression ParseUnaryExpression()
     {
         switch (tokens.Peek().Type)
         {
             case TokenType.PlusSign:
                 tokens.Advance();
-                return +ParseUnaryExpression();
+                return new UnaryOperationExpression(UnaryOperation.Plus, ParseUnaryExpression());
             case TokenType.MinusSign:
                 tokens.Advance();
-                return -ParseUnaryExpression();
+                return new UnaryOperationExpression(UnaryOperation.Minus, ParseUnaryExpression());
             case TokenType.BitwiseNot:
                 tokens.Advance();
-                return ~(long)ParseUnaryExpression();
+                return new UnaryOperationExpression(UnaryOperation.BitwiseNot, ParseUnaryExpression());
             case TokenType.LogicalNot:
                 tokens.Advance();
-                decimal value = ParseUnaryExpression();
-                return value != 0 ? 0 : 1;
+                return new UnaryOperationExpression(UnaryOperation.Not, ParseUnaryExpression());
             default:
                 return ParsePowerExpression();
         }
@@ -407,7 +454,7 @@ public class Parser
     ///                    | function_call
     ///                    | "(", expression, ")" ;.
     /// </summary>
-    private decimal ParsePrimaryExpression()
+    private Expression ParsePrimaryExpression()
     {
         Token t = tokens.Peek();
         switch (t.Type)
@@ -415,72 +462,109 @@ public class Parser
             case TokenType.Integer:
             case TokenType.Float:
                 tokens.Advance();
-                return t.Value!.ToDecimal();
+                return new LiteralExpression(new Runtime.Value(t.Value!.ToDecimal()));
+            case TokenType.True:
+                return new LiteralExpression(new Runtime.Value(true));
+            case TokenType.False:
+                return new LiteralExpression(new Runtime.Value(false));
+            case TokenType.StringLiteral:
+                return new LiteralExpression(new Runtime.Value((string)t.Value!.ToString()));
             case TokenType.Identifier:
-                tokens.Advance();
-                string name = t.Value!.ToString();
-
+                string name = Match(TokenType.Identifier).Value!.ToString();
                 if (tokens.Peek().Type == TokenType.LParenthesis)
                 {
-                    tokens.Advance();
-                    List<decimal> args = new List<decimal>();
-                    if (tokens.Peek().Type != TokenType.RParenthesis)
-                    {
-                        args = ParseExpressionList();
-                    }
-
-                    Match(TokenType.RParenthesis);
-                    if (name == "readNumber")
-                    {
-                        return environment.ReadNumber();
-                    }
-
-                    if (name == "print")
-                    {
-                        if (args.Count != 1)
-                        {
-                            throw new ArgumentException("print() expects exactly one argument");
-                        }
-
-                        environment.WriteNumber(args[0]);
-                        return args[0];
-                    }
-
-                    return BuiltinFunctions.Invoke(name, args);
-                }
-                else if (tokens.Peek().Type == TokenType.Assign)
-                {
-                    tokens.Advance();
-                    decimal result = ParseExpression();
-                    context.AssignVariable(name, result);
-                    return result;
+                    return ParseFunctionCall(name);
                 }
                 else
                 {
-                    switch (t.Value!.ToString())
-                    {
-                        case "Pi":
-                            return (decimal)Math.PI;
-                        case "Euler":
-                            return (decimal)Math.PI;
-                        default:
-                            return context.GetValue(t.Value.ToString());
-                    }
+                    return new VariableExpression(name);
                 }
 
             case TokenType.LParenthesis:
                 tokens.Advance();
-                decimal value = ParseExpression();
-                if (tokens.Peek().Type != TokenType.RParenthesis)
-                {
-                    throw new UnexpectedLexemeException(tokens.Peek().Type, t);
-                }
-
-                tokens.Advance();
-                return value;
+                Expression expression = ParseExpression();
+                Match(TokenType.RParenthesis);
+                return expression;
             default:
-                throw new UnexpectedLexemeException(TokenType.Integer, t);
+                throw new UnexpectedLexemeException(t);
+                //    tokens.Advance();
+                //    string name = t.Value!.ToString();
+
+                //    if (tokens.Peek().Type == TokenType.LParenthesis)
+                //    {
+                //        tokens.Advance();
+                //        List<decimal> args = new List<decimal>();
+                //        if (tokens.Peek().Type != TokenType.RParenthesis)
+                //        {
+                //            args = ParseExpressionList();
+                //        }
+
+                //        Match(TokenType.RParenthesis);
+                //        if (name == "readNumber")
+                //        {
+                //            return environment.ReadNumber();
+                //        }
+
+                //        if (name == "print")
+                //        {
+                //            if (args.Count != 1)
+                //            {
+                //                throw new ArgumentException("print() expects exactly one argument");
+                //            }
+
+                //            environment.WriteNumber(args[0]);
+                //            return args[0];
+                //        }
+
+                //        return BuiltinFunctions.Invoke(name, args);
+                //    }
+                //    else if (tokens.Peek().Type == TokenType.Assign)
+                //    {
+                //        tokens.Advance();
+                //        decimal result = ParseExpression();
+                //        context.AssignVariable(name, result);
+                //        return result;
+                //    }
+                //    else
+                //    {
+                //        switch (t.Value!.ToString())
+                //        {
+                //            case "Pi":
+                //                return (decimal)Math.PI;
+                //            case "Euler":
+                //                return (decimal)Math.PI;
+                //            default:
+                //                return context.GetValue(t.Value.ToString());
+                //        }
+                //    }
+
+                //case TokenType.LParenthesis:
+                //    tokens.Advance();
+                //    decimal value = ParseExpression();
+                //    if (tokens.Peek().Type != TokenType.RParenthesis)
+                //    {
+                //        throw new UnexpectedLexemeException(tokens.Peek().Type, t);
+                //    }
+
+                //    tokens.Advance();
+                //    return value;
+                //default:
+                //    throw new UnexpectedLexemeException(TokenType.Integer, t);
         }
+    }
+
+    private bool IsComprassionOperator(TokenType type)
+    {
+        return type switch
+        {
+            TokenType.Equal or
+            TokenType.LogicalNotEqual or
+            TokenType.LessThan or
+            TokenType.LessThanOrEqual or
+            TokenType.GreaterThan or
+            TokenType.GreaterThanOrEqual => true,
+            _ => false,
+        };
     }
 
     private Token Match(TokenType expected)

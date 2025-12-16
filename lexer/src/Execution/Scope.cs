@@ -1,21 +1,39 @@
-﻿namespace Execution;
+﻿using Runtime;
+
+namespace Execution;
 public class Scope
 {
-    private readonly Dictionary<string, decimal> variables = [];
+    private readonly Dictionary<string, Value> variables = [];
+
+    public bool FuncScope { get; set; }
+
+    public bool LoopScope { get; set; }
+
+    public bool ReturnState { get; set; }
+
+    public bool BreakState { get; set; }
+
+    public bool ContinueState { get; set; }
 
     /// <summary>
     /// Читает переменную из этой области видимости.
     /// Возвращает false, если переменная не объявлена в этой области видимости.
     /// </summary>
-    public bool TryGetVariable(string name, out decimal value)
+    public bool TryGetVariable(string name, out Value value)
     {
-        if (variables.TryGetValue(name, out decimal v))
+        if (variables.TryGetValue(name, out Value? v))
         {
+            if (v is null)
+            {
+                throw new ArgumentException("Variable is not initialized");
+            }
+
             value = v;
+
             return true;
         }
 
-        value = 0.0m;
+        value = default!;
         return false;
     }
 
@@ -23,7 +41,7 @@ public class Scope
     /// Присваивает переменную в этой области видимости.
     /// Возвращает false, если переменная не объявлена в этой области видимости.
     /// </summary>
-    public bool TryAssignVariable(string name, decimal value)
+    public bool TryAssignVariable(string name, Value value)
     {
         if (variables.ContainsKey(name))
         {
@@ -38,7 +56,7 @@ public class Scope
     /// Объявляет переменную в этой области видимости.
     /// Возвращает false, если переменная уже объявлена в этой области видимости.
     /// </summary>
-    public bool TryDefineVariable(string name, decimal value)
+    public bool TryDefineVariable(string name, Value value)
     {
         return variables.TryAdd(name, value);
     }
