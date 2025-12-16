@@ -14,7 +14,6 @@ importDecl
     : IMPORT IDENTIFIER
     ;
 
-// Верхнеуровневые объявления
 topLevelDecl
     : classDecl
     | enumDecl
@@ -51,7 +50,6 @@ parameter
     : IDENTIFIER (COLON typeAnnotation)?
     ;
 
-// ---------- Statements ----------
 statement
     : variableDecl
     | assignment
@@ -66,49 +64,38 @@ statement
     | expressionStatement
     ;
 
-// переменная (включая let/var)
 variableDecl
     : (LET | VAR) IDENTIFIER (COLON typeAnnotation)? (ASSIGN expression)? SEMICOLON
     ;
 
-// присваивание как инструкция (с точкой с запятой)
 assignment
     : IDENTIFIER ASSIGN expression SEMICOLON
     ;
 
-// присваивание как выражение/в заголовке for (без ; )
 assignmentExpr
     : IDENTIFIER ASSIGN expression
     ;
 
-// если-ветвление (в спецификации требуем THEN и блоки)
 ifStatement
     : IF expression THEN block (ELSE block)?
     ;
 
-// for: трёхчастный императивный цикл: init, condition, post in block
-// init/post могут быть пустыми (assignmentExpr | empty)
 forStatement
     : FOR assignmentOrEmpty COMMA expression COMMA assignmentOrEmpty IN block
     ;
 
-// вспомогательное: assignmentExpr или пусто
 assignmentOrEmpty
     : assignmentExpr
     | /* empty */
     ;
 
-// while (с явными скобками)
 whileStatement
     : WHILE LPAREN expression RPAREN block
     ;
 
-// do ... while (проверка после тела), завершается точкой с запятой
 doWhileStatement
     : DO block WHILE LPAREN expression RPAREN SEMICOLON
     ;
-
-// break / continue
 breakStatement
     : BREAK SEMICOLON
     ;
@@ -117,12 +104,10 @@ continueStatement
     : CONTINUE SEMICOLON
     ;
 
-// return
 returnStatement
     : RETURN expression? SEMICOLON
     ;
 
-// match / pattern matching
 matchStatement
     : MATCH expression LBRACE matchCase* RBRACE
     ;
@@ -131,7 +116,6 @@ matchCase
     : CASE pattern COLON block
     ;
 
-// pattern: идентификатор, enum-паттерн или wildcard '_'
 pattern
     : IDENTIFIER
     | enumPattern
@@ -158,7 +142,6 @@ typeAnnotation
     : IDENTIFIER
     ;
 
-// ---------- Expressions ----------
 expressionRoot
     : expression EOF
     ;

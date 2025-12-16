@@ -38,13 +38,11 @@ PRINT: 'print';
 READ_INT: 'readInt';
 READ_LINE: 'readLine';
 
-// новые ключевые слова для циклов и управления потоком
 WHILE: 'while';
 DO: 'do';
 BREAK: 'break';
 CONTINUE: 'continue';
 
-// символ подчеркивания как wildcard в паттернах match
 UNDERSCORE: '_';
 
 PLUS: '+';
