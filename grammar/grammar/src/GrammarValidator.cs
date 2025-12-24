@@ -1,5 +1,6 @@
 ﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
+using System.IO;
 
 namespace GlacierGrammar
 {
@@ -11,23 +12,34 @@ namespace GlacierGrammar
         /// </summary>
         public static void ValidateExpression(string expression)
         {
-            // Создаём лексический анализатор
             AntlrInputStream inputStream = new(expression);
             GlacierLexer lexer = new(inputStream);
-
-            // Создаём синтаксический анализатор
             CommonTokenStream tokenStream = new(lexer);
             GlacierParser parser = new(tokenStream);
 
-            // Устанавливаем обработчик ошибок
             parser.RemoveErrorListeners();
             parser.AddErrorListener(new ThrowingErrorListener());
-
-            // Отключаем механизм восстановления после ошибок
             parser.ErrorHandler = new BailErrorStrategy();
 
-            // Запускаем разбор по правилу expressionRoot
             parser.expressionRoot();
+        }
+
+        /// <summary>
+        /// Проверяет программу на соответствие грамматике Glacier.
+        /// Бросает исключение при несоответствии.
+        /// </summary>
+        public static void ValidateProgram(string code)
+        {
+            AntlrInputStream inputStream = new(code);
+            GlacierLexer lexer = new(inputStream);
+            CommonTokenStream tokenStream = new(lexer);
+            GlacierParser parser = new(tokenStream);
+
+            parser.RemoveErrorListeners();
+            parser.AddErrorListener(new ThrowingErrorListener());
+            parser.ErrorHandler = new BailErrorStrategy();
+
+            parser.program();
         }
     }
 
