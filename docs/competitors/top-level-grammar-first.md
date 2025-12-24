@@ -1,196 +1,326 @@
 # Грамматика верхнего уровня языка Glacier
 
-Glacier — объектно-ориентированный язык программирования с элементами функционального стиля.
-Он сочетает принципы Go (простота, явность, блочная область видимости) и Haskell (чистота выражений, match-выражения), сохраняя строгую статическую типизацию и лаконичность синтаксиса.
+Этот документ описывает грамматику верхнего уровня (top-level) языка Glacier:
+модули, импорты, объявления типов и подпрограмм, а также инструкции (statements).
+Glacier — объектно-ориентированный императивный язык с элементами функционального стиля.
+Ветки и циклы в языке — инструкции.
 
 ---
 
-## Пример программы
+## Структура программы
+
+Программа состоит из объявления модуля, нуля или более импортов и списка верхнеуровневых объявлений.
+
+Пример:
 
 ```glacier
 module Main
 
 import IO
 
-enum DivisionResult {
-    Success(value: int)
-    Failure(message: string)
-}
-
-class Divider {
-    let factor: int
-
-    new(f: int) {
-        this.factor = f
-    }
-
-    func divide(x: int, y: int): DivisionResult {
-        if y == 0 then
-            return DivisionResult.Failure("Cannot divide by zero")
-        else
-            return DivisionResult.Success(x / y)
-    }
-}
+class X { ... }
 
 func main(): void {
-    let divider = Divider.new(2)
-    let result = divider.divide(10, 0)
-
-    match result {
-        case Success(v): print("Quotient: " + show(v))
-        case Failure(msg): print("Error: " + msg)
-    }
+    ...
 }
 ```
 
 ---
 
-## Ключевые особенности языка
+## Ключевые правила и ограничения (семантика)
 
-- Модульная структура (module, import)
-- Классы, функции, перечисления (class, func, enum)
-- Неизменяемые (let) и изменяемые (var) переменные
-- Поддержка ООП и структурных типов
-- Статическая типизация с аннотациями
-- Встроенные функции ввода-вывода (print, readInt, readLine)
-- Без неявных побочных эффектов — как в Go
-
----
-
-## Семантические правила
-
-- Переменная не может быть объявлена повторно в пределах одной области видимости
-  (ошибка: `let x = 1; let x = 2;`)
-- Использование необъявленной переменной вызывает ошибку времени компиляции
-- Все функции с ненулевым возвращаемым типом должны возвращать значение
-- `return` разрешён только внутри тела функции
-- `let` создаёт неизменяемую, `var` — изменяемую переменную
-- Объявления модулей и импортов допустимы только на верхнем уровне
-- Классы определяют свои собственные области видимости и контекст `this`
+*   `module` и `import` — только на верхнем уровне.
+*   `return` разрешён только внутри тела функции.
+*   `break` и `continue` разрешены только внутри тела цикла (for / while / do-while).
+*   Повторное объявление переменной в одной области видимости — ошибка компиляции.
+*   Все функции с ненулевым возвращаемым типом должны возвращать значение по всем путям исполнения.
+*   Блочная область видимости: `{ ... }` создаёт новую область.
+*   `this` доступен внутри методов класса.
 
 ---
 
-## Виды инструкций
+## Решение проблемы «висячего else» (dangling else)
 
-| Категория | Пример | Описание |
-|-----------|--------|----------|
-| Объявление переменной | `let x: int = 10;` | Неизменяемая переменная |
-| Объявление изменяемой | `var sum = 0;` | Изменяемая переменная |
-| Присваивание | `sum = sum + 1;` | Только для `var` |
-| Вызов функции | `print("Hi");` | Ввод/вывод или вызов пользовательской функции |
-| Условный блок | `if cond then ... else ...` | Ветвление |
-| Цикл | `for i = 0, i < 10, i = i + 1 in { ... }` | Императивная форма |
-| Возврат | `return result;` | Прерывает выполнение функции |
-| Сопоставление | `match expr { case ... }` | Аналог switch с деструктуризацией |
+В Glacier применяется обычное, простое правило: `else` ассоциируется с ближайшим не закрытым `if`.
+Чтобы убрать неоднозначности в крупных конструкциях, в спецификации рекомендуется:
+*   Для многострочных ветвей использовать блоки `{ ... }`.
+*   Использовать явные `then` / `else` и скобки — синтаксис языка уже требует `then` после условия:
+    `if <expr> then <block> [ else <block> ]`.
+
+Пример (без неоднозначности):
+
+```glacier
+if cond1 then {
+    if cond2 then { ... } else { ... }  // else связывается с ближайшим if
+}
+```
+
+При желании программист может всегда добавить `{}` вокруг ветвей, чтобы сделать намерение очевидным.
 
 ---
 
-## Грамматика в нотации EBNF
+## Верхнеуровневые объявления и инструкции — описание
 
-```ebnf
+### Модули и импорты
+
+```
+module_decl = "module", identifier ;
+import_decl = "import", identifier ;
+```
+
+### Верхнеуровневые объявления
+
+Поддерживаются объявления классов, перечислений и функций. Также возможны инструкции на верхнем уровне (в виде statement), если язык собирается исполнять код при загрузке модуля.
+
+```
+top_level_decl = class_decl
+               | enum_decl
+               | function_decl
+               | statement ;
+```
+
+### Классы и члены
+
+```
+class_decl = "class", identifier, "{", { class_member }, "}" ;
+class_member = variable_decl | function_decl ;
+```
+
+### Перечисления (enum)
+
+```
+enum_decl = "enum", identifier, "{", { enum_case }, "}" ;
+enum_case = identifier, [ "(", parameter_list, ")" ] ;
+```
+
+### Функции
+
+Функция объявляется как `func <name>([params]): [type] block`. Тело функции — блок `{ ... }`. `return` можно использовать внутри этого блока.
+
+```
+function_decl = "func", identifier, "(", [ parameter_list ], ")", [ ":", type_annotation ], block ;
+parameter_list = parameter, { ",", parameter } ;
+parameter = identifier, [ ":", type_annotation ] ;
+```
+
+Уточнение: функции без параметров — разрешены (пустой `()`).
+
+---
+
+## Инструкции (statements)
+
+Список поддерживаемых инструкций:
+*   `variable_decl` — объявление переменной (`let` / `var`)
+*   `assignment` — присваивание
+*   `if_statement` — ветвление
+*   `for_statement` — императивный цикл for (трёхчастный)
+*   `while_statement` — цикл while
+*   `do_while_statement` — цикл do ... while
+*   `break_statement` — прерывание цикла
+*   `continue_statement` — переход к следующей итерации
+*   `return_statement` — возврат из функции
+*   `match_statement` — сопоставление (match)
+*   `expression_statement` — выражение как инструкция (вызов функции и т.п.)
+
+```
+statement = variable_decl
+          | assignment
+          | if_statement
+          | for_statement
+          | while_statement
+          | do_while_statement
+          | break_statement
+          | continue_statement
+          | return_statement
+          | match_statement
+          | expression_statement ;
+```
+
+### Объявление переменной
+
+```
+variable_decl = ("let" | "var"), identifier, [ ":", type_annotation ], [ "=", expression ], ";" ;
+```
+
+`let` — неизменяемая, `var` — изменяемая.
+
+### Присваивание
+
+```
+assignment = identifier, "=", expression, ";" ;
+```
+
+### if — ветвление (императивный)
+
+`if` требует ключевого слова `then`. Тело ветки — `block`. `else` опционален.
+
+```
+if_statement = "if", expression, "then", block, [ "else", block ] ;
+```
+
+Пример:
+
+```glacier
+if x > 0 then {
+    print("positive");
+} else {
+    print("non-positive");
+}
+```
+
+### for — императивный цикл (трёхчастный)
+
+Форма: `for <init>, <condition>, <post> in <block>`
+`init` и `post` — обычно assignment (или пустые при необходимости). `condition` — выражение булеан/числовое. Тело — `block`.
+
+```
+for_statement = "for", assignment_or_empty, expression, ",", assignment_or_empty, "in", block ;
+assignment_or_empty = assignment | /* empty assignment placeholder */ ;
+```
+
+Пример:
+
+```glacier
+for i = 0, i < 10, i = i + 1 in {
+    ...
+}
+```
+
+### while
+
+Стандартный цикл проверки перед первой итерацией:
+
+```
+while_statement = "while", "(", expression, ")", block ;
+```
+
+Пример:
+
+```glacier
+while (x < 10) {
+    x = x + 1;
+}
+```
+
+### do-while
+
+Проверка после первой итерации:
+
+```
+do_while_statement = "do", block, "while", "(", expression, ")", ";" ;
+```
+
+Пример:
+
+```glacier
+do {
+    x = x - 1;
+} while (x > 0);
+```
+
+### break / continue
+
+Простые инструкции внутри циклов:
+
+```
+break_statement = "break", ";" ;
+continue_statement = "continue", ";" ;
+```
+
+Семантика: `break` выходит из текущего (вложенного) цикла; `continue` пропускает оставшуюся часть тела и начинает следующую итерацию текущего цикла.
+
+### return
+
+```
+return_statement = "return", [ expression ], ";" ;
+```
+
+`return` разрешён только внутри тела функции. Для функций с возвращаемым типом `void` `return` без выражения допустим; для функций с другим типом — должен возвращаться корректный тип.
+
+### match (сопоставление)
+
+```
+match_statement = "match", expression, "{", { match_case }, "}" ;
+match_case = "case", pattern, ":", block ;
+pattern = identifier | enum_pattern | "_" ;
+enum_pattern = identifier, "(", [ identifier_list ], ")" ;
+identifier_list = identifier, { ",", identifier } ;
+```
+
+---
+
+## Блоки и инструкции
+
+```
+block = "{", { statement }, "}" ;
+expression_statement = expression, ";" ;
+```
+
+---
+
+## Полная EBNF-грамматика верхнего уровня
+
+```
 (* Корневая структура программы *)
 program = module_decl, { import_decl }, { top_level_decl } ;
 
 module_decl = "module", identifier ;
 import_decl = "import", identifier ;
 
-(* Верхнеуровневые объявления *)
 top_level_decl = class_decl
-                | enum_decl
-                | function_decl
-                | statement ;
+               | enum_decl
+               | function_decl
+               | statement ;
 
-(* Объявление класса *)
 class_decl = "class", identifier, "{", { class_member }, "}" ;
 class_member = variable_decl | function_decl ;
 
-(* Объявление перечисления *)
 enum_decl = "enum", identifier, "{", { enum_case }, "}" ;
 enum_case = identifier, [ "(", parameter_list, ")" ] ;
 
-(* Объявление функции *)
 function_decl = "func", identifier, "(", [ parameter_list ], ")", [ ":", type_annotation ], block ;
 parameter_list = parameter, { ",", parameter } ;
 parameter = identifier, [ ":", type_annotation ] ;
 
-(* Инструкции *)
 statement = variable_decl
-           | assignment
-           | if_statement
-           | for_statement
-           | return_statement
-           | match_statement
-           | expression_statement ;
+          | assignment
+          | if_statement
+          | for_statement
+          | while_statement
+          | do_while_statement
+          | break_statement
+          | continue_statement
+          | return_statement
+          | match_statement
+          | expression_statement ;
 
-variable_decl = let_variable_decl | var_variable_decl;
-
-let_variable_decl = "let", identifier, ":", type_annotation, [ "=", expression ], ";" ;
-
-var_variable_decl = "var, identifier, [ "=", expression ], ";" ;
-
+variable_decl = ("let" | "var"), identifier, [ ":", type_annotation ], [ "=", expression ], ";" ;
 assignment = identifier, "=", expression, ";" ;
 
 if_statement = "if", expression, "then", block, [ "else", block ] ;
-for_statement = "for", assignment, expression, ",", expression, "in", block ;
+
+for_statement = "for", assignment_or_empty, expression, ",", assignment_or_empty, "in", block ;
+assignment_or_empty = assignment | /* empty */ ;
+
+while_statement = "while", "(", expression, ")", block ;
+do_while_statement = "do", block, "while", "(", expression, ")", ";" ;
+
+break_statement = "break", ";" ;
+continue_statement = "continue", ";" ;
+
 return_statement = "return", [ expression ], ";" ;
 
 match_statement = "match", expression, "{", { match_case }, "}" ;
-match_case = "case", identifier, [ "(", identifier, ")" ], ":", statement ;
+match_case = "case", pattern, ":", block ;
+pattern = identifier | enum_pattern | "_" ;
+enum_pattern = identifier, "(", [ identifier_list ], ")" ;
+identifier_list = identifier, { ",", identifier } ;
 
 expression_statement = expression, ";" ;
-
 block = "{", { statement }, "}" ;
 
-(* Типы и базовые элементы *)
-type_annotation = "int" | "float" | identifier ;
-expression = (* см. docs/specification/expressions-grammar.md *) ;
-identifier = letter, { letter | digit | "_" } ;
+type_annotation = identifier ;
+expression = (* смотрите expressions-grammar.md *) ;
+
+identifier = ( letter | "_" ), { letter | digit | "_" } ;
 ```
-
----
-
-## Примеры инструкций
-
-```glacier
-let radius: float = 5.0
-var area = Pi * radius ** 2
-
-if area > 10.0 then
-    print("Big circle")
-else
-    print("Small circle")
-
-for i = 0, i < 5, i = i + 1 in {
-    print("Step " + show(i))
-}
-
-match result {
-    case Success(v): print(v)
-    case Failure(msg): print("Error: " + msg)
-}
-```
-
----
-
-## Комментарии
-
-Поддерживаются оба вида комментариев:
-
-```glacier
-// Однострочный комментарий
-
-/* Многострочный
-   комментарий */
-```
-
----
-
-## Замечания к грамматике
-
-- Грамматика не содержит левой рекурсии, подходит для рекурсивного спуска
-- Все выражения определены в отдельном файле `docs/specification/expressions-grammar.md`
-- Поддерживается последовательное исполнение инструкций
-- Разделители инструкций — символ `;`
-- Ввод-вывод реализуется как вызовы встроенных функций (`print`, `readInt`, `readLine`)
-- Встроенные функции и классы можно использовать без предварительного импорта `IO`
-
