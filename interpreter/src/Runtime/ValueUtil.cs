@@ -2,7 +2,7 @@
 using System.Text;
 
 namespace Runtime;
-public class ValueUtil
+public static class ValueUtil
 {
     /// <summary>
     /// Печатает строковое значение в кавычках с базовым экранированием.

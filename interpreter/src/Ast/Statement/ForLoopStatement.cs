@@ -3,7 +3,7 @@
 namespace Ast.Statement;
 public sealed class ForLoopStatement : Statement
 {
-    public ForLoopStatement(VariableDeclarationStatement? init, Expression? condition, AssignmentStatement? step, BlockStatement block)
+    public ForLoopStatement(VariableDeclarationStatement? init, Expression? condition, AssignmentExpression? step, BlockStatement block)
     {
         Init = init;
         Condition = condition;
@@ -15,7 +15,7 @@ public sealed class ForLoopStatement : Statement
 
     public Expression? Condition { get; }
 
-    public AssignmentStatement? Step { get; }
+    public AssignmentExpression? Step { get; }
 
     public BlockStatement Block { get; }
 

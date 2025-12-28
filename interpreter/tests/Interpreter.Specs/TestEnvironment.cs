@@ -14,7 +14,7 @@ namespace Interpreter.Specs;
 
 public class TestEnvironment : IEnvironment
 {
-    private readonly Queue<decimal> inputQueue = new();
+    private readonly Queue<string> inputQueue = new();
     private readonly Dictionary<string, ModuleDecl> modules = new();
 
     public List<decimal> Results { get; } = new();
@@ -26,21 +26,19 @@ public class TestEnvironment : IEnvironment
         inputQueue.Clear();
         foreach (DataTableRow? row in table.Rows)
         {
-            if (decimal.TryParse(row["Value"], out decimal value))
-            {
-                inputQueue.Enqueue(value);
-            }
+            inputQueue.Enqueue(row["Value"]);
         }
     }
 
     public decimal ReadNumber()
     {
-        if (inputQueue.Count == 0)
+        string inputStr = ReadInput();
+        if (decimal.TryParse(inputStr, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal value))
         {
-            throw new InvalidOperationException("No input values available.");
+            return value;
         }
 
-        return inputQueue.Dequeue();
+        throw new InvalidOperationException($"Cannot parse '{inputStr}' as number.");
     }
 
     public void AddResult(decimal result)
@@ -99,26 +97,37 @@ public class TestEnvironment : IEnvironment
 
     public void Print(decimal result)
     {
-        throw new NotImplementedException();
+        Output += result;
     }
 
     public void Print(string result)
     {
-        throw new NotImplementedException();
+        Output += result;
     }
 
     public void PrintLine()
     {
-        throw new NotImplementedException();
+        Console.WriteLine(Output);
     }
 
     public void PrintLine(string line)
     {
-        throw new NotImplementedException();
+        Output += line;
+        PrintLine();
     }
 
     public void PrintLine(decimal line)
     {
         throw new NotImplementedException();
+    }
+
+    public string ReadInput()
+    {
+        if (inputQueue.Count == 0)
+        {
+            throw new InvalidOperationException("No input values available.");
+        }
+
+        return inputQueue.Dequeue();
     }
 }

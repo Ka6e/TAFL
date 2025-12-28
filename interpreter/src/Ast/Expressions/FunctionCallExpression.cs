@@ -1,7 +1,6 @@
 ﻿namespace Ast.Expressions;
 public sealed class FunctionCallExpression : Expression
 {
-
     public FunctionCallExpression(string name, List<Expression> arguments)
     {
         Name = name;

@@ -71,71 +71,73 @@ public class AstEvaluator : IAstVisitor
     public void Visit(FunctionCallExpression e)
     {
         List<Value> argsValues = new();
-        foreach (Expression args in e.Arguments)
+        foreach (Expression arg in e.Arguments)
         {
-            args.Accept(this);
+            arg.Accept(this);
             argsValues.Add(values.Pop());
         }
 
-        Value result;
-
-        if (EnvironmentFunctions.TryInvoke(e.Name, argsValues, environment, out result))
+        if (EnvironmentFunctions.TryInvoke(e.Name, argsValues, environment, out Value? envResult))
         {
-            values.Push(result);
+            values.Push(envResult!);
             return;
         }
 
         if (BuiltinFunctions.TryInvoke(e.Name, argsValues, out decimal builtInResult))
         {
-            if (builtInResult % 1 != 0)
-            {
-                result = new Value(builtInResult);
-            }
-            else
-            {
-                result = new Value((int)builtInResult);
-            }
+            values.Push(
+                builtInResult % 1 == 0
+                    ? new Value((int)builtInResult)
+                    : new Value(builtInResult)
+            );
+            return;
         }
-        else
+
+        FunctionDecl func = context.GetFunction(e.Name);
+
+        if (func.Parameters.Count != argsValues.Count)
         {
-            // 3. Пользовательская функция
-            FunctionDecl func = context.GetFunction(e.Name);
+            throw new ArgumentException(
+                $"Function {e.Name} expects {func.Parameters.Count} arguments, got {argsValues.Count}"
+            );
+        }
 
-            if (func.Parameters.Count != argsValues.Count)
-            {
-                throw new ArgumentException("Function " + e.Name + " expects " + func.Parameters.Count + " arguments, got " + argsValues.Count);
-            }
+        context.PushScope(new Scope());
+        functionStack.Push(new FunctionFrame());
 
-            // Создаём новый scope для локальных переменных функции
-            //context.PushScope(new Scope { FuncScope = true });
-
-            // Привязываем параметры к значениям
+        try
+        {
             for (int i = 0; i < func.Parameters.Count; i++)
             {
                 if (func.Parameters[i].ValueType != argsValues[i].GetValueType())
                 {
-                    throw new TypeErrorException("Argument type mismatch for " + func.Parameters[i].Name);
+                    throw new TypeErrorException(
+                        $"Argument type mismatch for {func.Parameters[i].Name}"
+                    );
                 }
 
-                context.DefineVariable(func.Parameters[i].Name, argsValues[i]);
+                context.DefineVariable(
+                    func.Parameters[i].Name,
+                    argsValues[i]
+                );
             }
 
-            // Выполняем тело функции
             func.Block.Accept(this);
 
-            // Берём результат с вершины стека
             if (values.Count == 0)
             {
-                throw new InvalidOperationException("Function " + func.Name + " did not return a value");
+                throw new InvalidOperationException(
+                    $"Function {func.Name} did not return a value"
+                );
             }
 
-            result = values.Pop();
-
+            values.Push(values.Pop());
+        }
+        finally
+        {
+            functionStack.Pop();
             context.PopScope();
         }
-
-        // 4. Результат функции помещаем на стек
-        values.Push(result);
     }
 
     public void Visit(FunctionDecl d)
@@ -196,7 +198,6 @@ public class AstEvaluator : IAstVisitor
 
         Value condition = values.Pop();
 
-
         if (condition.GetValueType() != Runtime.ValueType.Bool)
         {
             throw new TypeErrorException("Condition must be boolean");
@@ -231,7 +232,7 @@ public class AstEvaluator : IAstVisitor
 
     public void Visit(ForLoopStatement e)
     {
-        //Scope loopScope = context.GetLastScope();
+        context.PushScope(new Scope());
         loopStack.Push(new LoopFrame());
 
         try
@@ -275,69 +276,22 @@ public class AstEvaluator : IAstVisitor
                     if (e.Step != null)
                     {
                         e.Step.Accept(this);
+                        values.Pop();
                     }
-
-                    continue;
                 }
 
                 if (e.Step != null)
                 {
                     e.Step.Accept(this);
+                    values.Pop();
                 }
             }
         }
         finally
         {
             loopStack.Pop();
+            context.PopScope();
         }
-        //try
-        //{
-        //    if (e.Init != null)
-        //    {
-        //        e.Init.Accept(this);
-        //    }
-
-        //    while (true)
-        //    {
-        //        if (e.Condition != null)
-        //        {
-        //            e.Condition.Accept(this);
-        //            Value cond = values.Pop();
-
-        //            if (cond.GetValueType() != ValueType.Bool)
-        //            {
-        //                throw new TypeErrorException("Condition must be boolean");
-        //            }
-
-        //            if (!cond.AsBool())
-        //            {
-        //                break;
-        //            }
-        //        }
-
-        //        e.Block.Accept(this);
-
-        //        if (loopScope.ReturnState || loopScope.BreakState)
-        //        {
-        //            break;
-        //        }
-
-        //        if (loopScope.ContinueState)
-        //        {
-        //            loopScope.ContinueState = false;
-        //        }
-
-        //        if (e.Step != null)
-        //        {
-        //            e.Step.Accept(this);
-        //            values.Pop();
-        //        }
-        //    }
-        //}
-        //finally
-        //{
-        //    context.PopScope();
-        //}
     }
 
     public void Visit(WhileLoopStatement e)
@@ -373,7 +327,6 @@ public class AstEvaluator : IAstVisitor
                 if (loop.Continue)
                 {
                     loop.Continue = false;
-                    continue;
                 }
             }
         }
@@ -381,51 +334,11 @@ public class AstEvaluator : IAstVisitor
         {
             loopStack.Pop();
         }
-        //context.PushScope(new Scope { LoopScope = true });
-
-        //Scope loopScope = context.GetLastScope();
-
-        //while (true)
-        //{
-        //    e.Condition.Accept(this);
-        //    Value condition = values.Pop();
-        //    if (condition.GetValueType() != Runtime.ValueType.Bool)
-        //    {
-        //        throw new TypeErrorException("Condition must be boolean");
-        //    }
-
-        //    if (!condition.AsBool())
-        //    {
-        //        break;
-        //    }
-
-        //    e.Block.Accept(this);
-
-        //    if (loopScope.ReturnState)
-        //    {
-        //        break;
-        //    }
-
-        //    if (loopScope.BreakState)
-        //    {
-        //        break;
-        //    }
-
-        //    if (loopScope.ContinueState)
-        //    {
-        //        loopScope.ContinueState = false;
-        //        continue;
-        //    }
-        //}
-
-        //context.PopScope();
     }
 
     public void Visit(DoWhileLoopStatement s)
     {
         loopStack.Push(new LoopFrame());
-        //context.PushScope(new Scope { LoopScope = true });
-        //Scope loopScope = context.GetLastScope();
 
         try
         {
@@ -464,36 +377,6 @@ public class AstEvaluator : IAstVisitor
         {
             loopStack.Pop();
         }
-        //do
-        //{
-        //s.Block.Accept(this);
-
-        //if (loopScope.ReturnState)
-        //{
-        //    break;
-        //}
-
-        //if (loopScope.ContinueState)
-        //{
-        //    loopScope.ContinueState = false;
-        //}
-
-        //s.Expression.Accept(this);
-        //Value condition = values.Pop();
-
-        //if (condition.GetValueType() != Runtime.ValueType.Bool)
-        //{
-        //    throw new TypeErrorException("Condition must be boolean");
-        //}
-
-        //if (!condition.AsBool())
-        //{
-        //    break;
-        //}
-
-        //} while (true);
-
-        //}
     }
 
     public void Visit(BreakStatement s)
@@ -528,30 +411,11 @@ public class AstEvaluator : IAstVisitor
         if (s.Value != null)
         {
             s.Value.Accept(this);
+            Value returnValue = values.Pop();
+            values.Push(returnValue);
         }
 
         frame.ReturnState = true;
-        //Scope scope = context.GetLastScope();
-
-        //if (!scope.FuncScope)
-        //{
-        //    throw new ArgumentException("'Return' can't be out of function");
-        //}
-
-        //if (s.Value is not null)
-        //{
-        //    s.Value.Accept(this);
-        //    if (values.Pop().GetValueType() != s.Type || s.Type == Runtime.ValueType.Void)
-        //    {
-        //        throw new TypeErrorException("Unknown types");
-        //    }
-        //}
-        //else if (s.Type != Runtime.ValueType.Void)
-        //{
-        //    throw new TypeErrorException("Unknown types");
-        //}
-
-        //scope.ReturnState = true;
     }
 
     public void Visit(LiteralExpression e)
@@ -586,14 +450,12 @@ public class AstEvaluator : IAstVisitor
     {
         s.Expression.Accept(this);
 
-        Value val = values.Pop();
-        decimal result = val.GetValueType() switch
+        if (functionStack.Count > 0 && functionStack.Peek().ReturnState)
         {
-            ValueType.Int => val.AsInt(),
-            ValueType.Float => (decimal)val.AsFloat(),
-            _ => throw new TypeErrorException("ExpressionStatement requires numeric type")
-        };
-        environment.AddResult(result);
+            return;
+        }
+
+        Value val = values.Pop();
     }
 
     public void Visit(BinaryOperationExpression e)
@@ -682,6 +544,7 @@ public class AstEvaluator : IAstVisitor
     public void Visit(VariableDeclarationStatement s)
     {
         Value value;
+
         if (s.Type != null)
         {
             if (s.Value != null)
@@ -694,11 +557,12 @@ public class AstEvaluator : IAstVisitor
                     throw new TypeErrorException($"Cannot assign value of type {value.GetValueType()} to let {s.Name}: {s.Type}");
                 }
             }
-
-            value = GetDefaultValue(s.Type.Value);
+            else
+            {
+                value = GetDefaultValue(s.Type.Value);
+            }
 
             context.DefineConstant(s.Name, value);
-            environment.AddResult((decimal)value.AsInt());
 
             return;
         }
@@ -712,29 +576,6 @@ public class AstEvaluator : IAstVisitor
         value = values.Pop();
 
         context.DefineVariable(s.Name, value);
-        //environment.AddResult((decimal)value.AsInt());
-    }
-
-    public void Visit(LetDeclarationStatement s)
-    {
-        Value value;
-
-        if (s.Value != null)
-        {
-            s.Value.Accept(this);
-            value = values.Pop();
-
-            if (value.GetValueType() != s.Type)
-            {
-                throw new TypeErrorException($"Cannot assign value of type {value.GetValueType()} to let {s.Name}: {s.Type}");
-            }
-        }
-        else
-        {
-            value = GetDefaultValue(s.Type);
-        }
-
-        context.DefineConstant(s.Name, value);
     }
 
     private void HandleUnaryMinus(Value value)
@@ -904,7 +745,7 @@ public class AstEvaluator : IAstVisitor
         {
             values.Push(new Value(left.AsInt() > right.AsInt()));
         }
-        if (right.GetValueType() == ValueType.Float && left.GetValueType() == ValueType.Float)
+        else if (right.GetValueType() == ValueType.Float && left.GetValueType() == ValueType.Float)
         {
             values.Push(new Value(left.AsFloat() > right.AsFloat()));
         }

@@ -38,8 +38,6 @@ public interface IAstVisitor
 
     void Visit(VariableDeclarationStatement s);
 
-    void Visit(LetDeclarationStatement s);
-
     void Visit(ExpressionStatement s);
 
     void Visit(WhileLoopStatement s);

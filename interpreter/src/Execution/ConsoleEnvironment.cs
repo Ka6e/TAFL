@@ -7,7 +7,7 @@ using Runtime;
 namespace Execution;
 public class ConsoleEnvironment : IEnvironment
 {
-    private readonly Queue<decimal> inputQueue = new();
+    private readonly Queue<string> inputQueue = new();
     private readonly Dictionary<string, ModuleDecl> modules = new();
     private readonly Dictionary<string, ImportDecl> imports = new();
 
@@ -44,7 +44,7 @@ public class ConsoleEnvironment : IEnvironment
     public void Print(decimal result)
     {
         string formatted = (result % 1 == 0)
-            ? result.ToString("0", CultureInfo.InvariantCulture) 
+            ? result.ToString("0", CultureInfo.InvariantCulture)
             : result.ToString("0.#####", CultureInfo.InvariantCulture);
 
         Output += formatted;
@@ -73,14 +73,21 @@ public class ConsoleEnvironment : IEnvironment
         Console.WriteLine();
     }
 
-    public decimal ReadNumber()
+    public string ReadInput()
     {
         if (inputQueue.Count == 0)
         {
             throw new InvalidOperationException("No input values available.");
         }
 
-        return inputQueue.Dequeue();
+        return inputQueue.Dequeue().ToString(CultureInfo.InvariantCulture);
+    }
+
+    public decimal ReadNumber()
+    {
+        string input = ReadInput();
+        decimal result = decimal.Parse(input, CultureInfo.InvariantCulture);
+        return result;
     }
 
     public void RemoveImport(ImportDecl import)

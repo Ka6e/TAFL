@@ -30,7 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\" />
+    <Compile Update="Features\IsPrime.feature.cs">
+      <DependentUpon>IsPrime.feature</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

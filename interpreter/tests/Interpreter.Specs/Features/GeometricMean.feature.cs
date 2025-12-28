@@ -154,20 +154,20 @@ namespace Interpreter.Specs.Features
             else
             {
                 await this.ScenarioStartAsync();
-                global::Reqnroll.Table table2 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table4 = new global::Reqnroll.Table(new string[] {
                             "Value"});
-                table2.AddRow(new string[] {
-                            "4"});
-                table2.AddRow(new string[] {
-                            "9"});
+                table4.AddRow(new string[] {
+                            "4.0"});
+                table4.AddRow(new string[] {
+                            "9.0"});
 #line 5
-    await testRunner.GivenAsync("I enter into the console:", ((string)(null)), table2, "Given ");
+    await testRunner.GivenAsync("I enter into the console:", ((string)(null)), table4, "Given ");
 #line hidden
 #line 9
-    await testRunner.WhenAsync("I execute the program:", "let x: int = readNumber();\r\nlet y: int = readNumber();\r\nlet mean: int = (x * y) *" +
-                        "* 0.5;\r\nprint(mean);", ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I execute the program:", "module Main\r\nlet x: float = readNumber();\r\nlet y: float = readNumber();\r\nlet mean" +
+                        ": float = (x * y) ** 0.5;\r\nprint(mean);", ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 16
+#line 17
     await testRunner.ThenAsync("I should get the output:", "6", ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }

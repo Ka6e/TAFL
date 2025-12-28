@@ -11,7 +11,7 @@ public interface IEnvironment
 
     decimal ReadNumber();
 
-    //string ReadString();
+    string ReadInput();
 
     void Print(decimal result);
 

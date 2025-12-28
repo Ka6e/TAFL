@@ -1,6 +1,12 @@
 ﻿using System.Runtime.CompilerServices;
 
 namespace Ast.Attributes;
+
+/// <summary>
+/// Каждый атрибут AST устанавливается один раз на фазе семантического анализа,
+///  после чего он становится доступным для чтения.
+/// </summary>
+/// <typeparam name="T">Тип значения атрибута.</typeparam>
 public struct AstAttribute<T>
 {
     private T value;

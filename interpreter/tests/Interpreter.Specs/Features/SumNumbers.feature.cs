@@ -154,20 +154,20 @@ namespace Interpreter.Specs.Features
             else
             {
                 await this.ScenarioStartAsync();
-                global::Reqnroll.Table table3 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table6 = new global::Reqnroll.Table(new string[] {
                             "Value"});
-                table3.AddRow(new string[] {
+                table6.AddRow(new string[] {
                             "5"});
-                table3.AddRow(new string[] {
+                table6.AddRow(new string[] {
                             "7"});
 #line 4
-    await testRunner.GivenAsync("I enter into the console:", ((string)(null)), table3, "Given ");
+    await testRunner.GivenAsync("I enter into the console:", ((string)(null)), table6, "Given ");
 #line hidden
 #line 8
-    await testRunner.WhenAsync("I execute the program:", "let a: int = readNumber();\r\nlet b: int = readNumber();\r\nlet sum: int = a + b;\r\npr" +
-                        "int(sum);", ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I execute the program:", "module Main\r\nlet a: int = readNumber();\r\nlet b: int = readNumber();\r\nlet sum: int" +
+                        " = a + b;\r\nprint(sum);", ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 15
+#line 16
     await testRunner.ThenAsync("I should get the output:", "12", ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }

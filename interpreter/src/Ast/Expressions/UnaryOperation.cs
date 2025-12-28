@@ -9,7 +9,7 @@ public enum UnaryOperation
     /// <summary>
     /// Операция "унарный минус"
     /// </summary>
-    Minus, 
+    Minus,
 
     /// <summary>
     /// Операция "логическое отрицание"

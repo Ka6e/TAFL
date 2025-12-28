@@ -41,34 +41,38 @@ public class ParseTopLevelStatementsTests
         {
             {
                 "var x = 2 + 2;" +
-                "x + 5;", [9]
+                "print(x + 5);", [9]
             },
             {
-                "1 + 2; 2 * 5;", [3, 10]
+                "print(1 + 2); print(2 * 5);", [3, 10]
             },
             {
                 "var x = 1;" +
                 "var y = 2;" +
                 "var z = 3;" +
-                "x + y * z;", [7]
+                "print(x + y * z);", [7]
             },
             {
                 "var x = 10;" +
                 "var y = x;" +
                 "var z = y;" +
-                "x + y + z;", [30]
+                "x + y + z;" +
+                "print(x+y+z);", [30]
             },
             {
                 "var a = 10;" +
                 "var b = 2;" +
                 "a = 5;" +
-                "b = a + 1;", [5, 6]
+                "b = a + 1;" +
+                "print(a);" +
+                "print(b);", [5, 6]
             },
             {
-                "let x:int;", [0]
+                "let x:int;" +
+                "print(x);", [0]
             },
             {
-                "1.0;", [1.0m]
+                "print(1.0);", [1.0m]
             },
         };
     }

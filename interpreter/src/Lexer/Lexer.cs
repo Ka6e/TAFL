@@ -21,6 +21,8 @@ public class Lexer
         { "while", TokenType.While },
         { "do", TokenType.Do },
         { "in", TokenType.In },
+        { "break", TokenType.Break },
+        { "continue", TokenType.Continue },
         { "return", TokenType.Return },
         { "throw", TokenType.Throw },
         { "try", TokenType.Try },

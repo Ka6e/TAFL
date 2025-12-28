@@ -17,21 +17,21 @@ namespace Interpreter.Specs.Features
     
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Reqnroll", "3.0.0.0")]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class CircleAreaCalculationFeature : object, global::Xunit.IClassFixture<CircleAreaCalculationFeature.FixtureData>, global::Xunit.IAsyncLifetime
+    public partial class SumStringsFeature : object, global::Xunit.IClassFixture<SumStringsFeature.FixtureData>, global::Xunit.IAsyncLifetime
     {
         
         private global::Reqnroll.ITestRunner testRunner;
         
         private static string[] featureTags = ((string[])(null));
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Circle area calculation", "  Calculates the area of a circle using radius input and built-in constants.", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Sum strings", "  Concatinate strings.", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
         private global::Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "CircleSquare.feature"
+#line 1 "SumStrings.feature"
 #line hidden
         
-        public CircleAreaCalculationFeature(CircleAreaCalculationFeature.FixtureData fixtureData, global::Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public SumStringsFeature(SumStringsFeature.FixtureData fixtureData, global::Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
         }
@@ -105,7 +105,7 @@ namespace Interpreter.Specs.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/CircleSquare.feature.ndjson", 3);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/SumStrings.feature.ndjson", 3);
         }
         
         async global::System.Threading.Tasks.Task global::Xunit.IAsyncLifetime.InitializeAsync()
@@ -133,15 +133,15 @@ namespace Interpreter.Specs.Features
             await this.TestTearDownAsync();
         }
         
-        [global::Xunit.SkippableFactAttribute(DisplayName="User enters radius and program prints computed area")]
-        [global::Xunit.TraitAttribute("FeatureTitle", "Circle area calculation")]
-        [global::Xunit.TraitAttribute("Description", "User enters radius and program prints computed area")]
-        public async global::System.Threading.Tasks.Task UserEntersRadiusAndProgramPrintsComputedArea()
+        [global::Xunit.SkippableFactAttribute(DisplayName="User enters strings")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Sum strings")]
+        [global::Xunit.TraitAttribute("Description", "User enters strings")]
+        public async global::System.Threading.Tasks.Task UserEntersStrings()
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "0";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("User enters radius and program prints computed area", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("User enters strings", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 4
@@ -154,19 +154,22 @@ namespace Interpreter.Specs.Features
             else
             {
                 await this.ScenarioStartAsync();
-                global::Reqnroll.Table table1 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table7 = new global::Reqnroll.Table(new string[] {
                             "Value"});
-                table1.AddRow(new string[] {
-                            "5.0"});
+                table7.AddRow(new string[] {
+                            "Hello"});
+                table7.AddRow(new string[] {
+                            "World"});
 #line 5
-    await testRunner.GivenAsync("I enter into the console:", ((string)(null)), table1, "Given ");
+    await testRunner.GivenAsync("I enter into the console:", ((string)(null)), table7, "Given ");
 #line hidden
-#line 8
-    await testRunner.WhenAsync("I execute the program:", "module Main\r\nlet Pi: float = 3.14;\r\nlet r: float = readNumber();\r\nlet area: float" +
-                        " = Pi * r ** 2.0;\r\nprint(area);", ((global::Reqnroll.Table)(null)), "When ");
+#line 9
+    await testRunner.WhenAsync("I execute the program:", "module Main\r\n\r\nfunc sum(a: string, b:string): string {\r\n  return a + b;\r\n}\r\nvar a" +
+                        " = readString();\r\nvar b = readString();\r\nvar strings = sum(a,b);\r\nprint(strings)" +
+                        ";", ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 16
-    await testRunner.ThenAsync("I should get the output:", "78.50", ((global::Reqnroll.Table)(null)), "Then ");
+#line 21
+    await testRunner.ThenAsync("I should get the output:", "HelloWorld", ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -179,12 +182,12 @@ namespace Interpreter.Specs.Features
             
             async global::System.Threading.Tasks.Task global::Xunit.IAsyncLifetime.InitializeAsync()
             {
-                await CircleAreaCalculationFeature.FeatureSetupAsync();
+                await SumStringsFeature.FeatureSetupAsync();
             }
             
             async global::System.Threading.Tasks.Task global::Xunit.IAsyncLifetime.DisposeAsync()
             {
-                await CircleAreaCalculationFeature.FeatureTearDownAsync();
+                await SumStringsFeature.FeatureTearDownAsync();
             }
         }
     }

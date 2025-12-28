@@ -17,21 +17,21 @@ namespace Interpreter.Specs.Features
     
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Reqnroll", "3.0.0.0")]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class CircleAreaCalculationFeature : object, global::Xunit.IClassFixture<CircleAreaCalculationFeature.FixtureData>, global::Xunit.IAsyncLifetime
+    public partial class IsPrimeFeature : object, global::Xunit.IClassFixture<IsPrimeFeature.FixtureData>, global::Xunit.IAsyncLifetime
     {
         
         private global::Reqnroll.ITestRunner testRunner;
         
         private static string[] featureTags = ((string[])(null));
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Circle area calculation", "  Calculates the area of a circle using radius input and built-in constants.", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Is prime", "  Computes is prime number.", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
         private global::Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "CircleSquare.feature"
+#line 1 "IsPrime.feature"
 #line hidden
         
-        public CircleAreaCalculationFeature(CircleAreaCalculationFeature.FixtureData fixtureData, global::Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public IsPrimeFeature(IsPrimeFeature.FixtureData fixtureData, global::Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
         }
@@ -105,7 +105,7 @@ namespace Interpreter.Specs.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/CircleSquare.feature.ndjson", 3);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/IsPrime.feature.ndjson", 3);
         }
         
         async global::System.Threading.Tasks.Task global::Xunit.IAsyncLifetime.InitializeAsync()
@@ -133,15 +133,15 @@ namespace Interpreter.Specs.Features
             await this.TestTearDownAsync();
         }
         
-        [global::Xunit.SkippableFactAttribute(DisplayName="User enters radius and program prints computed area")]
-        [global::Xunit.TraitAttribute("FeatureTitle", "Circle area calculation")]
-        [global::Xunit.TraitAttribute("Description", "User enters radius and program prints computed area")]
-        public async global::System.Threading.Tasks.Task UserEntersRadiusAndProgramPrintsComputedArea()
+        [global::Xunit.SkippableFactAttribute(DisplayName="User enters a number and program prints is prime number or not")]
+        [global::Xunit.TraitAttribute("FeatureTitle", "Is prime")]
+        [global::Xunit.TraitAttribute("Description", "User enters a number and program prints is prime number or not")]
+        public async global::System.Threading.Tasks.Task UserEntersANumberAndProgramPrintsIsPrimeNumberOrNot()
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "0";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("User enters radius and program prints computed area", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("User enters a number and program prints is prime number or not", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 4
@@ -154,19 +154,52 @@ namespace Interpreter.Specs.Features
             else
             {
                 await this.ScenarioStartAsync();
-                global::Reqnroll.Table table1 = new global::Reqnroll.Table(new string[] {
+                global::Reqnroll.Table table5 = new global::Reqnroll.Table(new string[] {
                             "Value"});
-                table1.AddRow(new string[] {
-                            "5.0"});
+                table5.AddRow(new string[] {
+                            "17"});
 #line 5
-    await testRunner.GivenAsync("I enter into the console:", ((string)(null)), table1, "Given ");
+    await testRunner.GivenAsync("I enter into the console:", ((string)(null)), table5, "Given ");
 #line hidden
 #line 8
-    await testRunner.WhenAsync("I execute the program:", "module Main\r\nlet Pi: float = 3.14;\r\nlet r: float = readNumber();\r\nlet area: float" +
-                        " = Pi * r ** 2.0;\r\nprint(area);", ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I execute the program:", @"module Main
+func isPrime(x: int): bool {
+  if x <= 1 then {
+      return false;
+  }
+
+  if x == 2 then {
+      return true;
+  }
+
+  if x % 2 == 0 then {
+      return false;
+  }
+
+  var devider = 3;
+  while(devider * devider <= x){
+      if x % devider == 0 then {
+          return false;
+      }
+
+      devider = devider + 2;
+  }
+
+  return true;
+}
+
+var x = readNumber();
+var result = isPrime(x);
+
+if result  then {
+  print(""number is prime"");
+}
+else {
+  print(""number is not prime"");
+}", ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 16
-    await testRunner.ThenAsync("I should get the output:", "78.50", ((global::Reqnroll.Table)(null)), "Then ");
+#line 46
+    await testRunner.ThenAsync("I should get the output:", "number is prime", ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -179,12 +212,12 @@ namespace Interpreter.Specs.Features
             
             async global::System.Threading.Tasks.Task global::Xunit.IAsyncLifetime.InitializeAsync()
             {
-                await CircleAreaCalculationFeature.FeatureSetupAsync();
+                await IsPrimeFeature.FeatureSetupAsync();
             }
             
             async global::System.Threading.Tasks.Task global::Xunit.IAsyncLifetime.DisposeAsync()
             {
-                await CircleAreaCalculationFeature.FeatureTearDownAsync();
+                await IsPrimeFeature.FeatureTearDownAsync();
             }
         }
     }

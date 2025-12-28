@@ -4,16 +4,16 @@ Feature: Circle area calculation
   Scenario: User enters radius and program prints computed area
     Given I enter into the console:
       | Value |
-      | 5     |
+      | 5.0   |
     When I execute the program:
       """
       module Main
       let Pi: float = 3.14;
-      let r: int = readNumber();
-      let area: int = Pi * r ** 2;
+      let r: float = readNumber();
+      let area: float = Pi * r ** 2.0;
       print(area);
       """
     Then I should get the output:
       """
-      78.53982
+      78.50
       """

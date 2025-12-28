@@ -7,6 +7,7 @@ Feature: Sum of two numbers
       | 7     |
     When I execute the program:
       """
+      module Main
       let a: int = readNumber();
       let b: int = readNumber();
       let sum: int = a + b;

@@ -4,11 +4,7 @@ using Ast.Expressions;
 using Ast.Programm;
 using Ast.Statement;
 
-using Execution;
-
 using Lexer;
-
-using Runtime;
 
 using ValueType = Runtime.ValueType;
 
@@ -115,6 +111,7 @@ public class Parser
         {
             tokens.Advance();
             returnType = ParseTypeAnnotation();
+            tokens.Advance();
         }
 
         returnTypes.Push(returnType);
@@ -152,12 +149,17 @@ public class Parser
     {
         string name = Match(TokenType.Identifier).Value!.ToString();
 
-        ValueType type = ValueType.Int;
+        ValueType type;
 
         if (tokens.Peek().Type == TokenType.Annotation)
         {
             tokens.Advance();
             type = ParseTypeAnnotation();
+            tokens.Advance();
+        }
+        else
+        {
+            throw new ArgumentException($"Parameter '{name}' without type");
         }
 
         return new Parameter(name, type);
@@ -165,7 +167,6 @@ public class Parser
 
     /// <summary>
     /// statement = variable_decl
-    ///      | assignment
     ///      | if_statement
     ///      | for_statement
     ///      | while_statement
@@ -183,7 +184,6 @@ public class Parser
         {
             TokenType.Var => ParseVariableDecl(),
             TokenType.Let => ParseVariableDecl(),
-            //TokenType.Identifier => ParseAssignmentOrCallExpression(),
             TokenType.If => ParseIfStatement(),
             TokenType.For => ParseForStatement(),
             TokenType.While => ParseWhileStatement(),
@@ -195,6 +195,9 @@ public class Parser
         };
     }
 
+    /// <summary>
+    /// expression_statement = expression, ";" ;.
+    /// </summary>
     private ExpressionStatement ParseExpressionStatement()
     {
         Expression value = ParseExpression();
@@ -203,6 +206,9 @@ public class Parser
         return new ExpressionStatement(value);
     }
 
+    /// <summary>
+    /// variable_decl = ("let" | "var"), identifier, [ ":", type_annotation ], [ "=", expression ], ";" ;.
+    /// </summary>
     private VariableDeclarationStatement ParseVariableDecl()
     {
         if (tokens.Peek().Type == TokenType.Var)
@@ -239,26 +245,6 @@ public class Parser
         return new VariableDeclarationStatement(name, type, value);
     }
 
-    //private LetDeclarationStatement ParseLetVariableDecl()
-    //{
-    //    Match(TokenType.Let);
-    //    string name = Match(TokenType.Identifier).Value!.ToString();
-    //    Match(TokenType.Annotation);
-    //    ValueType type = ParseTypeAnnotation();
-    //    tokens.Advance();
-
-    //    Expression? value = null;
-    //    if (tokens.Peek().Type == TokenType.Assign)
-    //    {
-    //        Match(TokenType.Assign);
-    //        value = ParseExpression();
-    //    }
-
-    //    Match(TokenType.Semicolon);
-
-    //    return new LetDeclarationStatement(name, type, value);
-    //}
-
     /// <summary>
     /// break_statement = "break", ";" ;.
     /// </summary>
@@ -281,6 +267,9 @@ public class Parser
         return new ContinueStatement();
     }
 
+    /// <summary>
+    /// return_statement = "return", [ expression ], ";" ;.
+    /// </summary>
     private ReturnStatement ParseReturnStatement()
     {
         Match(TokenType.Return);
@@ -295,36 +284,6 @@ public class Parser
 
         return new ReturnStatement(value, returnTypes.Peek());
     }
-
-    private AssignmentStatement ParseAssignmentExpression()
-    {
-        string name = Match(TokenType.Identifier).Value!.ToString();
-        Match(TokenType.Assign);
-        Expression value = ParseExpression();
-
-        return new AssignmentStatement(name, value);
-    }
-
-    //private Statement ParseAssignmentOrCallExpression()
-    //{
-    //    string name = Match(TokenType.Identifier).Value!.ToString();
-    //    if (tokens.Peek().Type == TokenType.LParenthesis)
-    //    {
-    //        return ParseFunctionCall(name);
-    //        //List<Expression> args = ParseExpressionList();
-    //        //return new FunctionCallExpression(name, args);
-    //    }
-
-    //    if (tokens.Peek().Type == TokenType.Assign)
-    //    {
-            
-    //    }
-
-    //    else
-    //    {
-    //        Expression value = 
-    //    }
-    //}
 
     /// <summary>
     /// assignment = identifier, "=", expression, ";" ;.
@@ -362,10 +321,10 @@ public class Parser
 
         Match(TokenType.Comma);
 
-        AssignmentStatement? step = null;
+        AssignmentExpression? step = null;
         if (tokens.Peek().Type != TokenType.In)
         {
-            step = ParseAssignmentExpression();
+            step = ParseForStep();
         }
 
         Match(TokenType.In);
@@ -381,9 +340,7 @@ public class Parser
     private IfElseStatement ParseIfStatement()
     {
         Match(TokenType.If);
-        Match(TokenType.LParenthesis);
         Expression condition = ParseExpression();
-        Match(TokenType.RParenthesis);
         Match(TokenType.Then);
         BlockStatement thenBlock = ParseBlock();
         BlockStatement? elseBlock = null;
@@ -470,7 +427,6 @@ public class Parser
     private Expression ParseExpression()
     {
         return ParseAssigmnetExpression();
-        //return ParseLogicalOrExpression();
     }
 
     private Expression ParseAssigmnetExpression()
@@ -479,7 +435,6 @@ public class Parser
 
         if (tokens.Peek().Type == TokenType.Assign)
         {
-
             if (left is not VariableExpression v)
             {
                 throw new Exception("Left side of assignment must be a variable");
@@ -717,10 +672,13 @@ public class Parser
                 tokens.Advance();
                 return new LiteralExpression(new Runtime.Value(t.Value!.ToDecimal()));
             case TokenType.True:
+                tokens.Advance();
                 return new LiteralExpression(new Runtime.Value(true));
             case TokenType.False:
+                tokens.Advance();
                 return new LiteralExpression(new Runtime.Value(false));
             case TokenType.StringLiteral:
+                tokens.Advance();
                 return new LiteralExpression(new Runtime.Value((string)t.Value!.ToString()));
             case TokenType.Identifier:
                 string name = Match(TokenType.Identifier).Value!.ToString();
@@ -793,6 +751,18 @@ public class Parser
         Expression value = ParseExpression();
 
         return new VariableDeclarationStatement(name, null, value);
+    }
+
+    private AssignmentExpression ParseForStep()
+    {
+        Expression expr = ParseAssigmnetExpression();
+
+        if (expr is not AssignmentExpression assignment)
+        {
+            throw new Exception("For step must be assignment");
+        }
+
+        return assignment;
     }
 
     private ValueType ParseTypeAnnotation()

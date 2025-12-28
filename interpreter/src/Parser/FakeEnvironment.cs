@@ -20,7 +20,7 @@ public class FakeEnvironment : IEnvironment
     private readonly Dictionary<string, ImportDecl> imports = [];
 
     public IReadOnlyList<decimal> Results => results;
-    
+
     public IReadOnlyList<string> Output => output;
 
     public void AddImport(ImportDecl import)
@@ -74,12 +74,14 @@ public class FakeEnvironment : IEnvironment
         results.Add(line);
     }
 
+    public string ReadInput()
+    {
+        throw new NotImplementedException();
+    }
+
     public decimal ReadNumber()
     {
         return 0;
-        //decimal.TryParse(Console.ReadLine() ?? "", out decimal result);
-
-        //return result;
     }
 
     public void RemoveImport(ImportDecl import)

@@ -7,9 +7,10 @@ public static class EnvironmentFunctions
     {
         { "print", Print },
         { "readNumber", ReadNumber },
+        { "readString", ReadString },
     };
 
-    public static bool TryInvoke(string name, List<Value> args, IEnvironment env, out Value result)
+    public static bool TryInvoke(string name, List<Value> args, IEnvironment env, out Value? result)
     {
         if (Functions.TryGetValue(name, out EnvFunction? func))
         {
@@ -52,8 +53,6 @@ public static class EnvironmentFunctions
                 case Runtime.ValueType.Bool:
                     env.Print(arg.AsBool() ? "true" : "false");
                     break;
-                default:
-                    break;
             }
         }
 
@@ -67,15 +66,26 @@ public static class EnvironmentFunctions
             throw new ArgumentException("readNumber() takes no arguments");
         }
 
-        decimal value = env.ReadNumber();
+        string input = env.ReadInput();
+        decimal value = decimal.Parse(input);
 
-        if (value % 1m == 0)
+        if (!input.Contains('.') && !input.Contains(','))
         {
             return new Value((int)value);
         }
-        else
+
+        return new Value(value);
+    }
+
+    private static Value ReadString(List<Value> args, IEnvironment env)
+    {
+        if (args.Count > 0)
         {
-            return new Value(value);
+            throw new ArgumentException("readString() takes no arguments");
         }
+
+        string input = env.ReadInput();
+
+        return new Value(input);
     }
 }
