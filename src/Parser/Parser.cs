@@ -286,19 +286,6 @@ public class Parser
     }
 
     /// <summary>
-    /// assignment = identifier, "=", expression, ";" ;.
-    /// </summary>
-    //private AssignmentStatement ParseAssignStatement()
-    //{
-    //    string name = Match(TokenType.Identifier).Value!.ToString();
-    //    Match(TokenType.Assign);
-    //    Expression value = ParseExpression();
-    //    Match(TokenType.Semicolon);
-
-    //    return new AssignmentStatement(name, value);
-    //}
-
-    /// <summary>
     /// for_statement = "for", assignment_or_empty, expression, ",", assignment_or_empty, "in", block ;.
     /// </summary>
     private ForLoopStatement ParseForStatement()
@@ -422,13 +409,16 @@ public class Parser
     }
 
     /// <summary>
-    /// expression = logical_or_expression ;.
+    /// expression = assignment_expression ;.
     /// </summary>
     private Expression ParseExpression()
     {
         return ParseAssigmnetExpression();
     }
 
+    /// <summary>
+    /// assignment_expression = logical_or_expression, [ "=",  assignment_expression ];.
+    /// </summary>
     private Expression ParseAssigmnetExpression()
     {
         Expression left = ParseLogicalOrExpression();

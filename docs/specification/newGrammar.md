@@ -111,7 +111,9 @@ Pi * r ** 2
 
 ```
 (* Верхний уровень *)
-expression = logical_or_expression ;
+expression = assignment_expression ;
+
+assignment_expression = logical_or_expression, [ "=", logical_or_expression ] ;
 
 (* Логические операторы (short-circuit) *)
 logical_or_expression  = logical_and_expression,
@@ -139,12 +141,12 @@ bitwise_and_expression = additive_expression,
 additive_expression    = multiplicative_expression,
                          { ("+" | "-"), multiplicative_expression } ;
 
-multiplicative_expression = power_expression,
-                            { ("*" | "/" | "%" | "//"), power_expression } ;
+multiplicative_expression = unary_expression, 
+                         { ("*" | "/" | "%" ), unary_expression } ;
 
 (* Возведение в степень — правоассоциативно *)
-power_expression       = unary_expression,
-                         { "**", power_expression } ;
+power_expression = primary_expression, 
+                         { "**", unary_expression } ;
 
 (* Унарные операторы *)
 unary_expression       = { "+" | "-" | "~" | "!" },
