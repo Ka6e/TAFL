@@ -155,18 +155,6 @@ public class AstEvaluator : IAstVisitor
         environment.AddModule(d);
     }
 
-    public void Visit(AssignmentStatement e)
-    {
-        e.Value.Accept(this);
-        Value value = values.Pop();
-        if (context.GetValue(e.Name).GetValueType() != value.GetValueType())
-        {
-            throw new TypeErrorException("Unknown type");
-        }
-
-        context.AssignVariable(e.Name, value);
-    }
-
     public void Visit(BlockStatement s)
     {
         context.PushScope(new Scope());

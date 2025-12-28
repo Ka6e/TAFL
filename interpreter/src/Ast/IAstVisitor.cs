@@ -28,8 +28,6 @@ public interface IAstVisitor
 
     void Visit(FunctionCallExpression e);
 
-    void Visit(AssignmentStatement s);
-
     void Visit(BlockStatement s);
 
     void Visit(IfElseStatement s);
