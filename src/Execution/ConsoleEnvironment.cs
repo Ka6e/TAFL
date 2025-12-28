@@ -55,6 +55,21 @@ public class ConsoleEnvironment : IEnvironment
         Output += result;
     }
 
+    public void Print(Value value)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Print(int result)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Print(bool result)
+    {
+        throw new NotImplementedException();
+    }
+
     public void PrintLine(string line)
     {
         Print(line);

@@ -283,7 +283,6 @@ parameter_list = parameter, { ",", parameter } ;
 parameter = identifier, [ ":", type_annotation ] ;
 
 statement = variable_decl
-          | assignment
           | if_statement
           | for_statement
           | while_statement
@@ -295,12 +294,13 @@ statement = variable_decl
           | expression_statement ;
 
 variable_decl = ("let" | "var"), identifier, [ ":", type_annotation ], [ "=", expression ], ";" ;
-assignment = identifier, "=", expression, ";" ;
 
 if_statement = "if", expression, "then", block, [ "else", block ] ;
 
-for_statement = "for", assignment_or_empty, expression, ",", assignment_or_empty, "in", block ;
-assignment_or_empty = assignment | /* empty */ ;
+for_statement = "for", for_init , for_condition ",", for_step, "in", block ;
+for_init = identifier, "=", expression | empty ;
+for_condition = expression | empty ;  
+for_step = assignment_expression | empty ;
 
 while_statement = "while", "(", expression, ")", block ;
 do_while_statement = "do", block, "while", "(", expression, ")", ";" ;
@@ -319,7 +319,7 @@ identifier_list = identifier, { ",", identifier } ;
 expression_statement = expression, ";" ;
 block = "{", { statement }, "}" ;
 
-type_annotation = identifier ;
+type_annotation = int | string | bool | float ;
 expression = (* смотрите expressions-grammar.md *) ;
 
 identifier = ( letter | "_" ), { letter | digit | "_" } ;

@@ -208,11 +208,6 @@ public class AstEvaluator : IAstVisitor
 
         Value variableValue = context.GetValue(e.Name);
 
-        if (variableValue.GetValueType() != value.GetValueType())
-        {
-            throw new TypeErrorException($"Cannot assign {value.GetValueType()} to {variableValue.GetValueType()}");
-        }
-
         context.AssignVariable(e.Name, value);
 
         values.Push(value);
@@ -427,7 +422,7 @@ public class AstEvaluator : IAstVisitor
                 HandleLogicalNot(value);
                 break;
             case UnaryOperation.BitwiseNot:
-                HandleBitsiweNot(value);
+                HandleBitwiseNot(value);
                 break;
             default:
                 throw new NotImplementedException($"Unknown unary operation {e.Operation}");
@@ -592,7 +587,7 @@ public class AstEvaluator : IAstVisitor
         values.Push(new Value(!value.AsBool()));
     }
 
-    private void HandleBitsiweNot(Value value)
+    private void HandleBitwiseNot(Value value)
     {
         if (value.GetValueType() != ValueType.Int)
         {

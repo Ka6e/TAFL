@@ -1,8 +1,8 @@
-﻿using Execution;
+﻿using Interpreter;
 
-using Interpreter;
+using Runtime;
 
-namespace Parser.UnitTests;
+namespace Parser.UnitTests.BuiltinFunctionsTests;
 public class BuiltinFunctionsTests
 {
     private const int Precision = 5;
@@ -17,45 +17,43 @@ public class BuiltinFunctionsTests
 
     [Theory]
     [MemberData(nameof(GetBuiltinFunctions))]
-    public void Handle_Built_In_Functions(string expression, decimal expected)
+    public void Handle_Built_In_Functions(string expression, Value expected)
     {
         string code = $"module Main\n print({expression});";
 
         interpreter.Execute(code);
 
-        decimal result = Assert.Single(environment.Results);
-
-        Assert.Equal(expected, result, Precision);
+        Assert.Equal(expected.AsFloat(), environment.Results[0].AsFloat());
     }
 
-    public static TheoryData<string, decimal> GetBuiltinFunctions()
+    public static TheoryData<string, Value> GetBuiltinFunctions()
     {
-        return new TheoryData<string, decimal>()
+        return new TheoryData<string, Value>()
         {
-            { "abs(-10)", 10m },
-            { "abs(-7.5)", 7.5m },
-            { "min(10, 4, 1, 56)", 1m },
-            { "min(-1, -50, 0)", -50m },
-            { "max(1, 2, 3, 4, 5)", 5m },
-            { "max(-10, -8, -1)", -1m },
-            { "pow(-1, 2)", 1m },
-            { "pow(1, 2)", 1m },
-            { "pow(2, 3)", 8m },
-            { "pow(-2, 3)", -8m },
-            { "round(3.2)", 3m },
-            { "round(3.5)", 4m },
-            { "round(3.7)", 4m },
-            { "round(-3.2)", -3m },
-            { "round(-3.5)", -4m },
-            { "round(-3.7)", -4m },
-            { "ceil(3.2)", 4m },
-            { "ceil(3.0)", 3m },
-            { "ceil(-3.2)", -3m },
-            { "ceil(-3.0)", -3m },
-            { "floor(3.8)", 3m },
-            { "floor(3.0)", 3m },
-            { "floor(-3.8)", -4m },
-            { "floor(-3.0)", -3m },
+            { "abs(-10)", new Value(10m) },
+            { "abs(-7.5)", new Value(7.5m) },
+            { "min(10, 4, 1, 56)", new Value(1m) },
+            { "min(-1, -50, 0)", new Value(-50m) },
+            { "max(1, 2, 3, 4, 5)", new Value(5m) },
+            { "max(-10, -8, -1)", new Value(-1m) },
+            { "pow(-1, 2)", new Value(1m) },
+            { "pow(1, 2)", new Value(1m) },
+            { "pow(2, 3)", new Value(8m) },
+            { "pow(-2, 3)", new Value(-8m) },
+            { "round(3.2)", new Value(3m) },
+            { "round(3.5)", new Value(4m) },
+            { "round(3.7)", new Value(4m) },
+            { "round(-3.2)", new Value(-3m) },
+            { "round(-3.5)", new Value(-4m) },
+            { "round(-3.7)", new Value(-4m) },
+            { "ceil(3.2)", new Value(4m) },
+            { "ceil(3.0)", new Value(3m) },
+            { "ceil(-3.2)", new Value(-3m) },
+            { "ceil(-3.0)", new Value(-3m) },
+            { "floor(3.8)", new Value(3m) },
+            { "floor(3.0)", new Value(3m) },
+            { "floor(-3.8)", new Value(-4m) },
+            { "floor(-3.0)", new Value(-3m) },
         };
     }
 }

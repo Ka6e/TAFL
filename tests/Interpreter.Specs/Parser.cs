@@ -669,7 +669,7 @@ public class Parser
                 return new LiteralExpression(new Runtime.Value(false));
             case TokenType.StringLiteral:
                 tokens.Advance();
-                return new LiteralExpression(new Runtime.Value(t.Value!.ToString()));
+                return new LiteralExpression(new Runtime.Value((string)t.Value!.ToString()));
             case TokenType.Identifier:
                 string name = Match(TokenType.Identifier).Value!.ToString();
                 if (tokens.Peek().Type == TokenType.LParenthesis)

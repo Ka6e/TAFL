@@ -13,13 +13,13 @@ namespace Parser;
 /// </summary>
 public class FakeEnvironment : IEnvironment
 {
-    private readonly List<decimal> results = [];
+    private readonly List<Value> results = [];
     private readonly List<string> output = [];
 
     private readonly Dictionary<string, ModuleDecl> modules = [];
     private readonly Dictionary<string, ImportDecl> imports = [];
 
-    public IReadOnlyList<decimal> Results => results;
+    public IReadOnlyList<Value> Results => results;
 
     public IReadOnlyList<string> Output => output;
 
@@ -39,24 +39,29 @@ public class FakeEnvironment : IEnvironment
         }
     }
 
-    public void AddResult(decimal result)
+    public void Print(int result)
     {
-        results.Add(result);
-    }
-
-    public void AddResult(Value result)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Print(decimal result)
-    {
-        results.Add(result);
+        results.Add(new Value(result));
     }
 
     public void Print(string result)
     {
-        output.Add(result);
+        results.Add(new Value(result));
+    }
+
+    public void Print(Value value)
+    {
+        results.Add(value);
+    }
+
+    public void Print(decimal result)
+    {
+        results.Add(new Value(result));
+    }
+
+    public void Print(bool result)
+    {
+        results.Add(new Value(result));
     }
 
     public void PrintLine()
@@ -71,7 +76,7 @@ public class FakeEnvironment : IEnvironment
 
     public void PrintLine(decimal line)
     {
-        results.Add(line);
+        results.Add(new Value(line));
     }
 
     public string ReadInput()

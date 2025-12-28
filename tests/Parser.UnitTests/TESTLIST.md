@@ -95,8 +95,8 @@
 - [x] Разбор цикла c continue: `do { var i = 0; if i == 1 then { continue; } i = i + 1;} while(i < 3)`
 - [x] Разбор цикла с выполненной одной иттерацией: `do { var x = 5; } while(false)`
 ### Негативные сценарии
-- [x] Разбор цикла с break вне цикла: ``
-- [x] Разбор цикла c continue вне цикла: `` 
+- [x] Разбор цикла с break вне цикла: `var x = 5; do { var a = x + 5; print(a); } while (x != 5); break;`
+- [x] Разбор цикла c continue вне цикла: `var x = 5; do { var a = x + 5; print(a); } while (x != 5); continue;` 
 
 ## Разбор if else
 ### Позитивные сценарии
@@ -104,3 +104,6 @@
 - [x] Разбор условия с else: `var x = 2; if x < 2 then { x = x + 1; } else { x = x - 1; }`
 ### Негативные сценарии
 - [x] Ращбор условия, отсутсвуют фигурный скобки
+
+
+

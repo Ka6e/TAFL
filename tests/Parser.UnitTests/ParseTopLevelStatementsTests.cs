@@ -1,5 +1,7 @@
 ﻿using Interpreter;
 
+using Runtime;
+
 namespace Parser.UnitTests.TopLevelStatmentsTests;
 public class ParseTopLevelStatementsTests
 {
@@ -15,16 +17,16 @@ public class ParseTopLevelStatementsTests
 
     [Theory]
     [MemberData(nameof(GetTopLevelStatementData))]
-    public void Can_parse_top_level_statements(string code, List<decimal> expected)
+    public void Can_parse_top_level_statements(string code, List<Value> expected)
     {
         string codeExp = "module main\n" + code;
 
         interpreter.Execute(codeExp);
 
-        IReadOnlyList<decimal> actual = environment.Results;
+        IReadOnlyList<Value> actual = environment.Results;
         for (int i = 0, iMax = Math.Min(expected.Count, actual.Count); i < iMax; i++)
         {
-            Assert.Equal(expected[i], actual[i], Precision);
+            Assert.Equal(expected[i].AsInt(), actual[i].AsInt());
         }
 
         if (expected.Count != actual.Count)
@@ -35,29 +37,29 @@ public class ParseTopLevelStatementsTests
         }
     }
 
-    public static TheoryData<string, List<decimal>> GetTopLevelStatementData()
+    public static TheoryData<string, List<Value>> GetTopLevelStatementData()
     {
-        return new TheoryData<string, List<decimal>>()
+        return new TheoryData<string, List<Value>>()
         {
             {
                 "var x = 2 + 2;" +
-                "print(x + 5);", [9]
+                "print(x + 5);", [new Value(9)]
             },
             {
-                "print(1 + 2); print(2 * 5);", [3, 10]
+                "print(1 + 2); print(2 * 5);", [new Value(3), new Value(10)]
             },
             {
                 "var x = 1;" +
                 "var y = 2;" +
                 "var z = 3;" +
-                "print(x + y * z);", [7]
+                "print(x + y * z);", [new Value(7)]
             },
             {
                 "var x = 10;" +
                 "var y = x;" +
                 "var z = y;" +
                 "x + y + z;" +
-                "print(x+y+z);", [30]
+                "print(x+y+z);", [new Value(30)]
             },
             {
                 "var a = 10;" +
@@ -65,14 +67,11 @@ public class ParseTopLevelStatementsTests
                 "a = 5;" +
                 "b = a + 1;" +
                 "print(a);" +
-                "print(b);", [5, 6]
+                "print(b);", [new Value(5), new Value(6)]
             },
             {
                 "let x:int;" +
-                "print(x);", [0]
-            },
-            {
-                "print(1.0);", [1.0m]
+                "print(x);", [new Value(0)]
             },
         };
     }

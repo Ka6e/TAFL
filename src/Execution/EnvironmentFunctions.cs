@@ -51,7 +51,7 @@ public static class EnvironmentFunctions
                     env.Print(arg.AsString());
                     break;
                 case Runtime.ValueType.Bool:
-                    env.Print(arg.AsBool() ? "true" : "false");
+                    env.Print(arg.AsBool() ? true : false);
                     break;
             }
         }

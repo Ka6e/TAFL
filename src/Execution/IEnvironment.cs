@@ -5,17 +5,17 @@ using Runtime;
 namespace Execution;
 public interface IEnvironment
 {
-    void AddResult(decimal result);
-
-    void AddResult(Value result);
-
-    decimal ReadNumber();
-
     string ReadInput();
+
+    void Print(Value value);
 
     void Print(decimal result);
 
+    void Print(int result);
+
     void Print(string result);
+
+    void Print(bool result);
 
     void PrintLine();
 

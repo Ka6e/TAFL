@@ -154,6 +154,8 @@ unary_expression       = { "+" | "-" | "~" | "!" },
 
 (* Базовые элементы *)
 primary_expression     = number
+                       | string
+                       | boolean
                        | identifier
                        | function_call
                        | "(", expression, ")" ;
@@ -164,6 +166,8 @@ expressions_list = expression, { ",", expression } ;
 
 (* Литералы *)
 number = integer_literal | float_literal ;
+string = string_literal ;
+boolean = true | false ;
 
 integer_literal = digit, { digit | "_" }
                  | "0x", hex_digit, { hex_digit | "_" }

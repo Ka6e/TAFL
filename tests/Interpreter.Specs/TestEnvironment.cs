@@ -130,4 +130,19 @@ public class TestEnvironment : IEnvironment
 
         return inputQueue.Dequeue();
     }
+
+    public void Print(Value value)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Print(int result)
+    {
+        Output += result;
+    }
+
+    public void Print(bool result)
+    {
+        Output += result;
+    }
 }

@@ -143,16 +143,4 @@ public class Value
     {
         return value.GetHashCode();
     }
-
-    public static Value FromDecimal(decimal d)
-    {
-        // Если число не имеет дробной части и входит в диапазон int — считаем int
-        if (d == Math.Truncate(d) && d >= int.MinValue && d <= int.MaxValue)
-        {
-            return new Value((int)d);
-        }
-
-        // В остальных случаях — float
-        return new Value(d);
-    }
 }
