@@ -70,11 +70,6 @@ public class AbstractPass : IAstVisitor
         throw new NotImplementedException();
     }
 
-    public virtual void Visit(AssignmentStatement s)
-    {
-        throw new NotImplementedException();
-    }
-
     public virtual void Visit(BlockStatement s)
     {
         throw new NotImplementedException();

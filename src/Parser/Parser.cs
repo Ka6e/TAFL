@@ -288,15 +288,15 @@ public class Parser
     /// <summary>
     /// assignment = identifier, "=", expression, ";" ;.
     /// </summary>
-    private AssignmentStatement ParseAssignStatement()
-    {
-        string name = Match(TokenType.Identifier).Value!.ToString();
-        Match(TokenType.Assign);
-        Expression value = ParseExpression();
-        Match(TokenType.Semicolon);
+    //private AssignmentStatement ParseAssignStatement()
+    //{
+    //    string name = Match(TokenType.Identifier).Value!.ToString();
+    //    Match(TokenType.Assign);
+    //    Expression value = ParseExpression();
+    //    Match(TokenType.Semicolon);
 
-        return new AssignmentStatement(name, value);
-    }
+    //    return new AssignmentStatement(name, value);
+    //}
 
     /// <summary>
     /// for_statement = "for", assignment_or_empty, expression, ",", assignment_or_empty, "in", block ;.
