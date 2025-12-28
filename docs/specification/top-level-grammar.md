@@ -267,13 +267,9 @@ program = module_decl, { import_decl }, { top_level_decl } ;
 module_decl = "module", identifier ;
 import_decl = "import", identifier ;
 
-top_level_decl = class_decl
-               | enum_decl
+top_level_decl = enum_decl
                | function_decl
                | statement ;
-
-class_decl = "class", identifier, "{", { class_member }, "}" ;
-class_member = variable_decl | function_decl ;
 
 enum_decl = "enum", identifier, "{", { enum_case }, "}" ;
 enum_case = identifier, [ "(", parameter_list, ")" ] ;
@@ -290,17 +286,14 @@ statement = variable_decl
           | break_statement
           | continue_statement
           | return_statement
-          | match_statement
           | expression_statement ;
 
-variable_decl = ("let" | "var"), identifier, [ ":", type_annotation ], [ "=", expression ], ";" ;
+variable_decl = "let", identifier, ":", type_annotation, [ "=", expression ], ";"
+              | "var", identifier, "=", expression, ";" ;
 
 if_statement = "if", expression, "then", block, [ "else", block ] ;
 
-for_statement = "for", for_init , for_condition ",", for_step, "in", block ;
-for_init = identifier, "=", expression | empty ;
-for_condition = expression | empty ;  
-for_step = assignment_expression | empty ;
+for_statement = "for", [ assignment_expression ] ",", [ expression ] ",", [ assignment_expression ] , "in", block ;
 
 while_statement = "while", "(", expression, ")", block ;
 do_while_statement = "do", block, "while", "(", expression, ")", ";" ;
@@ -309,12 +302,6 @@ break_statement = "break", ";" ;
 continue_statement = "continue", ";" ;
 
 return_statement = "return", [ expression ], ";" ;
-
-match_statement = "match", expression, "{", { match_case }, "}" ;
-match_case = "case", pattern, ":", block ;
-pattern = identifier | enum_pattern | "_" ;
-enum_pattern = identifier, "(", [ identifier_list ], ")" ;
-identifier_list = identifier, { ",", identifier } ;
 
 expression_statement = expression, ";" ;
 block = "{", { statement }, "}" ;

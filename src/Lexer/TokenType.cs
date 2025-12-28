@@ -12,11 +12,6 @@ public enum TokenType
     Import,
 
     /// <summary>
-    /// Ключевое слово class
-    /// </summary>
-    Class,
-
-    /// <summary>
     /// Ключевое слово new
     /// </summary>
     New,
@@ -60,16 +55,6 @@ public enum TokenType
     /// Ключевое слово else
     /// </summary>
     Else,
-
-    /// <summary>
-    /// Ключевое слово match
-    /// </summary>
-    Match,
-
-    /// <summary>
-    /// Ключевое слово case
-    /// </summary>
-    Case,
 
     /// <summary>
     /// Ключевое слово for

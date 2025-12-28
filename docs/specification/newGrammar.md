@@ -113,7 +113,8 @@ Pi * r ** 2
 (* Верхний уровень *)
 expression = assignment_expression ;
 
-assignment_expression = logical_or_expression, [ "=", logical_or_expression ] ;
+assignment_expression = logical_or_expression
+                      | identifier "=" assignment_expression
 
 (* Логические операторы (short-circuit) *)
 logical_or_expression  = logical_and_expression,
@@ -150,7 +151,7 @@ power_expression = primary_expression,
 
 (* Унарные операторы *)
 unary_expression       = { "+" | "-" | "~" | "!" },
-                         primary_expression ;
+                         power_expression ;
 
 (* Базовые элементы *)
 primary_expression     = number

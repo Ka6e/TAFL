@@ -74,17 +74,17 @@ public class LexicalStatsTests
     [Fact]
     public void CollectFromFile_WithDifficulProgramm_ReturnsCorrectStats()
     {
-        string path = CreateTempFile("module Main\r\n\r\nimport IO\r\n\r\nenum DivisionResult {\r\n    Success(value: int)\r\n    Failure(message: string)\r\n}\r\n\r\nclass Divider {\r\n    let factor: int\r\n\r\n    new(f: int) {\r\n        this.factor = f\r\n    }\r\n\r\n    func divide(x: int, y: int): DivisionResult {\r\n        if y == 0 then\r\n            return DivisionResult.Failure(\"Cannot divide by zero\")\r\n        else\r\n            return DivisionResult.Success(x / y)\r\n    }\r\n}\r\n\r\nfunc main(): void {\r\n    let divider = Divider.new(2)\r\n    let result = divider.divide(10, 0)\r\n\r\n    match result {\r\n        case Success(v): print(\"Quotient: \" + show(v))\r\n        case Failure(msg): print(\"Error: \" + msg)\r\n    }\r\n}");
+        string path = CreateTempFile("module Main\r\n\r\nimport IO\r\n\r\nfunc newDivider(f: int): int {\r\nreturn f\r\n}\r\n\r\nfunc divide(x: int, y: int, factor: int): int {\r\nif y == 0 then\r\nreturn -1\r\nelse\r\nreturn x / y * factor\r\n}\r\n\r\nfunc main(): void {\r\nlet factor = newDivider(2)\r\n let result = divide(10, 0, factor)\r\n\r\nif result != -1 then\r\nprint(\"Quotient: \" + show(result))\r\nelse\r\nprint(\"Error: Cannot divide by zero\")\r\n}");
 
         string result = LexicalStats.CollectFromFile(path);
 
         string expected =
-            $"keywords: 27{Environment.NewLine}" +
-            $"identifier: 39{Environment.NewLine}" +
-            $"number literals: 4{Environment.NewLine}" +
-            $"string literals: 3{Environment.NewLine}" +
-            $"operators: 22{Environment.NewLine}" +
-            "other lexemes: 42";
+            $"keywords: 23{Environment.NewLine}" +
+            $"identifier: 24{Environment.NewLine}" +
+            $"number literals: 6{Environment.NewLine}" +
+            $"string literals: 2{Environment.NewLine}" +
+            $"operators: 16{Environment.NewLine}" +
+            "other lexemes: 26";
         Assert.Equal(expected, result);
     }
 

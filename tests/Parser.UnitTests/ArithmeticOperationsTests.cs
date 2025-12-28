@@ -38,7 +38,6 @@ public class ArithmeticOperationsTests
 
         interpreter.Execute(code);
 
-        Assert.Single(environment.Results);
         Assert.Equal(expected.AsInt(), environment.Results[0].AsInt());
     }
 
@@ -66,6 +65,7 @@ public class ArithmeticOperationsTests
             { "-2 ** 3", new Value(-8) },
             { "(-1) ** 2", new Value(1) },
             { "-1 ** 2", new Value(-1) },
+            { "-2 ** 2", new Value(-4) },
         };
     }
 

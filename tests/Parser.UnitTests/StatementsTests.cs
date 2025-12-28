@@ -70,7 +70,7 @@ public class StatementsTests
             {
                 "for i = 0, i < 5, i = i + 1 in {" +
                 "if i == 2 then { continue; } print(i);" +
-                "}", [new Value(0), new Value(1), new Value(4)]
+                "}", [new Value(0), new Value(1), new Value(3), new Value(4)]
             },
             {
                 "var x = 0;" +

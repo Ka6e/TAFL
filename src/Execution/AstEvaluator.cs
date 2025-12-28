@@ -255,12 +255,13 @@ public class AstEvaluator : IAstVisitor
                 if (loop.Continue)
                 {
                     loop.Continue = false;
-
                     if (e.Step != null)
                     {
                         e.Step.Accept(this);
                         values.Pop();
                     }
+
+                    continue;
                 }
 
                 if (e.Step != null)

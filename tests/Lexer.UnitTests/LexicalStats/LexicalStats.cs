@@ -15,15 +15,15 @@ public static class LexicalStats
 
     private static readonly HashSet<TokenType> KeyWords = new()
     {
-        TokenType.Module, TokenType.Import, TokenType.Class, TokenType.New,
+        TokenType.Module, TokenType.Import, TokenType.New,
         TokenType.Func, TokenType.Let, TokenType.Var, TokenType.Enum,
         TokenType.Interface, TokenType.If, TokenType.Then, TokenType.Else,
-        TokenType.Match, TokenType.For, TokenType.Return, TokenType.Throw,
+        TokenType.For, TokenType.Return, TokenType.Throw,
         TokenType.Try, TokenType.Catch, TokenType.Type, TokenType.Where,
         TokenType.Implements, TokenType.This,
         TokenType.True, TokenType.False, TokenType.NullLiteral,
         TokenType.IntegerType, TokenType.FloatType, TokenType.StringType, TokenType.CharType,
-        TokenType.BooleanType, TokenType.VoidType, TokenType.In, TokenType.Case,
+        TokenType.BooleanType, TokenType.VoidType, TokenType.In,
     };
 
     private static readonly HashSet<TokenType> Operators = new()

@@ -46,7 +46,7 @@ public class CommentTests
                 var a = x;*/
                 module Main
 
-                class Calculator {
+                func calculator {
                 let factor: int
 
                 new(f: int) {
@@ -57,8 +57,8 @@ public class CommentTests
                 [
                     new Token(TokenType.Module),
                     new Token(TokenType.Identifier, new TokenValue("Main")),
-                    new Token(TokenType.Class),
-                    new Token(TokenType.Identifier, new TokenValue("Calculator")),
+                    new Token(TokenType.Func),
+                    new Token(TokenType.Identifier, new TokenValue("calculator")),
                     new Token(TokenType.LBrace),
                     new Token(TokenType.Let),
                     new Token(TokenType.Identifier, new TokenValue("factor")),

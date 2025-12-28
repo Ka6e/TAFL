@@ -5,7 +5,6 @@ public class Lexer
     {
         { "module", TokenType.Module },
         { "import", TokenType.Import },
-        { "class", TokenType.Class },
         { "new", TokenType.New },
         { "func", TokenType.Func },
         { "let", TokenType.Let },
@@ -15,8 +14,6 @@ public class Lexer
         { "if", TokenType.If },
         { "then", TokenType.Then },
         { "else", TokenType.Else },
-        { "match", TokenType.Match },
-        { "case", TokenType.Case },
         { "for", TokenType.For },
         { "while", TokenType.While },
         { "do", TokenType.Do },

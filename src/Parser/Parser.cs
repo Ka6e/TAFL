@@ -71,8 +71,7 @@ public class Parser
     }
 
     /// <summary>
-    /// top_level_decl = class_decl
-    ///                | enum_decl
+    /// top_level_decl = enum_decl
     ///                | function_decl
     ///                | statement ;.
     /// </summary>
@@ -80,7 +79,6 @@ public class Parser
     {
         return tokens.Peek().Type switch
         {
-            TokenType.Class => throw new NotImplementedException(),
             TokenType.Enum => throw new NotImplementedException(),
             TokenType.Func => ParseFuncDecl(),
             _ => ParseStatement(),
@@ -159,7 +157,7 @@ public class Parser
         }
         else
         {
-            throw new ArgumentException($"Parameter '{name}' without type");
+            type = ValueType.Void;
         }
 
         return new Parameter(name, type);
@@ -417,7 +415,8 @@ public class Parser
     }
 
     /// <summary>
-    /// assignment_expression = logical_or_expression, [ "=",  assignment_expression ];.
+    /// assignment_expression = logical_or_expression
+    ///                       | identifier, "=", assignment_expression ;.
     /// </summary>
     private Expression ParseAssigmnetExpression()
     {
@@ -477,7 +476,7 @@ public class Parser
     private Expression ParseEqualityExpression()
     {
         Expression left = ParseBitwiseOrExpression();
-        if (IsComprassionOperator(tokens.Peek().Type))
+        while (IsComprassionOperator(tokens.Peek().Type))
         {
             BinaryOperation operation = tokens.Peek().Type switch
             {
@@ -493,7 +492,7 @@ public class Parser
             tokens.Advance();
             Expression right = ParseBitwiseOrExpression();
 
-            return new BinaryOperationExpression(left, operation, right);
+            left = new BinaryOperationExpression(left, operation, right);
         }
 
         return left;
@@ -610,7 +609,7 @@ public class Parser
     private Expression ParsePowerExpression()
     {
         Expression left = ParsePrimaryExpression();
-        while (tokens.Peek().Type == TokenType.Exponent)
+        if (tokens.Peek().Type == TokenType.Exponent)
         {
             tokens.Advance();
             Expression right = ParseUnaryExpression();
