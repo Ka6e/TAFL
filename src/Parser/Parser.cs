@@ -60,7 +60,7 @@ public class Parser
     }
 
     /// <summary>
-    /// import_decl = "import", identifier ;.
+    /// import_decl = "import", identifier ;.1488
     /// </summary>
     private ImportDecl ParseImportDecl()
     {
@@ -79,7 +79,6 @@ public class Parser
     {
         return tokens.Peek().Type switch
         {
-            TokenType.Enum => throw new NotImplementedException(),
             TokenType.Func => ParseFuncDecl(),
             _ => ParseStatement(),
         };
@@ -284,7 +283,7 @@ public class Parser
     }
 
     /// <summary>
-    /// for_statement = "for", assignment_or_empty, expression, ",", assignment_or_empty, "in", block ;.
+    /// for_statement = "for", [ assignment_expression ] ",", [ expression ] ",", [ assignment_expression ] , "in", block ;.
     /// </summary>
     private ForLoopStatement ParseForStatement()
     {

@@ -77,7 +77,7 @@
 - [x] Разбор функции с 1 параметров: `func inc(x: int): int { return x + 1; }`
 - [x] Разбор функции с несколькими параметрами: `func foo(a: int, b: int): int { return a + b; }`
 - [x] Разбор функции функции с рекурсией: `func foo(x: int): int { if x == 5 then { return x; } return foo(x - 1); }`
-- [ ] Разбор функции с возвратом разных типов: `func foo(): int { return 0; }, func foo(): float { return 1.5; }, func foo(): bool { return true; } func foo(): string { return "abc"; }`
+- [x] Разбор функции с возвратом разных типов: `func foo(): int { return 0; }, func foo(): float { return 1.5; }, func foo(): bool { return true; } func foo(): string { return "abc"; }`
 
 ## Разбор цикла while
 ### Позитивные сценарии

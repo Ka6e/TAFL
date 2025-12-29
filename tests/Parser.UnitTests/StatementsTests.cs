@@ -1,10 +1,6 @@
-﻿using System.Reflection.PortableExecutable;
-
-using Interpreter;
+﻿using Interpreter;
 
 using Runtime;
-
-using Xunit.Sdk;
 
 namespace Parser.UnitTests.StatementsTests;
 public class StatementsTests

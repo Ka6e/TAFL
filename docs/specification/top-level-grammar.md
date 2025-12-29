@@ -267,12 +267,8 @@ program = module_decl, { import_decl }, { top_level_decl } ;
 module_decl = "module", identifier ;
 import_decl = "import", identifier ;
 
-top_level_decl = enum_decl
-               | function_decl
+top_level_decl = function_decl
                | statement ;
-
-enum_decl = "enum", identifier, "{", { enum_case }, "}" ;
-enum_case = identifier, [ "(", parameter_list, ")" ] ;
 
 function_decl = "func", identifier, "(", [ parameter_list ], ")", [ ":", type_annotation ], block ;
 parameter_list = parameter, { ",", parameter } ;
